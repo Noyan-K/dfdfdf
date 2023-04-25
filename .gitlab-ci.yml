@@ -6,8 +6,9 @@ build_dev:
   tags:
     - docker 
   stage: build
+  when: manual
   only: 
-   - develop
+   - master
   image:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint: [""]
@@ -23,9 +24,9 @@ deploy_dev:
   tags:
     - docker 
   stage: deploy
-  #when: manual
-  only: 
-   - develop
+  when: manual
+  #only: 
+  # - develop
   image: 
     name: alpine
   before_script:    
