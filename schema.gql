@@ -1,0 +1,919 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type CurrencyModel {
+  id: Int!
+  name: String
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type CurrencyRateModel {
+  currency_id: Int!
+  rate: Float
+  date: DateTime!
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+}
+
+type SupplierProductPriceModel {
+  product_id: Int!
+  supplier_id: Int!
+  price_date: DateTime!
+  price: Float!
+  currency_id: Int!
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+}
+
+type Currency {
+  id: Int!
+  name: String
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+  CurrencyRate: [CurrencyRateModel!]!
+  SupplierProductPrice: [SupplierProductPriceModel!]
+  User: [User!]!
+  Supplier: [Supplier!]!
+}
+
+type SupplierModel {
+  id: Int!
+  currency_id: Int
+  deliver_goods_yourself: Boolean!
+  array_of_delivery_ids: [Int!]!
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+}
+
+type Supplier {
+  id: Int!
+  currency_id: Int
+  deliver_goods_yourself: Boolean!
+  array_of_delivery_ids: [Int!]!
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+  SupplierProductPrice: [SupplierProductPriceModel!]!
+  User: User
+  Address: Address
+  Currency: Currency!
+}
+
+type Address {
+  id: Int!
+  user_id: Int!
+  supplier_id: Int
+  type: AddressTypeEnum!
+  name: String!
+  postcode: Int
+  country: String!
+  region: String!
+  city: String!
+  street: String!
+  house_number: Int!
+  apartment_number_or_office: Int
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+  User: User!
+  Supplier: Supplier!
+}
+
+enum AddressTypeEnum {
+  DELIVERY
+  WAREHOUSE
+}
+
+type CartModel {
+  id: Int!
+  contact_id: Int!
+  cloth_sex: ClothSexEnum!
+  category_id: Int!
+  size_id: Int!
+  custom_size: String
+  cloth_style_id: Int!
+  cloth_style_requirements: String
+  node_processing_id: Int!
+  node_processing_requirements: String
+  fabric_id: Int!
+  fabric_requirements: String
+  additional_materials: String
+  artistic_description_of_the_model: String
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+}
+
+enum ClothSexEnum {
+  MALE
+  FEMALE
+  UNISEX
+}
+
+type Profile {
+  id: Int!
+  user_id: Int!
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+  User: User!
+}
+
+type Document {
+  id: Int!
+  url: String!
+  name: String!
+  type: DocumentTypeEnum!
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+}
+
+enum DocumentTypeEnum {
+  IMAGE
+  FILE
+}
+
+type User {
+  id: Int!
+  name: String!
+  user_name: String
+  document_id: Int
+  currency_id: Int
+  array_of_delivery_ids: [Int!]!
+  supplier_id: Int
+  email: String!
+  type: UserTypeEnum!
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+  Document: Document
+  Supplier: SupplierModel
+  Cart: [CartModel!]
+  UserRole: [UserRole!]
+  Profile: Profile
+  Address: Address
+  Currency: Currency!
+}
+
+enum UserTypeEnum {
+  USER
+  GUEST
+}
+
+type UserRole {
+  id: Int!
+  user_id: Int!
+  role_name: RolesEnum!
+  User: [User!]!
+}
+
+enum RolesEnum {
+  ADMIN
+  USER
+}
+
+type Delivery {
+  id: Int!
+  name: String!
+  type: DeliveryTypeEnum!
+  parent_id: Int
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+  Children: [Delivery!]!
+  Parent: Delivery
+}
+
+enum DeliveryTypeEnum {
+  USER
+  SUPPLIER
+}
+
+type ProductModel {
+  id: Int!
+  vendor_id: Int
+  vendor_partnumber: String!
+  name: String!
+  description_id: Int
+  category_id: Int
+  description: String
+  document_id: [Int!]
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+}
+
+type VendorModel {
+  id: Int!
+  name: String!
+  document_id: Int
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+}
+
+type ModelProductModel {
+  product_id: Int!
+  model_id: Int!
+  created_at: Int!
+  updated_at: Int!
+  deleted_at: Int
+}
+
+type ModelModel {
+  id: Int!
+  name: String!
+  vendor_id: Int
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+}
+
+type Model {
+  id: Int!
+  name: String!
+  vendor_id: Int
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+  Vendor: VendorModel
+  ModelProduct: [ModelProductModel!]
+}
+
+type Vendor {
+  id: Int!
+  name: String!
+  document_id: Int
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+  Document: Document
+  Model: [Model!]
+  Product: [ProductModel!]
+}
+
+type SupplierProductPrice {
+  product_id: Int!
+  supplier_id: Int!
+  price_date: DateTime!
+  price: Float!
+  currency_id: Int!
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+  Currency: CurrencyModel
+  Product: ProductModel
+  Supplier: Supplier
+}
+
+type ModelProduct {
+  product_id: Int!
+  model_id: Int!
+  created_at: Int!
+  updated_at: Int!
+  deleted_at: Int
+  Model: Model!
+  Product: ProductModel!
+}
+
+type DescriptionModel {
+  id: Int!
+  text: String!
+  language_id: Int!
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+}
+
+type LanguageModel {
+  id: Int!
+  language: String!
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+}
+
+type Description {
+  id: Int!
+  text: String!
+  language_id: Int!
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+  Language: LanguageModel!
+  Product: [ProductModel!]
+}
+
+type Size {
+  id: Int!
+  json: JSON!
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+type CategoriesOnClothStyle {
+  category_id: Int!
+  clothes_style_id: Int!
+  Category: [Category!]!
+  ClothStyle: [ClothStyle!]!
+}
+
+type ClothStyle {
+  id: Int!
+  name: String!
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+  CategoriesOnClothStyle: [CategoriesOnClothStyle!]!
+  Cart: [Cart!]!
+}
+
+type NodeProcessing {
+  id: Int!
+  name: String!
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+  Cart: [Cart!]!
+}
+
+type Fabric {
+  id: Int!
+  name: String!
+  description: String
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+  Cart: [Cart!]!
+}
+
+type CartProduct {
+  id: Int!
+  cart_id: Int!
+  product_id: Int
+  quantity: Int!
+  supplier_id: Int
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+  Product: Product
+  Cart: CartModel!
+  Supplier: Supplier
+}
+
+type Cart {
+  id: Int!
+  contact_id: Int!
+  cloth_sex: ClothSexEnum!
+  category_id: Int!
+  size_id: Int!
+  custom_size: String
+  cloth_style_id: Int!
+  cloth_style_requirements: String
+  node_processing_id: Int!
+  node_processing_requirements: String
+  fabric_id: Int!
+  fabric_requirements: String
+  additional_materials: String
+  artistic_description_of_the_model: String
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+  CartProducts: [CartProduct!]
+  Contact: User
+  Category: Category
+  Size: Size
+  ClothStyle: ClothStyle
+  NodeProcessing: NodeProcessing
+  Fabric: Fabric
+}
+
+type Category {
+  id: Int!
+  parent_id: Int
+  name: String!
+  sex: ClothSexEnum
+  description: String
+  document_id: Int
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+  Children: [Category!]
+  Parent: Category
+  Product: [ProductModel!]
+  CategoriesOnClothStyle: [CategoriesOnClothStyle!]
+  Cart: [Cart!]
+}
+
+type Product {
+  id: Int!
+  vendor_id: Int
+  vendor_partnumber: String!
+  name: String!
+  description_id: Int
+  category_id: Int
+  description: String
+  document_id: [Int!]
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+  Document: [Document!]
+  Vendor: Vendor
+  SupplierProductPrice: [SupplierProductPrice!]
+  ModelProduct: [ModelProduct!]
+  Description: Description
+  Category: Category
+}
+
+type GetProductsDto {
+  total: Int!
+  products: [Product!]
+}
+
+type SearchResultModel {
+  receivedProducts: [ProductModel!]!
+  receivedModels: [ModelModel!]!
+  receivedVendors: [VendorModel!]!
+}
+
+type ComparedProduct {
+  id: Int!
+  vendor_id: Int
+  vendor_partnumber: String!
+  name: String!
+  description_id: Int
+  category_id: Int
+  description: String
+  document_id: [Int!]
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+  Document: [Document!]
+  Vendor: Vendor
+  SupplierProductPrice: [SupplierProductPrice!]
+  ModelProduct: [ModelProduct!]
+  Description: Description
+  Category: Category
+  supplier_price: Float
+  supplier_with_price: Float!
+  price_difference: Float!
+}
+
+type GetComparedProductsDto {
+  total: Int!
+  products: [ComparedProduct!]
+}
+
+type Language {
+  id: Int!
+  language: String!
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+  Description: [DescriptionModel!]!
+}
+
+type CurrencyRate {
+  currency_id: Int!
+  rate: Float
+  date: DateTime!
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+  Currency: CurrencyModel!
+}
+
+type Contact {
+  id: Int!
+  name: String!
+  email: String!
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+  Cart: [Cart!]!
+}
+
+type Query {
+  user: User
+  getProfile: User
+  documents(take: Int, skip: Int): [Document!]!
+  document(id: Int!): Document!
+  getDocuments(id: [Int!]!): [Document!]
+  getDocument(id: Int!): [Document!]
+  userRoles(user_id: Int!, skip: Int, take: Int): [UserRole!]!
+  userRole(user_id: Int!, role_name: RolesEnum!): UserRole
+  suppliers(findSuppliersInput: FindSuppliersInput!, take: Int, skip: Int): [Supplier!]!
+  supplier(id: Int!): Supplier
+  products(FilterProductsInput: FilterProductsInput!, take: Int, skip: Int): GetProductsDto!
+  compareProducts(FilterProductsInput: FilterProductsInput!, CompareProductsInput: CompareProductsInput!, take: Int, skip: Int): GetComparedProductsDto!
+  product(id: Int!): Product
+  searchProducts(take: Int!, skip: Int!, text: String!): SearchResultModel!
+  currencies(take: Int, skip: Int): [Currency!]!
+  currency(id: Int!): Currency
+  languages(skip: Int, take: Int): [Language!]!
+  language(id: Int!): Language
+  models(take: Int, skip: Int, sortOrder: SearchMode): [Model!]!
+  model(id: Int!): Model
+  vendors(take: Int, skip: Int, vendor_id: Int): [Vendor!]!
+  vendor(id: Int!): Vendor
+  getFilteredVendorsList: [Vendor!]!
+  getVendorsModelList(vendor_id: Int): [Vendor!]!
+  currencyRates(skip: Int, take: Int): [CurrencyRate!]!
+  currencyRate(findUniqueCurrencyRateInput: FindUniqueCurrencyRateInput!): CurrencyRate
+  supplierProductPrices(take: Int, skip: Int): [SupplierProductPrice!]!
+  supplierProductPrice(product_id: Int!, supplier_id: Int!, price_date: DateTime!): SupplierProductPrice
+  carts(contact_id: Int!, take: Int, skip: Int): [Cart!]!
+  cart(id: Int!): Cart
+  categories(search: String!, parent_id: Int!): [Category!]!
+  category(id: Int!): Category
+  profiles(skip: Int, take: Int): [Profile!]!
+  profile(id: Int!): Profile
+  modelProduct(product_id: Int!, model_id: Int!): ModelProduct!
+  addresses(take: Int, skip: Int, supplier_id: Int): [Address!]!
+  address(id: Int!): Address!
+  size(id: Int!): Size!
+  clothStyle(id: Int!): ClothStyle!
+  nodeProcessings(take: Int, skip: Int): [NodeProcessing!]
+  nodeProcessing(id: Int!): NodeProcessing
+  fabric(id: Int!): Fabric!
+  categoriesOnClothStyle(id: Int!): CategoriesOnClothStyle!
+  contacts: [Contact!]!
+  contact(id: Int!): Contact
+}
+
+input FindSuppliersInput {
+  search: String
+  sort_by: SortByEnum
+}
+
+enum SortByEnum {
+  NAME
+}
+
+input FilterProductsInput {
+  search: String!
+  vendor_ids: [Int!]
+  model_ids: [Int!]
+}
+
+input CompareProductsInput {
+  supplier_id: Int
+  supplier_id_with: Int!
+}
+
+enum SearchMode {
+  default
+  insensitive
+}
+
+input FindUniqueCurrencyRateInput {
+  currency_id: Int!
+  date: DateTime!
+}
+
+type Mutation {
+  updateUser(updateUserInput: UpdateUserInput!): User!
+  createDocument(createDocumentInput: CreateDocumentInput!): Document!
+  updateDocument(updateDocumentInput: UpdateDocumentInput!): Document!
+  removeDocument(id: Int!): Document!
+  createUserRole(createUserRoleInput: CreateUserRoleInput!): UserRole!
+  removeUserRole(user_id: Int!, role_name: RolesEnum!): UserRole!
+  createSupplier(createSupplierInput: CreateSupplierInput!): Supplier!
+  updateSupplier(updateSupplierInput: UpdateSupplierInput!): Supplier
+  removeSupplier(id: Int!): Supplier!
+  createProduct(createProductInput: CreateProductInput!): Product!
+  updateProduct(updateProductInput: UpdateProductInput!): Product!
+  removeProduct(id: Int!): Product!
+  createCurrency(createCurrencyInput: CreateCurrencyInput!): Currency!
+  updateCurrency(updateCurrencyInput: UpdateCurrencyInput!): Currency!
+  removeCurrency(id: Int!): Currency!
+  createLanguage(createLanguageInput: CreateLanguageInput!): Language!
+  updateLanguage(updateLanguageInput: UpdateLanguageInput!): Language!
+  removeLanguage(id: Int!): Language!
+  createModel(createModelInput: CreateModelInput!): Model!
+  updateModel(updateModelInput: UpdateModelInput!): Model!
+  removeModel(id: Int!): Model!
+  createVendor(createVendorInput: CreateVendorInput!): Vendor!
+  updateVendor(updateVendorInput: UpdateVendorInput!): Vendor!
+  removeVendor(id: Int!): Vendor!
+  createCurrencyRate(createCurrencyRateInput: CreateCurrencyRateInput!): CurrencyRate!
+  updateCurrencyRate(updateCurrencyRateInput: UpdateCurrencyRateInput!): CurrencyRate!
+  removeCurrencyRate(findUniqueCurrencyRateInput: FindUniqueCurrencyRateInput!): CurrencyRate!
+  createSupplierProductPrice(createSupplierProductPriceInput: CreateSupplierProductPriceInput!): SupplierProductPrice!
+  updateSupplierProductPrice(updateSupplierProductPriceInput: UpdateSupplierProductPriceInput!): SupplierProductPrice!
+  removeSupplierProductPrice(product_id: Int!, supplier_id: Int!, price_date: DateTime!): SupplierProductPrice!
+  createCart(createCartInput: CreateCartInput!): Cart!
+  deleteCart(id: Int!): Cart!
+  createCategory(createCategoryInput: CreateCategoryInput!): Category!
+  updateCategory(id: Int!, updateCategoryInput: UpdateCategoryInput!): Category
+  removeCategory(id: Int!): Category!
+  createProfile(createProfileInput: CreateProfileInput!): Profile!
+  updateProfile(updateProfileInput: UpdateProfileInput!): Profile!
+  removeProfile(id: Int!): Profile!
+  createModelProduct(createModelProductInput: CreateModelProductInput!): ModelProduct!
+  updateModelProduct(product_id: Int!, model_id: Int!): ModelProduct!
+  removeModelProduct(product_id: Int!, model_id: Int!): ModelProduct!
+  createAddress(createAddressInput: CreateAddressInput!): Address!
+  updateAddress(id: Int!, updateAddressInput: UpdateAddressInput!): Address!
+  removeAddress(id: Int!): Address!
+  createSize(createSizeInput: CreateSizeInput!): Size!
+  updateSize(id: Int!, updateSizeInput: UpdateSizeInput!): Size!
+  removeSize(id: Int!): Size!
+  createClothStyle(createClothStyleInput: CreateClothStyleInput!): ClothStyle!
+  updateClothStyle(id: Int!, updateClothStyleInput: UpdateClothStyleInput!): ClothStyle!
+  removeClothStyle(id: Int!): ClothStyle!
+  createNodeProcessing(createNodeProcessingInput: CreateNodeProcessingInput!): NodeProcessing!
+  updateNodeProcessing(id: Int!, updateNodeProcessingInput: UpdateNodeProcessingInput!): NodeProcessing!
+  removeNodeProcessing(id: Int!): NodeProcessing!
+  createFabric(createFabricInput: CreateFabricInput!): Fabric!
+  updateFabric(id: Int!, updateFabricInput: UpdateFabricInput!): Fabric!
+  removeFabric(id: Int!): Fabric!
+  createCategoriesOnClothStyle(createCategoriesOnClothStyleInput: CreateCategoriesOnClothStyleInput!): CategoriesOnClothStyle!
+  updateCategoriesOnClothStyle(updateCategoriesOnClothStyleInput: UpdateCategoriesOnClothStyleInput!): CategoriesOnClothStyle!
+  removeCategoriesOnClothStyle(id: Int!): CategoriesOnClothStyle!
+  createContact(createContactInput: CreateContactInput!): Contact!
+  updateContact(id: Int!, updateContactInput: UpdateContactInput!): Contact
+  removeContact(id: Int!): Contact!
+}
+
+input UpdateUserInput {
+  name: String
+  email: String
+  newPassword: String!
+  password: String!
+  currency_id: Int
+  array_of_delivery_ids: [Int!]
+}
+
+input CreateDocumentInput {
+  url: String!
+  name: String!
+  type: DocumentTypeEnum!
+}
+
+input UpdateDocumentInput {
+  url: String
+  name: String
+  type: DocumentTypeEnum
+  id: Int!
+}
+
+input CreateUserRoleInput {
+  user_id: Int!
+  role_name: RolesEnum!
+}
+
+input CreateSupplierInput {
+  name: String!
+}
+
+input UpdateSupplierInput {
+  name: String
+  id: Int!
+  currency_id: Int
+  deliver_goods_yourself: Boolean
+  array_of_delivery_ids: [Int!]
+}
+
+input CreateProductInput {
+  vendor_partnumber: String!
+  name: String!
+  description: String
+  description_id: Int
+  vendor_id: Int
+  model_id: Int
+}
+
+input UpdateProductInput {
+  vendor_partnumber: String
+  name: String
+  description: String
+  description_id: Int
+  vendor_id: Int
+  model_id: Int
+  id: Int!
+}
+
+input CreateCurrencyInput {
+  name: String!
+}
+
+input UpdateCurrencyInput {
+  name: String
+  id: Int!
+}
+
+input CreateLanguageInput {
+  language: String!
+}
+
+input UpdateLanguageInput {
+  language: String
+  id: Int!
+}
+
+input CreateModelInput {
+  name: String!
+  vendor_id: Int
+}
+
+input UpdateModelInput {
+  name: String
+  vendor_id: Int
+  id: Int!
+}
+
+input CreateVendorInput {
+  name: String!
+  document_id: Int
+}
+
+input UpdateVendorInput {
+  name: String
+  document_id: Int
+  id: Int!
+}
+
+input CreateCurrencyRateInput {
+  currency_id: Int!
+  rate: Float!
+  date: DateTime!
+}
+
+input UpdateCurrencyRateInput {
+  currency_id: Int
+  rate: Float
+  date: DateTime
+}
+
+input CreateSupplierProductPriceInput {
+  product_id: Int!
+  supplier_id: Int!
+  price_date: DateTime!
+  price: Int!
+  currency_id: Int!
+}
+
+input UpdateSupplierProductPriceInput {
+  product_id: Int!
+  supplier_id: Int!
+  price_date: DateTime!
+  price: Int
+  currency_id: Int
+}
+
+input CreateCartInput {
+  contact_id: Int!
+  cloth_sex: ClothSexEnum!
+  category_id: Int!
+  size_id: Int!
+  custom_size: String
+  cloth_style_id: Int!
+  cloth_style_requirements: String
+  node_processing_id: Int!
+  node_processing_requirements: String
+  fabric_id: Int!
+  fabric_requirements: String
+  additional_materials: String
+  artistic_description_of_the_model: String
+}
+
+input CreateCategoryInput {
+  parent_id: Int
+  name: String!
+  sex: ClothSexEnum
+  description: String
+  document_id: Int
+}
+
+input UpdateCategoryInput {
+  parent_id: Int
+  name: String
+  sex: ClothSexEnum
+  description: String
+  document_id: Int
+}
+
+input CreateProfileInput {
+  user_id: Int!
+  supplier_id: Int
+  document_id: Int
+}
+
+input UpdateProfileInput {
+  user_id: Int
+  supplier_id: Int
+  document_id: Int
+  id: Int!
+}
+
+input CreateModelProductInput {
+  product_id: Int!
+  model_id: Int!
+}
+
+input CreateAddressInput {
+  type: AddressTypeEnum!
+  name: String!
+  postcode: Int
+  country: String!
+  region: String!
+  city: String!
+  street: String!
+  house_number: Int!
+  apartment_number_or_office: Int
+}
+
+input UpdateAddressInput {
+  type: AddressTypeEnum
+  name: String
+  postcode: Int
+  country: String
+  region: String
+  city: String
+  street: String
+  house_number: Int
+  apartment_number_or_office: Int
+}
+
+input CreateSizeInput {
+  name: String!
+  russian_size: Int!
+  chest_girth: String!
+  waits_girth: String!
+  hips_girth: String!
+}
+
+input UpdateSizeInput {
+  name: String
+  russian_size: Int
+  chest_girth: String
+  waits_girth: String
+  hips_girth: String
+}
+
+input CreateClothStyleInput {
+  name: String!
+}
+
+input UpdateClothStyleInput {
+  name: String
+}
+
+input CreateNodeProcessingInput {
+  name: String!
+}
+
+input UpdateNodeProcessingInput {
+  name: String
+}
+
+input CreateFabricInput {
+  name: String!
+  description: String
+}
+
+input UpdateFabricInput {
+  name: String
+  description: String
+}
+
+input CreateCategoriesOnClothStyleInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateCategoriesOnClothStyleInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateContactInput {
+  name: String!
+  email: String!
+}
+
+input UpdateContactInput {
+  name: String
+  email: String
+}

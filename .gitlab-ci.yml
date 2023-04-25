@@ -1,0 +1,45 @@
+stages:
+  - build
+  - deploy
+
+build_dev:
+  tags:
+    - docker 
+  stage: build
+  only: 
+   - develop
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  script:
+    - >-
+      /kaniko/executor
+      --cache=true --cache-ttl=24h
+      --context "${CI_PROJECT_DIR}"
+      --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
+      --destination "${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}"
+
+deploy_dev:
+  tags:
+    - docker 
+  stage: deploy
+  #when: manual
+  only: 
+   - develop
+  image: 
+    name: alpine
+  before_script:    
+     - apk update && apk add openssh-client
+     - mkdir -p ~/.ssh
+     - echo "$SSH_KEY_DEV" | tr -d '\r' > ~/.ssh/id_rsa
+     - chmod 700 ~/.ssh/id_rsa
+     - eval "$(ssh-agent -s)"
+     - ssh-add ~/.ssh/id_rsa
+  script:
+     - echo "deploy..." 
+
+     #- ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no $SSH_USER_DEV@$SSH_SERVER_DEV "docker login -u $CI_REGISTRY_CANISTER_USER -p $CI_REGISTRY_CANISTER_PASSWORD $CI_REGISTRY_CANISTER"
+     - ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no $SSH_USER_DEV@$SSH_SERVER_DEV "docker pull ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}"
+     - ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no $SSH_USER_DEV@$SSH_SERVER_DEV "cd $FOLDER && sed -i 's/VERSION_BACKEND.*/VERSION_BACKEND=${CI_COMMIT_SHA}/' .env"
+     - ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no $SSH_USER_DEV@$SSH_SERVER_DEV "cd $FOLDER && docker-compose up -d"
+     - ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no $SSH_USER_DEV@$SSH_SERVER_DEV "cd $FOLDER && docker-compose exec -T mplace_backend npx prisma migrate deploy"
