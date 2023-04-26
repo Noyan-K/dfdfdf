@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import { ClothSexEnum } from '@prisma/client';
 import { CreateCategoryInput } from './dto/create-category.input';
 import { UpdateCategoryInput } from './dto/update-category.input';
 import { PrismaService } from '../prisma/prisma.service';
-import { CategoryModel } from './models/category';
 import { Category } from './models/category.model';
 
 @Injectable()
@@ -13,11 +13,36 @@ export class CategoryService {
     return this.prisma.category.create({ data: createCategoryInput });
   }
 
-  findAll(search?: string, parent_id?: number): Promise<Category[]> {
+  findAll(sex: ClothSexEnum, search?: string, parent_id?: number): Promise<Category[]> {
+    const sexFilter = {
+      MALE: { not: ClothSexEnum.FEMALE },
+      FEMALE: { not: ClothSexEnum.MALE },
+      UNISEX: { equals: ClothSexEnum.UNISEX },
+    };
+    if (search) {
+      return this.prisma.category.findMany({
+        where: {
+          name: { contains: search, mode: 'insensitive' },
+          sex: sexFilter[sex],
+        },
+        include: {
+          Children: true,
+          Parent: {
+            include: {
+              Parent: {
+                include: {
+                  Parent: true,
+                },
+              },
+            },
+          },
+        },
+      });
+    }
     return this.prisma.category.findMany({
       where: {
         parent_id: { equals: parent_id ?? null },
-        name: { contains: search, mode: 'insensitive' },
+        sex: sexFilter[sex],
       },
       include: {
         Parent: true,
@@ -38,7 +63,15 @@ export class CategoryService {
     return this.prisma.category.findFirst({
       where: { id },
       include: {
-        Children: true,
+        Parent: {
+          include: {
+            Parent: {
+              include: {
+                Parent: true,
+              },
+            },
+          },
+        },
       },
     });
   }

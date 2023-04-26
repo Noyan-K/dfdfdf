@@ -515,7 +515,7 @@ type Query {
   carts(contact_id: Int!, take: Int, skip: Int): [Cart!]!
   cart(id: Int!): Cart
   generatePdf(id: Int!): Document
-  categories(search: String!, parent_id: Int): [Category!]!
+  categories(sex: ClothSexEnum!, search: String!, parent_id: Int): [Category!]!
   category(id: Int!): Category
   profiles(skip: Int, take: Int): [Profile!]!
   profile(id: Int!): Profile
