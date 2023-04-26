@@ -20,7 +20,7 @@ export class CategoryResolver {
   @Query(() => [Category], { name: 'categories' })
   findAll(
     @Args('search', { type: () => String }) search?: string,
-      @Args('parent_id', { type: () => Int }) parent_id?: number,
+      @Args('parent_id', { type: () => Int, nullable: true }) parent_id?: number,
   ): Promise<Category[]> {
     return this.categoryService.findAll(search, parent_id);
   }

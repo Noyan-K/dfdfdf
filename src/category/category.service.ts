@@ -13,11 +13,11 @@ export class CategoryService {
     return this.prisma.category.create({ data: createCategoryInput });
   }
 
-  findAll(search?: string, parent_id?: number): Promise<CategoryModel[]> {
+  findAll(search?: string, parent_id?: number): Promise<Category[]> {
     return this.prisma.category.findMany({
       where: {
         parent_id: { equals: parent_id ?? null },
-        name: { search, mode: 'insensitive' },
+        name: { contains: search, mode: 'insensitive' },
       },
       include: {
         Parent: true,
@@ -35,7 +35,12 @@ export class CategoryService {
   }
 
   findOne(id: number): Promise<Category | null> {
-    return this.prisma.category.findFirst({ where: { id } });
+    return this.prisma.category.findFirst({
+      where: { id },
+      include: {
+        Children: true,
+      },
+    });
   }
 
   async update(

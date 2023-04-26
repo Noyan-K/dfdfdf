@@ -34,7 +34,10 @@ export class CartSizeResolver {
   }
 
   @Mutation(() => CartSize)
-  removeCartSize(@Args('id', { type: () => Int }) id: number) {
-    return this.cartSizeService.remove(id);
+  removeCartSize(
+  @Args('cart_id', { type: () => Int }) cart_id: number,
+    @Args('size_id', { type: () => Int }) size_id: number,
+  ) {
+    return this.cartSizeService.remove(cart_id, size_id);
   }
 }
