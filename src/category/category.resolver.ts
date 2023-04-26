@@ -5,6 +5,7 @@ import { CategoryService } from './category.service';
 import { Category } from './models/category.model';
 import { CreateCategoryInput } from './dto/create-category.input';
 import { UpdateCategoryInput } from './dto/update-category.input';
+import {ClothSexEnum} from '@prisma/client';
 
 @Resolver(() => Category)
 export class CategoryResolver {
@@ -19,10 +20,11 @@ export class CategoryResolver {
 
   @Query(() => [Category], { name: 'categories' })
   findAll(
-    @Args('search', { type: () => String }) search?: string,
+    @Args('sex', { type: () => ClothSexEnum }) sex: ClothSexEnum,
+      @Args('search', { type: () => String }) search?: string,
       @Args('parent_id', { type: () => Int, nullable: true }) parent_id?: number,
   ): Promise<Category[]> {
-    return this.categoryService.findAll(search, parent_id);
+    return this.categoryService.findAll(sex, search, parent_id);
   }
 
   @Query(() => Category, { name: 'category', nullable: true })
