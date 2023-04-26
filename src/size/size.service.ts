@@ -18,22 +18,27 @@ export class SizeService {
       hips_girth: createSizeInput.hips_girth,
     };
 
-    return this.prismaService.size.create({ data: { ...createSizeInput, json: requisiteJson } });
+    return this.prismaService.size.create({
+      data: { ...createSizeInput, json: requisiteJson },
+    });
   }
 
-  findAll(
-    take?: number,
-    skip?: number,
-  ): Promise<Size[]> {
-    return this.prismaService.size.findMany({ take, skip });
+  findAll(take?: number, skip?: number): Promise<Size[]> {
+    return this.prismaService.size.findMany({ take, skip, orderBy: { id: 'asc' } });
   }
 
   findOne(id: number): Promise<Size | null> {
     return this.prismaService.size.findFirst({ where: { id } });
   }
 
-  async update(id: number, updateSizeInput: UpdateSizeInput): Promise<Size | null> {
-    await this.prismaService.size.updateMany({ where: { id }, data: updateSizeInput });
+  async update(
+    id: number,
+    updateSizeInput: UpdateSizeInput,
+  ): Promise<Size | null> {
+    await this.prismaService.size.updateMany({
+      where: { id },
+      data: updateSizeInput,
+    });
     return this.findOne(id);
   }
 

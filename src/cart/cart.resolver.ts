@@ -7,13 +7,17 @@ import { GqlJwtAuthGuard } from 'src/auth/guards/gql-jwt-auth.guard';
 import { CartService } from './cart.service';
 import { Cart } from './models/cart.model';
 import { CreateCartInput } from './dto/create-cart.input';
+import { Category } from '../category/models/category.model';
+import { UpdateCartInput } from './dto/update-cart.input';
 
 @Resolver(() => Cart)
 export class CartResolver {
   constructor(private readonly cartService: CartService) {}
 
   @Mutation(() => Cart, { name: 'createCart' })
-  create(@Args('createCartInput') createCartInput: CreateCartInput): Promise<Cart> {
+  create(
+    @Args('createCartInput') createCartInput: CreateCartInput,
+  ): Promise<Cart> {
     return this.cartService.create(createCartInput);
   }
 
@@ -31,7 +35,6 @@ export class CartResolver {
     }
   }
 
-  @UseGuards(GqlJwtAuthGuard)
   @Query(() => Cart, { name: 'cart', nullable: true })
   findOne(@Args('id', { type: () => Int }) id: number): Promise<Cart | null> {
     try {
@@ -39,6 +42,13 @@ export class CartResolver {
     } catch (e) {
       throw new NotFoundException('Cart not found!');
     }
+  }
+
+  @Mutation(() => Cart, { nullable: true })
+  updateCart(
+    @Args('updateCartInput') updateCartInput: UpdateCartInput,
+  ): Promise<Cart | null> {
+    return this.cartService.update(updateCartInput.id, updateCartInput);
   }
 
   @UseGuards(GqlJwtAuthGuard)

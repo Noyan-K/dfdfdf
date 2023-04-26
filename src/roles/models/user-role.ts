@@ -1,6 +1,4 @@
-import {
-  ObjectType, Field, Int,
-} from '@nestjs/graphql';
+import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { RolesEnum } from '@prisma/client';
 
 @ObjectType()

@@ -1,4 +1,8 @@
-import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { User } from 'src/user/models/user.model';
@@ -8,9 +12,9 @@ import { RolesService } from 'src/roles/roles.service';
 import { RolesEnum } from '@prisma/client';
 import { UserRoleModel } from 'src/roles/models/user-role';
 import { UserService } from 'src/user/user.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { TokensInterface } from './interfaces/tokens.interface';
 import { RegistrationDto } from './dto/registration.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class AuthService {
@@ -26,33 +30,33 @@ export class AuthService {
   // async registration(
   //   registrationDto: RegistrationDto,
   // ): Promise<TokensInterface> {
-    // const doesEmailExist = await this.prismaService.user.findFirst({ where: { email: registrationDto.email } });
+  // const doesEmailExist = await this.prismaService.user.findFirst({ where: { email: registrationDto.email } });
 
-    // if (doesEmailExist) {
-    //   throw new BadRequestException(`Email:${registrationDto.email} already exists.`);
-    // }
+  // if (doesEmailExist) {
+  //   throw new BadRequestException(`Email:${registrationDto.email} already exists.`);
+  // }
 
-    // const supplier = await this.supplierService.create({
-    //   name: registrationDto.name,
-    // });
-    // const newUser = await this.userService.create({
-    //   ...registrationDto,
-    //   supplier_id: supplier.id,
-    // });
+  // const supplier = await this.supplierService.create({
+  //   name: registrationDto.name,
+  // });
+  // const newUser = await this.userService.create({
+  //   ...registrationDto,
+  //   supplier_id: supplier.id,
+  // });
 
-    // const newUsersRole = await this.rolesService.createUserRole({
-    //   user_id: newUser.id,
-    //   role_name: RolesEnum.USER,
-    // });
+  // const newUsersRole = await this.rolesService.createUserRole({
+  //   user_id: newUser.id,
+  //   role_name: RolesEnum.USER,
+  // });
 
-    // const payload = {
-    //   email: newUser?.email,
-    //   sub: newUser?.id,
-    //   name: newUser?.name,
-    //   roles: newUsersRole ? [RolesEnum.USER] : [],
-    // };
+  // const payload = {
+  //   email: newUser?.email,
+  //   sub: newUser?.id,
+  //   name: newUser?.name,
+  //   roles: newUsersRole ? [RolesEnum.USER] : [],
+  // };
 
-    // return this.generateTokens(payload);
+  // return this.generateTokens(payload);
   // }
 
   async validateUser(email: string, pass: string): Promise<any> {

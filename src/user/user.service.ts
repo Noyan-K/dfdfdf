@@ -16,7 +16,9 @@ export class UserService {
   ) {}
 
   async create(createUserInput: CreateUserInput): Promise<User> {
-    const receivedCurrency = await this.prisma.currency.findFirst({ where: { name: { mode: 'insensitive', equals: 'rub' } } });
+    const receivedCurrency = await this.prisma.currency.findFirst({
+      where: { name: { mode: 'insensitive', equals: 'rub' } },
+    });
 
     if (createUserInput.type === 'GUEST' && !createUserInput.password) {
       return this.prisma.user.create({

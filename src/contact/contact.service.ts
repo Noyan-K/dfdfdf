@@ -12,10 +12,7 @@ export class ContactService {
     return this.prismaService.contact.create({ data: createContactInput });
   }
 
-  findAll(
-    take?: number,
-    skip?: number,
-  ): Promise<Contact[]> {
+  findAll(take?: number, skip?: number): Promise<Contact[]> {
     return this.prismaService.contact.findMany({ take, skip });
   }
 
@@ -23,8 +20,14 @@ export class ContactService {
     return this.prismaService.contact.findFirst({ where: { id } });
   }
 
-  async update(id: number, updateContactInput: UpdateContactInput): Promise<Contact | null> {
-    await this.prismaService.contact.updateMany({ where: { id }, data: updateContactInput });
+  async update(
+    id: number,
+    updateContactInput: UpdateContactInput,
+  ): Promise<Contact | null> {
+    await this.prismaService.contact.updateMany({
+      where: { id },
+      data: updateContactInput,
+    });
 
     return this.prismaService.contact.findFirst({ where: { id } });
   }
