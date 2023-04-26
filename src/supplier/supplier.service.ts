@@ -17,7 +17,9 @@ export class SupplierService {
   ) {}
 
   async create(createSupplierInput: CreateSupplierInput): Promise<Supplier> {
-    const receivedCurrency = await this.prisma.currency.findFirst({ where: { name: { mode: 'insensitive', equals: 'rub' } } });
+    const receivedCurrency = await this.prisma.currency.findFirst({
+      where: { name: { mode: 'insensitive', equals: 'rub' } },
+    });
 
     return this.prisma.supplier.create({
       data: {

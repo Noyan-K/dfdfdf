@@ -26,11 +26,8 @@ import { TypeModule } from './types/types.module';
 import { AddressModule } from './address/address.module';
 import { DeliveryModule } from './delivery/delivery.module';
 import { SizeModule } from './size/size.module';
-import { ClothStyleModule } from './cloth-style/cloth-style.module';
-import { NodeProcessingModule } from './node-processing/node-processing.module';
-import { FabricModule } from './fabric/fabric.module';
-import { CategoriesOnClothStyleModule } from './categories-on-cloth-style/categories-on-cloth-style.module';
 import { ContactModule } from './contact/contact.module';
+import { CartSizeModule } from './cart/cart-size/cart-size.module';
 import config from './config';
 import PrismaModule from './prisma/prisma.module';
 
@@ -65,11 +62,8 @@ import PrismaModule from './prisma/prisma.module';
     AddressModule,
     DeliveryModule,
     SizeModule,
-    ClothStyleModule,
-    NodeProcessingModule,
-    FabricModule,
-    CategoriesOnClothStyleModule,
     ContactModule,
+    CartSizeModule,
   ],
   controllers: [AppController],
   providers: [AppService, Logger],

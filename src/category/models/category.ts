@@ -1,10 +1,10 @@
 import {
   ObjectType, Field, Int, registerEnumType,
 } from '@nestjs/graphql';
-import { Category, ClothSexEnum } from '@prisma/client';
+import { ClothSexEnum, MannequinPositionEnum } from '@prisma/client';
 
 @ObjectType()
-export class CategoryModel implements Category {
+export class CategoryModel {
   @Field(() => Int)
     id: number;
 
@@ -13,6 +13,9 @@ export class CategoryModel implements Category {
 
   @Field(() => String)
     name: string;
+
+  @Field(() => MannequinPositionEnum, { nullable: true })
+    mannequin: MannequinPositionEnum | null;
 
   @Field(() => ClothSexEnum, { nullable: true })
     sex: ClothSexEnum | null;
@@ -32,6 +35,10 @@ export class CategoryModel implements Category {
   @Field(() => Date, { nullable: true })
     deleted_at: Date | null;
 }
+
+registerEnumType(MannequinPositionEnum, {
+  name: 'MannequinPositionEnum',
+});
 
 registerEnumType(ClothSexEnum, {
   name: 'ClothSexEnum',

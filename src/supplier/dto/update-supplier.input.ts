@@ -1,9 +1,7 @@
 import {
   InputType, Field, Int, PartialType,
 } from '@nestjs/graphql';
-import {
-  IsBoolean, IsNumber, IsOptional,
-} from 'class-validator';
+import { IsBoolean, IsNumber, IsOptional } from 'class-validator';
 import { CreateSupplierInput } from './create-supplier.input';
 
 @InputType()

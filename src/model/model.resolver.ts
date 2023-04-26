@@ -22,8 +22,10 @@ export class ModelResolver {
   findAll(
     @Args('take', { type: () => Int, nullable: true }) take?: number,
       @Args('skip', { type: () => Int, nullable: true }) skip?: number,
-      @Args('sortOrder', { type: () => Prisma.SortOrder, nullable: true }) sortOrder?: Prisma.SortOrder,
-      @Args('sortOrder', { type: () => Prisma.QueryMode, nullable: true }) queryMode?: Prisma.QueryMode,
+      @Args('sortOrder', { type: () => Prisma.SortOrder, nullable: true })
+      sortOrder?: Prisma.SortOrder,
+      @Args('sortOrder', { type: () => Prisma.QueryMode, nullable: true })
+      queryMode?: Prisma.QueryMode,
   ): Promise<Model[]> {
     return this.modelService.findAll(take, skip, sortOrder);
   }

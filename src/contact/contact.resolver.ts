@@ -11,7 +11,9 @@ export class ContactResolver {
   constructor(private readonly contactService: ContactService) {}
 
   @Mutation(() => Contact)
-  createContact(@Args('createContactInput') createContactInput: CreateContactInput): Promise<Contact> {
+  createContact(
+    @Args('createContactInput') createContactInput: CreateContactInput,
+  ): Promise<Contact> {
     return this.contactService.create(createContactInput);
   }
 
@@ -21,7 +23,9 @@ export class ContactResolver {
   }
 
   @Query(() => Contact, { name: 'contact', nullable: true })
-  findOne(@Args('id', { type: () => Int }) id: number): Promise<Contact | null> {
+  findOne(
+    @Args('id', { type: () => Int }) id: number,
+  ): Promise<Contact | null> {
     return this.contactService.findOne(id);
   }
 

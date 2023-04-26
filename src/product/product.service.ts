@@ -36,7 +36,12 @@ export class ProductService {
     const where = {
       OR: [
         { name: { contains: search, mode: Prisma.QueryMode.insensitive } },
-        { vendor_partnumber: { contains: search, mode: Prisma.QueryMode.insensitive } },
+        {
+          vendor_partnumber: {
+            contains: search,
+            mode: Prisma.QueryMode.insensitive,
+          },
+        },
       ],
       vendor_id: { in: vendor_ids },
       SupplierProductPrice: { some: { deleted_at: { equals: null } } },
@@ -61,11 +66,11 @@ export class ProductService {
         Description: true,
         SupplierProductPrice: {
           where: {
-            deleted_at: { equals: null }
+            deleted_at: { equals: null },
           },
           orderBy: {
             price: 'asc',
-          }
+          },
         },
       },
     });
@@ -102,17 +107,35 @@ export class ProductService {
     const where = {
       OR: [
         { name: { contains: search, mode: Prisma.QueryMode.insensitive } },
-        { vendor_partnumber: { contains: search, mode: Prisma.QueryMode.insensitive } },
+        {
+          vendor_partnumber: {
+            contains: search,
+            mode: Prisma.QueryMode.insensitive,
+          },
+        },
       ],
       AND: [
         { SupplierProductPrice: { some: { deleted_at: { equals: null } } } },
-        { SupplierProductPrice: { some: { supplier_id: supplier_id_with, deleted_at: { equals: null } } } },
+        {
+          SupplierProductPrice: {
+            some: {
+              supplier_id: supplier_id_with,
+              deleted_at: { equals: null },
+            },
+          },
+        },
       ],
       vendor_id: { in: vendor_ids },
       ModelProduct: {},
     };
 
-    if (supplier_id) where.AND.push({SupplierProductPrice: { some: { supplier_id: supplier_id, deleted_at: { equals: null } } }})
+    if (supplier_id) {
+      where.AND.push({
+        SupplierProductPrice: {
+          some: { supplier_id, deleted_at: { equals: null } },
+        },
+      });
+    }
 
     if (model_ids?.length && model_ids.length > 0) where.ModelProduct = { some: { model_id: { in: model_ids } } };
 
@@ -130,11 +153,11 @@ export class ProductService {
         Description: true,
         SupplierProductPrice: {
           where: {
-            deleted_at: { equals: null }
+            deleted_at: { equals: null },
           },
           orderBy: {
             price: 'asc',
-          }
+          },
         },
       },
     });
@@ -151,18 +174,34 @@ export class ProductService {
       products[idx].Document = documents[idx];
     });
 
-    let resultProducts: ComparedProduct[] = []
+    let resultProducts: ComparedProduct[] = [];
 
     for (let i = 0; i < products.length; i++) {
-      const product = products[i]
-      let supplierPrice = supplier_id ? product.SupplierProductPrice?.find(p => p.supplier_id == supplier_id)?.price : product.SupplierProductPrice?.at(0)?.price
-      const supplierWithPrice =product.SupplierProductPrice?.find((p) => p.supplier_id == supplier_id_with)?.price
-      const difference = supplierPrice && supplierWithPrice ? Math.ceil((100 - ((supplierPrice * 100 / supplierWithPrice))) * 10) / 10 : undefined
-      resultProducts.push({ ...product, supplier_price: supplierPrice, supplier_with_price: supplierWithPrice || 0, price_difference: difference || 0 })
+      const product = products[i];
+      const supplierPrice = supplier_id
+        ? product.SupplierProductPrice?.find(
+          (p) => p.supplier_id == supplier_id,
+        )?.price
+        : product.SupplierProductPrice?.at(0)?.price;
+      const supplierWithPrice = product.SupplierProductPrice?.find(
+        (p) => p.supplier_id == supplier_id_with,
+      )?.price;
+      const difference = supplierPrice && supplierWithPrice
+        ? Math.ceil((100 - (supplierPrice * 100) / supplierWithPrice) * 10)
+            / 10
+        : undefined;
+      resultProducts.push({
+        ...product,
+        supplier_price: supplierPrice,
+        supplier_with_price: supplierWithPrice || 0,
+        price_difference: difference || 0,
+      });
     }
 
-    resultProducts = resultProducts.sort((a, b) => b.price_difference - a.price_difference)
-    resultProducts = resultProducts.slice(skip, ((take || 0) + (skip || 0)))
+    resultProducts = resultProducts.sort(
+      (a, b) => b.price_difference - a.price_difference,
+    );
+    resultProducts = resultProducts.slice(skip, (take || 0) + (skip || 0));
 
     return {
       products: resultProducts,

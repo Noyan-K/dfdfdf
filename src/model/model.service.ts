@@ -14,7 +14,11 @@ export class ModelService {
     return this.prismaService.model.create({ data: createModelInput });
   }
 
-  findAll(take?: number, skip?: number, sortOrder: Prisma.SortOrder = 'asc'): Promise<Model[]> {
+  findAll(
+    take?: number,
+    skip?: number,
+    sortOrder: Prisma.SortOrder = 'asc',
+  ): Promise<Model[]> {
     return this.prismaService.model.findMany({
       orderBy: { name: sortOrder },
       take,

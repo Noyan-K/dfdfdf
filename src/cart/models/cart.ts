@@ -1,6 +1,4 @@
-import {
-  ObjectType, Field, Int,
-} from '@nestjs/graphql';
+import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { ClothSexEnum } from '@prisma/client';
 
 @ObjectType()
@@ -8,44 +6,35 @@ export class CartModel {
   @Field(() => Int)
     id: number;
 
-  @Field(() => Int)
-    contact_id: number;
+  @Field(() => Int, { nullable: true })
+    contact_id: number | null;
+
+  @Field(() => Int, { nullable: true })
+    document_id: number | null;
 
   @Field(() => ClothSexEnum)
     cloth_sex: ClothSexEnum;
 
-  @Field(() => Int)
-    category_id: number;
-
-  @Field(() => Int)
-    size_id: number;
+  @Field(() => Int, { nullable: true })
+    category_id: number | null;
 
   @Field(() => String, { nullable: true })
     custom_size: string | null;
 
-  @Field(() => Int)
-    cloth_style_id: number;
+  @Field(() => String, { nullable: true })
+    custom_model: string | null;
 
   @Field(() => String, { nullable: true })
-    cloth_style_requirements: string | null;
-
-  @Field(() => Int)
-    node_processing_id: number;
+    custom_knot: string | null;
 
   @Field(() => String, { nullable: true })
-    node_processing_requirements: string | null;
-
-  @Field(() => Int)
-    fabric_id: number;
-
-  @Field(() => String, { nullable: true })
-    fabric_requirements: string | null;
+    custom_textile: string | null;
 
   @Field(() => String, { nullable: true })
     additional_materials: string | null;
 
   @Field(() => String, { nullable: true })
-    artistic_description_of_the_model: string | null;
+    artistic_description: string | null;
 
   @Field(() => Date, { nullable: false })
     created_at: Date;

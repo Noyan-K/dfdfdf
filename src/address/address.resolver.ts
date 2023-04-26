@@ -30,7 +30,8 @@ export class AddressResolver {
     @CurrentUser() user: ValidatedUser,
       @Args('take', { type: () => Int, nullable: true }) take?: number,
       @Args('skip', { type: () => Int, nullable: true }) skip?: number,
-      @Args('supplier_id', { type: () => Int, nullable: true }) supplier_id?: number,
+      @Args('supplier_id', { type: () => Int, nullable: true })
+      supplier_id?: number,
   ): Promise<AddressModel[]> {
     return this.addressService.findAll(user.id, skip, take, supplier_id);
   }
