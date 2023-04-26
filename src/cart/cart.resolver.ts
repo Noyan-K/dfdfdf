@@ -9,6 +9,7 @@ import { Cart } from './models/cart.model';
 import { CreateCartInput } from './dto/create-cart.input';
 import { Category } from '../category/models/category.model';
 import { UpdateCartInput } from './dto/update-cart.input';
+import { Document } from '../document/models/document.model';
 
 @Resolver(() => Cart)
 export class CartResolver {
@@ -55,5 +56,12 @@ export class CartResolver {
   @Mutation(() => Cart, { name: 'deleteCart' })
   remove(@Args('id', { type: () => Int }) id: number): Promise<Cart> {
     return this.cartService.remove(id);
+  }
+
+  @Query(() => Document, { name: 'generatePdf', nullable: true })
+  generatePdf(
+    @Args('id', { type: () => Int }) id: number,
+    ): Promise<Document> {
+    return this.cartService.generatePdf(id);
   }
 }
