@@ -46,9 +46,9 @@ export class ProductResolver {
   @Query(() => GetComparedProductsDto, { name: 'compareProducts' })
   compareAll(
     @Args('FilterProductsInput') filterProductsInput: FilterProductsInput,
-    @Args('CompareProductsInput') compareProductsInput: CompareProductsInput,
-    @Args('take', { type: () => Int, nullable: true }) take?: number,
-    @Args('skip', { type: () => Int, nullable: true }) skip?: number,
+      @Args('CompareProductsInput') compareProductsInput: CompareProductsInput,
+      @Args('take', { type: () => Int, nullable: true }) take?: number,
+      @Args('skip', { type: () => Int, nullable: true }) skip?: number,
   ): Promise<GetComparedProductsDto> {
     const { search, vendor_ids, model_ids } = filterProductsInput;
     const { supplier_id, supplier_id_with } = compareProductsInput;
@@ -60,7 +60,7 @@ export class ProductResolver {
       take,
       skip,
       vendor_ids,
-      model_ids
+      model_ids,
     );
   }
 

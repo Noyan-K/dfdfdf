@@ -191,30 +191,24 @@ enum CartType {
 
 model Cart {
   id                                    Int                    @id @default(autoincrement())
-  contact_id                            Int
+  contact_id                            Int?
+  document_id                           Int?
   cloth_sex                             ClothSexEnum
-  category_id                           Int
-  size_id                               Int
+  category_id                           Int?
   custom_size                           String?                @db.VarChar(1024)
-  cloth_style_id                        Int
-  cloth_style_requirements              String?
-  node_processing_id                    Int
-  node_processing_requirements          String?
-  fabric_id                             Int
-  fabric_requirements                   String?
-  additional_materials                  String?
-  artistic_description_of_the_model     String?
+  custom_model                          String?                @db.VarChar(1024)
+  custom_knot                           String?                @db.VarChar(1024)
+  custom_textile                        String?                @db.VarChar(1024)
+  additional_materials                  String?                @db.VarChar(1024)
+  artistic_description                  String?                @db.VarChar(1024)
   created_at                            DateTime               @default(now())
   updated_at                            DateTime               @updatedAt
   deleted_at                            DateTime?
 
-  Contact                               Contact                @relation(fields: [contact_id], references: [id])
-  Category                              Category               @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "category_id")
-  Size                                  Size                   @relation(fields: [size_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "size_id")
-  ClothStyle                            ClothStyle             @relation(fields: [cloth_style_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "cloth_style_id")
-  NodeProcessing                        NodeProcessing         @relation(fields: [node_processing_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "node_processing_id")
-  Fabric                                Fabric                 @relation(fields: [fabric_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fabric_id")
+  Contact                               Contact?               @relation(fields: [contact_id], references: [id])
+  Category                              Category?              @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "category_id")
   CartProducts                          CartProduct[]
+  CartSize                              CartSize[]
 
   @@unique([id, contact_id])
 }
@@ -237,9 +231,10 @@ model CartProduct {
 }
 
 model Category {
-	id                           Int                           @id @default(autoincrement())
+  id                           Int                           @id @default(autoincrement())
   name                         String
   parent_id                    Int?
+  mannequin                    MannequinPositionEnum?
   sex                          ClothSexEnum?
   description                  String?
   document_id                  Int?
@@ -249,9 +244,14 @@ model Category {
 
   Children                     Category[]                    @relation(name: "CategoryToCategory")
   Parent                       Category?                     @relation(name: "CategoryToCategory", fields: [parent_id], references: [id])
-  CategoriesOnClothStyle       CategoriesOnClothStyle[]
   Cart                         Cart[]
   Product                      Product[]
+}
+
+enum MannequinPositionEnum {
+  UP
+  DOWN
+  FULL
 }
 
 enum UserTypeEnum {
@@ -359,51 +359,18 @@ model Size {
   updated_at           DateTime               @updatedAt
   deleted_at           DateTime?
 
-  Cart                 Cart[]
+  CartSize             CartSize[]
 }
 
-model ClothStyle {
-  id                           Int                            @id @default(autoincrement())
-  name                         String                         @unique
-  created_at                   DateTime                       @default(now())
-  updated_at                   DateTime                       @updatedAt
-  deleted_at                   DateTime?
-
-  CategoriesOnClothStyle       CategoriesOnClothStyle[]
-  Cart                         Cart[]
-}
-
-model CategoriesOnClothStyle {
-  category_id          Int
-  clothes_style_id     Int
+model CartSize {
+  size_id              Int
+  cart_id              Int
   created_at           DateTime               @default(now())
   updated_at           DateTime               @updatedAt
   deleted_at           DateTime?
 
-  Category             Category               @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "category_id")
-  ClothStyle           ClothStyle             @relation(fields: [clothes_style_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "clothes_style_id")
+  Cart                 Cart                   @relation(fields: [cart_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "cart_id")
+  Size                 Size                   @relation(fields: [size_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "size_id")
 
-  @@id([category_id, clothes_style_id])
+  @@unique([cart_id, size_id])
 }
-
-model NodeProcessing {
-  id                   Int                     @id @default(autoincrement())
-  name                 String                  @unique
-  created_at           DateTime                @default(now())
-  updated_at           DateTime                @updatedAt
-  deleted_at           DateTime?
-
-  Cart                 Cart[]
-}
-
-model Fabric {
-  id                   Int                     @id @default(autoincrement())
-  name                 String                  @unique
-  description          String?
-  created_at           DateTime                @default(now())
-  updated_at           DateTime                @updatedAt
-  deleted_at           DateTime?
-
-  Cart                 Cart[]
-}
-

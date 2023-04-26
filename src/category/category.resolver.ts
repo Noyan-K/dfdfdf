@@ -26,7 +26,9 @@ export class CategoryResolver {
   }
 
   @Query(() => Category, { name: 'category', nullable: true })
-  findOne(@Args('id', { type: () => Int }) id: number): Promise<Category | null> {
+  findOne(
+    @Args('id', { type: () => Int }) id: number,
+  ): Promise<Category | null> {
     return this.categoryService.findOne(id);
   }
 
@@ -35,14 +37,13 @@ export class CategoryResolver {
     @Args('id', { type: () => Int }) id: number,
       @Args('updateCategoryInput') updateCategoryInput: UpdateCategoryInput,
   ): Promise<Category | null> {
-    return this.categoryService.update(
-      id,
-      updateCategoryInput,
-    );
+    return this.categoryService.update(id, updateCategoryInput);
   }
 
   @Mutation(() => Category)
-  removeCategory(@Args('id', { type: () => Int }) id: number): Promise<Category> {
+  removeCategory(
+    @Args('id', { type: () => Int }) id: number,
+  ): Promise<Category> {
     return this.categoryService.remove(id);
   }
 }

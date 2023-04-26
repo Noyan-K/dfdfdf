@@ -11,11 +11,13 @@ export class SizeResolver {
   constructor(private readonly sizeService: SizeService) {}
 
   @Mutation(() => Size)
-  createSize(@Args('createSizeInput') createSizeInput: CreateSizeInput): Promise<Size> {
+  createSize(
+    @Args('createSizeInput') createSizeInput: CreateSizeInput,
+  ): Promise<Size> {
     return this.sizeService.create(createSizeInput);
   }
 
-  @Query(() => [Size], { name: 'size' })
+  @Query(() => [Size], { name: 'sizes' })
   findAll(
     @Args('take', { type: () => Int, nullable: true }) take?: number,
       @Args('skip', { type: () => Int, nullable: true }) skip?: number,

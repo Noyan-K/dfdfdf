@@ -98,19 +98,16 @@ enum AddressTypeEnum {
 
 type CartModel {
   id: Int!
-  contact_id: Int!
+  contact_id: Int
+  document_id: Int
   cloth_sex: ClothSexEnum!
-  category_id: Int!
-  size_id: Int!
+  category_id: Int
   custom_size: String
-  cloth_style_id: Int!
-  cloth_style_requirements: String
-  node_processing_id: Int!
-  node_processing_requirements: String
-  fabric_id: Int!
-  fabric_requirements: String
+  custom_model: String
+  custom_knot: String
+  custom_textile: String
   additional_materials: String
-  artistic_description_of_the_model: String
+  artistic_description: String
   created_at: DateTime!
   updated_at: DateTime!
   deleted_at: DateTime
@@ -317,49 +314,10 @@ type Description {
   Product: [ProductModel!]
 }
 
-type Size {
-  id: Int!
-  json: JSON!
-  created_at: DateTime!
-  updated_at: DateTime!
-  deleted_at: DateTime
-}
-
-"""
-The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
-"""
-scalar JSON
-
-type CategoriesOnClothStyle {
-  category_id: Int!
-  clothes_style_id: Int!
-  Category: [Category!]!
-  ClothStyle: [ClothStyle!]!
-}
-
-type ClothStyle {
+type Contact {
   id: Int!
   name: String!
-  created_at: DateTime!
-  updated_at: DateTime!
-  deleted_at: DateTime
-  CategoriesOnClothStyle: [CategoriesOnClothStyle!]!
-  Cart: [Cart!]!
-}
-
-type NodeProcessing {
-  id: Int!
-  name: String!
-  created_at: DateTime!
-  updated_at: DateTime!
-  deleted_at: DateTime
-  Cart: [Cart!]!
-}
-
-type Fabric {
-  id: Int!
-  name: String!
-  description: String
+  email: String!
   created_at: DateTime!
   updated_at: DateTime!
   deleted_at: DateTime
@@ -380,37 +338,55 @@ type CartProduct {
   Supplier: Supplier
 }
 
+type Size {
+  id: Int!
+  json: JSON!
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+type CartSize {
+  size_id: Int!
+  cart_id: Int!
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+  Cart: CartModel!
+  Size: Size!
+}
+
 type Cart {
   id: Int!
-  contact_id: Int!
+  contact_id: Int
+  document_id: Int
   cloth_sex: ClothSexEnum!
-  category_id: Int!
-  size_id: Int!
+  category_id: Int
   custom_size: String
-  cloth_style_id: Int!
-  cloth_style_requirements: String
-  node_processing_id: Int!
-  node_processing_requirements: String
-  fabric_id: Int!
-  fabric_requirements: String
+  custom_model: String
+  custom_knot: String
+  custom_textile: String
   additional_materials: String
-  artistic_description_of_the_model: String
+  artistic_description: String
   created_at: DateTime!
   updated_at: DateTime!
   deleted_at: DateTime
   CartProducts: [CartProduct!]
-  Contact: User
+  Contact: Contact
   Category: Category
-  Size: Size
-  ClothStyle: ClothStyle
-  NodeProcessing: NodeProcessing
-  Fabric: Fabric
+  CartSize: [CartSize!]
 }
 
 type Category {
   id: Int!
   parent_id: Int
   name: String!
+  mannequin: MannequinPositionEnum
   sex: ClothSexEnum
   description: String
   document_id: Int
@@ -420,8 +396,13 @@ type Category {
   Children: [Category!]
   Parent: Category
   Product: [ProductModel!]
-  CategoriesOnClothStyle: [CategoriesOnClothStyle!]
   Cart: [Cart!]
+}
+
+enum MannequinPositionEnum {
+  UP
+  DOWN
+  FULL
 }
 
 type Product {
@@ -502,16 +483,6 @@ type CurrencyRate {
   Currency: CurrencyModel!
 }
 
-type Contact {
-  id: Int!
-  name: String!
-  email: String!
-  created_at: DateTime!
-  updated_at: DateTime!
-  deleted_at: DateTime
-  Cart: [Cart!]!
-}
-
 type Query {
   user: User
   getProfile: User
@@ -550,14 +521,11 @@ type Query {
   modelProduct(product_id: Int!, model_id: Int!): ModelProduct!
   addresses(take: Int, skip: Int, supplier_id: Int): [Address!]!
   address(id: Int!): Address!
+  sizes(take: Int, skip: Int): [Size!]!
   size(id: Int!): Size!
-  clothStyle(id: Int!): ClothStyle!
-  nodeProcessings(take: Int, skip: Int): [NodeProcessing!]
-  nodeProcessing(id: Int!): NodeProcessing
-  fabric(id: Int!): Fabric!
-  categoriesOnClothStyle(id: Int!): CategoriesOnClothStyle!
   contacts: [Contact!]!
   contact(id: Int!): Contact
+  cartSize(id: Int!): CartSize!
 }
 
 input FindSuppliersInput {
@@ -622,6 +590,7 @@ type Mutation {
   updateSupplierProductPrice(updateSupplierProductPriceInput: UpdateSupplierProductPriceInput!): SupplierProductPrice!
   removeSupplierProductPrice(product_id: Int!, supplier_id: Int!, price_date: DateTime!): SupplierProductPrice!
   createCart(createCartInput: CreateCartInput!): Cart!
+  updateCart(updateCartInput: UpdateCartInput!): Cart
   deleteCart(id: Int!): Cart!
   createCategory(createCategoryInput: CreateCategoryInput!): Category!
   updateCategory(id: Int!, updateCategoryInput: UpdateCategoryInput!): Category
@@ -638,21 +607,12 @@ type Mutation {
   createSize(createSizeInput: CreateSizeInput!): Size!
   updateSize(id: Int!, updateSizeInput: UpdateSizeInput!): Size!
   removeSize(id: Int!): Size!
-  createClothStyle(createClothStyleInput: CreateClothStyleInput!): ClothStyle!
-  updateClothStyle(id: Int!, updateClothStyleInput: UpdateClothStyleInput!): ClothStyle!
-  removeClothStyle(id: Int!): ClothStyle!
-  createNodeProcessing(createNodeProcessingInput: CreateNodeProcessingInput!): NodeProcessing!
-  updateNodeProcessing(id: Int!, updateNodeProcessingInput: UpdateNodeProcessingInput!): NodeProcessing!
-  removeNodeProcessing(id: Int!): NodeProcessing!
-  createFabric(createFabricInput: CreateFabricInput!): Fabric!
-  updateFabric(id: Int!, updateFabricInput: UpdateFabricInput!): Fabric!
-  removeFabric(id: Int!): Fabric!
-  createCategoriesOnClothStyle(createCategoriesOnClothStyleInput: CreateCategoriesOnClothStyleInput!): CategoriesOnClothStyle!
-  updateCategoriesOnClothStyle(updateCategoriesOnClothStyleInput: UpdateCategoriesOnClothStyleInput!): CategoriesOnClothStyle!
-  removeCategoriesOnClothStyle(id: Int!): CategoriesOnClothStyle!
   createContact(createContactInput: CreateContactInput!): Contact!
   updateContact(id: Int!, updateContactInput: UpdateContactInput!): Contact
   removeContact(id: Int!): Contact!
+  createCartSize(createCartSizeInput: CreateCartSizeInput!): CartSize!
+  updateCartSize(updateCartSizeInput: UpdateCartSizeInput!): CartSize!
+  removeCartSize(id: Int!): CartSize!
 }
 
 input UpdateUserInput {
@@ -782,19 +742,28 @@ input UpdateSupplierProductPriceInput {
 }
 
 input CreateCartInput {
-  contact_id: Int!
-  cloth_sex: ClothSexEnum!
-  category_id: Int!
-  size_id: Int!
+  contact_id: Int
+  cloth_sex: ClothSexEnum
+  category_id: Int
   custom_size: String
-  cloth_style_id: Int!
-  cloth_style_requirements: String
-  node_processing_id: Int!
-  node_processing_requirements: String
-  fabric_id: Int!
-  fabric_requirements: String
+  custom_model: String
+  custom_knot: String
+  custom_textile: String
   additional_materials: String
-  artistic_description_of_the_model: String
+  artistic_description: String
+}
+
+input UpdateCartInput {
+  contact_id: Int
+  cloth_sex: ClothSexEnum
+  category_id: Int
+  custom_size: String
+  custom_model: String
+  custom_knot: String
+  custom_textile: String
+  additional_materials: String
+  artistic_description: String
+  id: Int!
 }
 
 input CreateCategoryInput {
@@ -871,43 +840,6 @@ input UpdateSizeInput {
   hips_girth: String
 }
 
-input CreateClothStyleInput {
-  name: String!
-}
-
-input UpdateClothStyleInput {
-  name: String
-}
-
-input CreateNodeProcessingInput {
-  name: String!
-}
-
-input UpdateNodeProcessingInput {
-  name: String
-}
-
-input CreateFabricInput {
-  name: String!
-  description: String
-}
-
-input UpdateFabricInput {
-  name: String
-  description: String
-}
-
-input CreateCategoriesOnClothStyleInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-input UpdateCategoriesOnClothStyleInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
-}
-
 input CreateContactInput {
   name: String!
   email: String!
@@ -916,4 +848,15 @@ input CreateContactInput {
 input UpdateContactInput {
   name: String
   email: String
+}
+
+input CreateCartSizeInput {
+  size_id: Int!
+  cart_id: Int!
+}
+
+input UpdateCartSizeInput {
+  size_id: Int
+  cart_id: Int
+  id: Int!
 }

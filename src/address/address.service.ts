@@ -8,9 +8,17 @@ import { Address } from './models/address.model';
 export class AddressService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async create(user_id: number, createAddressInput: CreateAddressInput): Promise<Address> {
-    const name = createAddressInput.name ?? `Адрес доставки №${await this.prismaService.address.count({ where: { user_id } })}`;
-    const receivedUser = await this.prismaService.user.findFirst({ where: { id: user_id } });
+  async create(
+    user_id: number,
+    createAddressInput: CreateAddressInput,
+  ): Promise<Address> {
+    const name = createAddressInput.name
+      ?? `Адрес доставки №${await this.prismaService.address.count({
+        where: { user_id },
+      })}`;
+    const receivedUser = await this.prismaService.user.findFirst({
+      where: { id: user_id },
+    });
 
     return this.prismaService.address.create({
       data: {
@@ -22,28 +30,38 @@ export class AddressService {
     });
   }
 
-  findAll(user_id: number, take?: number, skip?: number, supplier_id?: number): Promise<Address[]> {
-    return supplier_id ? this.prismaService.address.findMany({
-      where: {
-        supplier_id,
-        type: 'WAREHOUSE',
-      },
-      skip,
-      take,
-    }) : this.prismaService.address.findMany({
-      where: {
-        user_id,
-      },
-      skip,
-      take,
-    });
+  findAll(
+    user_id: number,
+    take?: number,
+    skip?: number,
+    supplier_id?: number,
+  ): Promise<Address[]> {
+    return supplier_id
+      ? this.prismaService.address.findMany({
+        where: {
+          supplier_id,
+          type: 'WAREHOUSE',
+        },
+        skip,
+        take,
+      })
+      : this.prismaService.address.findMany({
+        where: {
+          user_id,
+        },
+        skip,
+        take,
+      });
   }
 
   async findOne(id: number, user_id: number): Promise<Address | null> {
-    const receivedAddress = await this.prismaService.address.findFirst({ where: { id } });
+    const receivedAddress = await this.prismaService.address.findFirst({
+      where: { id },
+    });
 
     if (
-      (receivedAddress?.type === 'DELIVERY' && receivedAddress?.user_id === user_id)
+      (receivedAddress?.type === 'DELIVERY'
+        && receivedAddress?.user_id === user_id)
       || receivedAddress?.type === 'WAREHOUSE'
     ) {
       return receivedAddress;
@@ -52,7 +70,11 @@ export class AddressService {
     throw new NotFoundException();
   }
 
-  async update(id: number, user_id: number, updateAddressInput: UpdateAddressInput): Promise<Address | null> {
+  async update(
+    id: number,
+    user_id: number,
+    updateAddressInput: UpdateAddressInput,
+  ): Promise<Address | null> {
     const receivedAddress = await this.prismaService.address.findFirst({
       where: {
         id,

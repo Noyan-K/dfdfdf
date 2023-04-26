@@ -1,5 +1,10 @@
 import {
-  Resolver, Query, Mutation, Args, Int, registerEnumType,
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  Int,
+  registerEnumType,
 } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common/decorators';
 import { GqlJwtAuthGuard } from 'src/auth/guards/gql-jwt-auth.guard';

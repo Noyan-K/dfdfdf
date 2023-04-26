@@ -6,61 +6,48 @@ import {
 
 @InputType()
 export class CreateCartInput {
+  @IsOptional()
   @IsNumber()
-  @Field(() => Int)
-    contact_id: number;
+  @Field(() => Int, { nullable: true })
+    contact_id: number | null;
 
+  @IsOptional()
   @IsEnum(ClothSexEnum)
-  @Field(() => ClothSexEnum)
+  @Field(() => ClothSexEnum, { nullable: true })
     cloth_sex: ClothSexEnum;
 
+  @IsOptional()
   @IsNumber()
-  @Field(() => Int)
-    category_id: number;
-
-  @IsNumber()
-  @Field(() => Int)
-    size_id: number;
+  @Field(() => Int, { nullable: true })
+    category_id: number | null;
 
   @IsOptional()
   @IsString()
   @Field(() => String, { nullable: true })
-    custom_size: string;
-
-  @IsNumber()
-  @Field(() => Int)
-    cloth_style_id: number;
+    custom_size: string | null;
 
   @IsOptional()
   @IsString()
   @Field(() => String, { nullable: true })
-    cloth_style_requirements: string;
-
-  @IsNumber()
-  @Field(() => Int)
-    node_processing_id: number;
+    custom_model: string | null;
 
   @IsOptional()
   @IsString()
   @Field(() => String, { nullable: true })
-    node_processing_requirements: string;
-
-  @IsNumber()
-  @Field(() => Int)
-    fabric_id: number;
+    custom_knot: string | null;
 
   @IsOptional()
   @IsString()
   @Field(() => String, { nullable: true })
-    fabric_requirements: string;
+    custom_textile: string | null;
 
   @IsOptional()
   @IsString()
   @Field(() => String, { nullable: true })
-    additional_materials: string;
+    additional_materials: string | null;
 
   @IsOptional()
   @IsString()
   @Field(() => String, { nullable: true })
-    artistic_description_of_the_model: string;
+    artistic_description: string | null;
 }

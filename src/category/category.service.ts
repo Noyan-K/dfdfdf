@@ -38,8 +38,14 @@ export class CategoryService {
     return this.prisma.category.findFirst({ where: { id } });
   }
 
-  async update(id: number, updateCategoryInput: UpdateCategoryInput): Promise<Category | null> {
-    await this.prisma.category.update({ where: { id }, data: updateCategoryInput });
+  async update(
+    id: number,
+    updateCategoryInput: UpdateCategoryInput,
+  ): Promise<Category | null> {
+    await this.prisma.category.update({
+      where: { id },
+      data: updateCategoryInput,
+    });
     return this.findOne(id);
   }
 

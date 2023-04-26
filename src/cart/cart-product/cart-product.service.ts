@@ -19,7 +19,6 @@ export class CartProductService {
   //   private readonly prismaService: PrismaService,
   //   private readonly cartService: CartService,
   // ) {}
-
   // async create(
   //   user_id: number,
   //   createCartProductInput: CreateCartProductInput,
@@ -28,23 +27,18 @@ export class CartProductService {
   //     user_id,
   //     createCartProductInput.cart_id,
   //   );
-
   //   if (!createCartProductInput.supplier_id) {
   //     const receivedSupplierProductPrice: SupplierProductPrice[] = await this.prismaService.supplierProductPrice.findMany({
   //       where: { product_id: createCartProductInput.product_id },
   //     });
-
   //     const lowestPriceOffer: SupplierProductPrice = receivedSupplierProductPrice.reduce((prev, curr) => {
   //       if (!prev.price || !curr.price) {
   //         return prev.price === null ? prev : curr;
   //       }
-
   //       return prev?.price < curr?.price ? prev : curr;
   //     });
-
   //     createCartProductInput.supplier_id = lowestPriceOffer.supplier_id;
   //   }
-
   //   return this.prismaService.cartProduct.upsert({
   //     where: {
   //       cart_id_product_id: {
@@ -63,7 +57,6 @@ export class CartProductService {
   //     },
   //   });
   // }
-
   // findAll(cart_id: number): Promise<CartProduct[]> {
   //   return this.prismaService.cartProduct.findMany({
   //     where: {
@@ -71,7 +64,6 @@ export class CartProductService {
   //     },
   //   });
   // }
-
   // async findOne(
   //   cart_id: number,
   //   product_id: number,
@@ -82,14 +74,11 @@ export class CartProductService {
   //       product_id,
   //     },
   //   });
-
   //   if (!receivedCart) {
   //     throw new NotFoundException();
   //   }
-
   //   return receivedCart;
   // }
-
   // async update(
   //   user_id: number,
   //   updateCartProductInput: UpdateCartProductInput,
@@ -98,7 +87,6 @@ export class CartProductService {
   //     user_id,
   //     updateCartProductInput.cart_id,
   //   );
-
   //   await this.prismaService.cartProduct.updateMany({
   //     where: {
   //       cart_id: receivedCart!.id,
@@ -109,7 +97,6 @@ export class CartProductService {
   //       quantity: updateCartProductInput.quantity,
   //     },
   //   });
-
   //   return this.prismaService.cartProduct.findFirst({
   //     where: {
   //       cart_id: receivedCart!.id,
@@ -117,7 +104,6 @@ export class CartProductService {
   //     },
   //   });
   // }
-
   // async remove(
   //   user_id: number,
   //   deleteCartProductInput: DeleteCartProductInput,
@@ -126,7 +112,6 @@ export class CartProductService {
   //     user_id,
   //     deleteCartProductInput.cart_id,
   //   );
-
   //   return this.prismaService.cartProduct.delete({
   //     where: {
   //       cart_id_product_id: {
@@ -144,7 +129,6 @@ export class CartProductService {
   //     },
   //   });
   // }
-
   // async addProductToCart(
   //   user_id: number,
   //   addProductToCartInput: AddProductToCartInput,
@@ -159,19 +143,15 @@ export class CartProductService {
   //       addProductToCartInput.cart_id,
   //     );
   //   }
-
   //   delete addProductToCartInput.name;
   //   const createCartProductInput: CreateCartProductInput = <
   //     CreateCartProductInput
   //   >addProductToCartInput;
-
   //   await this.create(user_id, createCartProductInput);
-
   //   return this.prismaService.cartProduct.findMany({
   //     where: { cart_id: addProductToCartInput.cart_id },
   //   });
   // }
-
   // async addToWatchList(
   //   user_id: number,
   //   type: WatchListTypeUnion,
@@ -184,16 +164,13 @@ export class CartProductService {
   //     type,
   //     false,
   //   );
-
   //   if (!watchList) {
   //     watchList = await this.cartService.create(user_id, type, type);
   //   }
-
   //   let typeObj;
   //   if (type === CartTypeEnum.PRODUCT_WATCHLIST && product_id) typeObj = { product_id };
   //   else if (type === CartTypeEnum.SUPPLIER_WATCHLIST && supplier_id) typeObj = { supplier_id };
   //   else throw new BadRequestException('Bad value for this type of Cart!');
-
   //   const elem = await this.prismaService.cartProduct.findFirst({
   //     where: {
   //       cart_id: watchList.id,
@@ -201,7 +178,6 @@ export class CartProductService {
   //       deleted_at: 'all',
   //     },
   //   });
-
   //   return this.prismaService.cartProduct.upsert({
   //     where: {
   //       id: elem?.id ?? -1,
@@ -216,7 +192,6 @@ export class CartProductService {
   //     },
   //   });
   // }
-
   // async removeFromWatchList(
   //   user_id: number,
   //   type: WatchListTypeUnion,
@@ -229,16 +204,13 @@ export class CartProductService {
   //     type,
   //     false,
   //   );
-
   //   if (!watchList) {
   //     throw new BadRequestException('You cant remove nothing!');
   //   }
-
   //   let typeObj;
   //   if (type === CartTypeEnum.PRODUCT_WATCHLIST && product_id) typeObj = { product_id };
   //   else if (type === CartTypeEnum.SUPPLIER_WATCHLIST && supplier_id) typeObj = { supplier_id };
   //   else throw new BadRequestException('Bad value for this type of Cart!');
-
   //   const elem = await this.prismaService.cartProduct.findFirst({
   //     where: {
   //       cart_id: watchList.id,
@@ -250,7 +222,6 @@ export class CartProductService {
   //       'Product or Supplier not exist in watchlist or already deleted!',
   //     );
   //   }
-
   //   return this.prismaService.cartProduct.delete({
   //     where: {
   //       id: elem.id,

@@ -24,7 +24,10 @@ export class DeliveryService {
     return this.prismaService.delivery.findFirst({ where: { id } });
   }
 
-  async update(id: number, updateDeliveryInput: UpdateDeliveryInput): Promise<Delivery | null> {
+  async update(
+    id: number,
+    updateDeliveryInput: UpdateDeliveryInput,
+  ): Promise<Delivery | null> {
     await this.prismaService.delivery.updateMany({
       where: { id },
       data: updateDeliveryInput,
