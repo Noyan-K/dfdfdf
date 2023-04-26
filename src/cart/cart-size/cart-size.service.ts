@@ -11,7 +11,11 @@ export class CartSizeService {
   ) {}
 
   create(createCartSizeInput: CreateCartSizeInput): Promise<CartSize> {
-    return this.prisma.cartSize.create({ data: createCartSizeInput });
+    return this.prisma.cartSize.upsert({
+      where: { cart_id_size_id: { ...createCartSizeInput } },
+      update: { deleted_at: null },
+      create: { ...createCartSizeInput },
+    });
   }
 
   // async createMany(createCartSizeArrayInput: CreateCartSizeInput[]): Promise<CartSize[]> {
@@ -33,7 +37,9 @@ export class CartSizeService {
     return `This action updates a #${id} cartSize`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} cartSize`;
+  remove(cart_id: number, size_id: number):Promise<CartSize> {
+    return this.prisma.cartSize.delete({
+      where: { cart_id_size_id: { cart_id, size_id } },
+    });
   }
 }
