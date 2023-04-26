@@ -514,7 +514,7 @@ type Query {
   supplierProductPrice(product_id: Int!, supplier_id: Int!, price_date: DateTime!): SupplierProductPrice
   carts(contact_id: Int!, take: Int, skip: Int): [Cart!]!
   cart(id: Int!): Cart
-  categories(search: String!, parent_id: Int!): [Category!]!
+  categories(search: String!, parent_id: Int): [Category!]!
   category(id: Int!): Category
   profiles(skip: Int, take: Int): [Profile!]!
   profile(id: Int!): Profile
@@ -612,7 +612,7 @@ type Mutation {
   removeContact(id: Int!): Contact!
   createCartSize(createCartSizeInput: CreateCartSizeInput!): CartSize!
   updateCartSize(updateCartSizeInput: UpdateCartSizeInput!): CartSize!
-  removeCartSize(id: Int!): CartSize!
+  removeCartSize(cart_id: Int!, size_id: Int!): CartSize!
 }
 
 input UpdateUserInput {

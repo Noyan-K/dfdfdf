@@ -29,6 +29,9 @@ export class CartService {
       where: { id },
       include: {
         CartSize: {
+          where: {
+            deleted_at: { equals: null },
+          },
           include: {
             Size: true,
           },
