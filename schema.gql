@@ -514,7 +514,7 @@ type Query {
   supplierProductPrice(product_id: Int!, supplier_id: Int!, price_date: DateTime!): SupplierProductPrice
   carts(contact_id: Int!, take: Int, skip: Int): [Cart!]!
   cart(id: Int!): Cart
-  categories(search: String!, parent_id: Int): [Category!]!
+  categories(sex: ClothSexEnum!, search: String!, parent_id: Int): [Category!]!
   category(id: Int!): Category
   profiles(skip: Int, take: Int): [Profile!]!
   profile(id: Int!): Profile
