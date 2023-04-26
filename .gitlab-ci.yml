@@ -6,7 +6,7 @@ build_prod:
   tags:
     - docker 
   stage: build
-  when: manual
+ # when: manual
   only: 
    - master
   image:
@@ -24,7 +24,7 @@ deploy_prod:
   tags:
     - docker 
   stage: deploy
-  when: manual
+ # when: manual
   only: 
    - master
   image: 
