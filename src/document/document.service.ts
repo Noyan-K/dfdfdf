@@ -124,7 +124,7 @@ export class DocumentService {
     let documentType: DocumentTypeEnum;
     let destination: string;
 
-    if (file.mimetype.match(/\/(jpg|jpeg|png)$/) && file.size < 1024 ** 2) {
+    if (file.mimetype.match(/\/(jpg|jpeg|png|svg\+xml)$/) && file.size < 1024 ** 2) {
       documentType = 'IMAGE';
       destination = `${this.configService.get('STATIC_PATH')}/img`;
     } else {

@@ -26,7 +26,7 @@ async function bootstrap() {
     bodyParser.urlencoded({ limit: config.get('LIMIT'), extended: false }),
   );
   app.useStaticAssets(
-    join(__dirname, config.get('STATIC_PATH') ?? '../static'),
+    join(__dirname, '..', config.get('STATIC_PATH') ?? '../static'),
     {
       prefix: config.get('static_prefix') ?? '/static/',
     },
