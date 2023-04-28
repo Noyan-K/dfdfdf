@@ -75,7 +75,7 @@ export class CartService {
 
     if (!cart) throw new NotFoundException()
 
-    const staticPath = this.configService.get('TEMPLATES_PATH');
+    const staticPath = this.configService.get('STATIC_PATH');
     const templatesPath = this.configService.get('TEMPLATES_PATH');
     const destination = path.join(staticPath, "pdf");
     const fileName = `${uuidv4()}.pdf`;
