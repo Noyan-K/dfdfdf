@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FABRIKA</title>
+
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        section:not(:first-child) {
+            padding: 0.5418666666666667cm 0px;
+        }
+
+        .product-image {
+            width: 6.773333333333333cm;
+            height: 6.773333333333333cm;
+        }
+
+        h1 {
+            font-family: 'Noto Serif Display';
+            font-style: normal;
+            font-weight: 500;
+            font-size: 1.0837333333333334cm;
+            line-height: 1.4731999999999998cm;
+            letter-spacing: -0.02em;
+            color: #131B23;
+        }
+
+        h2 {
+            font-family: 'Jost';
+            font-style: normal;
+            font-weight: 400;
+            font-size: 0.5418666666666667cm;
+            line-height: 0.7789333333333333cm;
+            letter-spacing: -0.02em;
+            color: #131B23;
+
+            margin-bottom: 0.5418666666666667cm;
+        }
+
+        p {
+            font-family: 'Jost Light';
+            font-style: normal;
+            font-weight: 300;
+            font-size: 0.40640000000000004cm;
+            line-height: 150%;
+            letter-spacing: -0.02em;
+            color: #131B23;
+        }
+
+        .subtext {
+            font-family: 'Jost Light';
+            font-style: normal;
+            font-weight: 300;
+            font-size: 0.3048cm;
+            line-height: 0.4402666666666667cm;
+            letter-spacing: -0.02em;
+            color: #8C8B89;
+
+            margin-bottom: 0.13546666666666668cm;
+        }
+
+        table.product-profile td {
+            position: relative;
+        }
+
+        .product-properties {
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+        }
+
+        .product-property:not(:last-child) {
+            border-right: 1px solid #E0DAD3;
+        }
+
+        .product-property:not(:first-child) {
+            padding-left: 0.27093333333333336cm;
+        }
+
+        .product-property__name {
+            font-family: 'Jost Light';
+            font-style: normal;
+            font-weight: 300;
+            font-size: 0.27093333333333336cm;
+            line-height: 0.3894666666666666cm;
+            letter-spacing: -0.02em;
+            color: #8C8B89;
+        }
+
+        .product-property__value {
+            font-family: 'Jost Light';
+            font-style: normal;
+            font-weight: 300;
+            font-size: 0.40640000000000004cm;
+            line-height: 0.5842cm;
+            letter-spacing: -0.02em;
+            color: #131B23;
+        }
+
+        .product-sizes>h2 {
+            margin-bottom: 0.27093333333333336cm;
+        }
+
+        .sizes-table {
+            border-spacing: 0;
+            width: 100%;
+        }
+
+        .sizes-table * {
+            text-align: left;
+        }
+
+        .sizes-table>thead>tr>th {
+            font-family: 'Jost Light';
+            font-style: normal;
+            font-weight: 300;
+            font-size: 0.3048cm;
+            line-height: 0.4402666666666667cm;
+            letter-spacing: -0.02em;
+            color: #8C8B89;
+        }
+
+        .sizes-table>thead>tr:last-child>th {
+            padding-bottom: 0.40640000000000004cm;
+            border-bottom: 1px solid #E0DAD3;
+        }
+
+        .sizes-table>tbody>tr {}
+
+        .sizes-table>tbody>tr>td {
+            font-family: 'Jost Light';
+            font-style: normal;
+            font-weight: 300;
+            font-size: 0.40640000000000004cm;
+            line-height: 0.5842cm;
+            letter-spacing: -0.02em;
+            color: #2D353D;
+
+            padding-bottom: 0.13546666666666668cm;
+            padding-top: 0.40640000000000004cm;
+        }
+
+        .sizes-table>tbody>tr:not(:last-child)>td {
+            border-bottom: 1px solid #E0DAD3;
+        }
+
+        .product-specifications {
+            margin-bottom: 0.5418666666666667cm;
+        }
+
+        .product-specifications>div {
+            display: inline-block;
+            font-family: 'Jost Light';
+            font-style: normal;
+            font-weight: 300;
+            font-size: 0.40640000000000004cm;
+            line-height: 150%;
+            letter-spacing: -0.02em;
+            color: #131B23;
+
+            border: 1px solid #2D353D;
+            border-radius: 1.0837333333333334cm;
+            padding: 0.10160000000000001cm 0.27093333333333336cm;
+        }
+
+        .product-specifications>div:not(:last-child) {
+            margin-left: 0.13546666666666668cm;
+        }
+    </style>
+</head>
+
+<body>
+    <section>
+        <table class="product-profile">
+            <tr>
+                <td><img src="https://i.ibb.co/v1SbQVW/product.png" class="product-image"></td>
+                <td style="padding-left: 0.5418666666666667cm; width: 100%;" valign="top">
+                    <div>
+                        <h1>{{ Category.name }}</h1>
+                        <p>{{ Category.description }}</p>
+                    </div>
+
+                    <table class=" product-properties">
+                        <tr>
+                            {{#ifCond cloth_sex '!=' null}}
+                            <td class="product-property">
+                                <div class="product-property__name">Пол</div>
+                                {{#ifCond cloth_sex '==' "UNISEX"}}<div class="product-property__value">Унисекс</div>{{/ifCond}}
+                                {{#ifCond cloth_sex '==' "MALE"}}<div class="product-property__value">Мужская</div>{{/ifCond}}
+                                {{#ifCond cloth_sex '==' "FEMALE"}}<div class="product-property__value">Женская</div>{{/ifCond}}
+                            </td>
+                            {{/ifCond}}
+                            {{#ifCond Category.Parent.Parent.Parent '!=' null}}
+                            <td class="product-property">
+                                <div class="product-property__name">Вид</div>
+                                <div class="product-property__value">{{Category.Parent.Parent.Parent.name}}</div>
+                            </td>
+                            {{/ifCond}}
+                            {{#ifCond Category.Parent.Parent '!=' null}}
+                            <td class="product-property">
+                                <div class="product-property__name">Подвид</div>
+                                <div class="product-property__value">{{Category.Parent.Parent.name}}</div>
+                            </td>
+                            {{/ifCond}}
+                            {{#ifCond Category.Parent '!=' null}}
+                            <td class="product-property">
+                                <div class="product-property__name">Рукав</div>
+                                <div class="product-property__value">{{Category.Parent.name}}</div>
+                            </td>
+                            {{/ifCond}}
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </section>
+
+    {{#ifCond CartSize.length '>' 0 }}
+    <section class="product-sizes">
+        <h2>Размеры</h2>
+        <table class="sizes-table">
+            <thead>
+                <tr>
+                    <th style="width: 15%">Международный</th>
+                    <th style="width: 15%">Российский</th>
+                    <th style="width: 20%">Обхват</th>
+                    <th style="width: 20%"></th>
+                    <th style="width: 20%"></th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th>Груди</th>
+                    <th>Талии</th>
+                    <th>Бедер</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each CartSize}}
+                <tr>
+                    <td>{{ this.Size.json.international }}</td>
+                    <td>{{ this.Size.json.russian }}</td>
+                    <td>{{ this.Size.json.bust }}</td>
+                    <td>{{ this.Size.json.waist }}</td>
+                    <td>{{ this.Size.json.hips }}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </section>
+    {{/ifCond}}
+
+    {{#ifCond custom_model '!=' null}}
+    <section>
+        <h2>Силуэт и покрой</h2>
+        <div class="subtext">Описание</div>
+        <p>{{ custom_model }}</p>
+    </section>
+    {{/ifCond}}
+
+    {{#ifCond artistic_description '!=' null}}
+    <section>
+        <h2>Художественное описание модели</h2>
+        <div class="subtext">Описание</div>
+        <p>{{ artistic_description }}</p>
+    </section>
+    {{/ifCond}}
+
+    {{#ifCond custom_knot '!=' null}}
+    <section>
+        <h2>Обработка узлов</h2>
+        <div class="subtext">Описание</div>
+        <p>{{ custom_knot }}</p>
+    </section>
+    {{/ifCond}}
+
+    {{#ifCond custom_textile '!=' null}}
+    <section>
+        <h2>Ткани</h2>
+        <div class="subtext">Описание</div>
+        <p>{{ custom_textile }}</p>
+    </section>
+    {{/ifCond}}
+
+    {{#ifCond additional_materials '!=' null}}
+    <section>
+        <h2>Дополнительные материалы</h2>
+        <div class="subtext">Описание</div>
+        <p>{{ additional_materials }}</p>
+    </section>
+    {{/ifCond}}
+</body>
+
+</html>
