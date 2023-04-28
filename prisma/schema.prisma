@@ -237,7 +237,6 @@ model Category {
   mannequin                    MannequinPositionEnum?
   sex                          ClothSexEnum?
   description                  String?
-  document_id                  Int?
   created_at                   DateTime                      @default(now())
   updated_at                   DateTime                      @updatedAt
   deleted_at                   DateTime?
@@ -246,6 +245,26 @@ model Category {
   Parent                       Category?                     @relation(name: "CategoryToCategory", fields: [parent_id], references: [id])
   Cart                         Cart[]
   Product                      Product[]
+  CategoryDocument             CategoryDocument[]
+}
+
+model CategoryDocument {
+  id                           Int                           @id @default(autoincrement())
+  category_id                  Int
+  document_id                  Int
+  type                         DocumentTypeOfCategoryEnum
+  created_at                   DateTime                      @default(now())
+  updated_at                   DateTime                      @updatedAt
+  deleted_at                   DateTime?
+
+  Category                     Category                      @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "category_id")
+
+  @@unique([category_id, type])
+}
+
+enum DocumentTypeOfCategoryEnum {
+  MANNEQUIN
+  PREVIEW
 }
 
 enum MannequinPositionEnum {

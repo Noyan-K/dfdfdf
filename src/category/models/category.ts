@@ -23,9 +23,6 @@ export class CategoryModel {
   @Field(() => String, { nullable: true })
     description: string | null;
 
-  @Field(() => Int, { nullable: true })
-    document_id: number | null;
-
   @Field(() => Date)
     created_at: Date;
 
