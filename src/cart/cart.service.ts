@@ -76,13 +76,14 @@ export class CartService {
     if (!cart) throw new NotFoundException()
 
     const staticPath = this.configService.get('STATIC_PATH');
+    const templatesPath = this.configService.get('TEMPLATES_PATH');
     const destination = path.join(staticPath, "pdf");
     const fileName = `${uuidv4()}.pdf`;
     const pth = path.join(destination, fileName);
 
     this.documentService.createFolderIfDoesNotExist(destination);
 
-    const html = fs.readFileSync(path.join(staticPath, "pdf-template.html")).toString()
+    const html = fs.readFileSync(path.join(templatesPath, "pdf", "pdf-template.html")).toString()
 
     await pdf.create(
       { html, data: cart, path: pth, type: "" },

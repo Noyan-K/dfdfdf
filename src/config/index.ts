@@ -1,6 +1,9 @@
+import * as path from "path";
+
 export default () => ({
   PORT: (process.env.PORT ?? '8000') as string,
   STATIC_PATH: (process.env.STATIC_PATH ?? 'static') as string,
+  TEMPLATES_PATH: (process.env.TEMPLATES_PATH ?? path.join(__dirname, "../", "../", "templates")) as string,
   LIMIT: '100mb',
   JWT_ACCESS_SECRET: (process.env.JWT_ACCESS_SECRET
     ?? 'accessSecretKey') as string,
