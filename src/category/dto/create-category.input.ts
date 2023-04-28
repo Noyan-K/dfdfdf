@@ -25,8 +25,11 @@ export class CreateCategoryInput {
   @Field(() => String, { nullable: true })
     description: string | null;
 
-  @IsOptional()
   @IsNumber()
-  @Field(() => Int, { nullable: true })
-    document_id: number | null;
+  @Field(() => Int)
+    preview_document_id: number;
+
+  @IsNumber()
+  @Field(() => Int)
+    mannequin_document_id: number;
 }

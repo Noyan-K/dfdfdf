@@ -1,11 +1,11 @@
 import {
   Resolver, Query, Mutation, Args, Int,
 } from '@nestjs/graphql';
+import { ClothSexEnum } from '@prisma/client';
 import { CategoryService } from './category.service';
 import { Category } from './models/category.model';
 import { CreateCategoryInput } from './dto/create-category.input';
 import { UpdateCategoryInput } from './dto/update-category.input';
-import {ClothSexEnum} from '@prisma/client';
 
 @Resolver(() => Category)
 export class CategoryResolver {
