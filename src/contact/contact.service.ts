@@ -12,8 +12,12 @@ export class ContactService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(createContactInput: CreateContactInput): Promise<Contact> {
-    const contact = await this.prismaService.contact.create({ data: createContactInput });
-    const url = encodeURI(`https://kitponomarenko.ru/fabrix/run?code=VforVakhrushev2049&id=${contact.id}&name=${contact.name}&email=${contact.email}`);
+    const contact = await this.prismaService.contact.create({
+      data: createContactInput,
+    });
+    const url = encodeURI(
+      `https://kitponomarenko.ru/fabrix/run?code=VforVakhrushev2049&id=${contact.id}&name=${contact.name}&email=${contact.email}`,
+    );
     fetch(url);
     return contact;
   }

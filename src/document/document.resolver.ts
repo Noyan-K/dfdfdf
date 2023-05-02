@@ -58,15 +58,15 @@ export class DocumentResolver {
   @Query(() => [Document], { name: 'getDocuments', nullable: true })
   getDocuments(
     @Args('id', { type: () => [Int] }) id: number[],
-  ): Promise<Document[] | Document | null> {
-    return this.documentService.getDocument(id);
+  ): Promise<Document[]> {
+    return this.documentService.getDocuments(id);
   }
 
   @UseGuards(GqlJwtAuthGuard)
   @Query(() => [Document], { name: 'getDocument', nullable: true })
   getDocument(
     @Args('id', { type: () => Int }) id: number,
-  ): Promise<Document[] | Document | null> {
+  ): Promise<Document | null> {
     return this.documentService.getDocument(id);
   }
 }

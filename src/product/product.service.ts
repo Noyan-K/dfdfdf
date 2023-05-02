@@ -76,11 +76,7 @@ export class ProductService {
     });
 
     const documents = await Promise.all(
-      products.map(
-        (product) => this.documentService.getDocument(product.document_id) as Promise<
-        Document[]
-        >,
-      ),
+      products.map((product) => this.documentService.getDocuments(product.document_id)),
     );
 
     products.forEach((product, idx) => {
@@ -163,11 +159,7 @@ export class ProductService {
     });
 
     const documents = await Promise.all(
-      products.map(
-        (product) => this.documentService.getDocument(product.document_id) as Promise<
-        Document[]
-        >,
-      ),
+      products.map((product) => this.documentService.getDocuments(product.document_id)),
     );
 
     products.forEach((product, idx) => {
@@ -180,11 +172,11 @@ export class ProductService {
       const product = products[i];
       const supplierPrice = supplier_id
         ? product.SupplierProductPrice?.find(
-          (p) => p.supplier_id == supplier_id,
+          (p) => p.supplier_id === supplier_id,
         )?.price
         : product.SupplierProductPrice?.at(0)?.price;
       const supplierWithPrice = product.SupplierProductPrice?.find(
-        (p) => p.supplier_id == supplier_id_with,
+        (p) => p.supplier_id === supplier_id_with,
       )?.price;
       const difference = supplierPrice && supplierWithPrice
         ? Math.ceil((100 - (supplierPrice * 100) / supplierWithPrice) * 10)
@@ -247,9 +239,7 @@ export class ProductService {
 
     if (!receivedProduct) throw new NotFoundException();
 
-    receivedProduct.Document = (await this.documentService.getDocument(
-      receivedProduct.document_id,
-    )) as Document[];
+    receivedProduct.Document = await this.documentService.getDocuments(receivedProduct.document_id);
 
     return receivedProduct;
   }

@@ -2,7 +2,7 @@ import { ObjectType, Field } from '@nestjs/graphql';
 import { Cart } from 'src/cart/models/cart.model';
 import { CategoryModel } from './category';
 import { ProductModel } from '../../product/models/product';
-import { CategoryDocumentModel } from './category-document';
+import { CategoryDocument } from './category-document.model';
 
 @ObjectType()
 export class Category extends CategoryModel {
@@ -18,6 +18,6 @@ export class Category extends CategoryModel {
   @Field(() => [Cart], { nullable: true })
     Cart?: Cart[] | null;
 
-  @Field(() => [CategoryDocumentModel], { nullable: true })
-    CategoryDocument?: CategoryDocumentModel[] | null;
+  @Field(() => [CategoryDocument], { nullable: true })
+    CategoryDocument?: CategoryDocument[];
 }
