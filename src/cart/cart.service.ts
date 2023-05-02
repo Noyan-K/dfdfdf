@@ -1,23 +1,24 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { ConfigService } from '@nestjs/config';
+import { v4 as uuidv4 } from 'uuid';
+import * as path from 'path';
+import * as fs from 'fs';
+import { DocumentTypeEnum } from '@prisma/client';
 import { Cart } from './models/cart.model';
 import { DocumentService } from '../document/document.service';
 import { CreateCartInput } from './dto/create-cart.input';
 import { UpdateCartInput } from './dto/update-cart.input';
-import { ConfigService } from '@nestjs/config';
-import { v4 as uuidv4 } from 'uuid';
 import { Document } from '../document/models/document.model';
-import * as path from "path"
-import * as fs from "fs";
-import { DocumentTypeEnum } from '@prisma/client';
-const pdf = require("pdf-creator-node")
+
+const pdf = require('pdf-creator-node');
 
 @Injectable()
 export class CartService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly documentService: DocumentService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
   ) {}
 
   async create(createCartInput: CreateCartInput): Promise<Cart> {
@@ -63,38 +64,46 @@ export class CartService {
     return this.prismaService.cart.delete({ where: { id } });
   }
 
-  async generatePdf(id: number) : Promise<Document> {
+  async generatePdf(id: number): Promise<Document> {
     const cart = await this.prismaService.cart.findFirst({
       where: { id },
       include: {
         Contact: true,
         CartSize: { include: { Size: true } },
-        Category: { include: { Parent: { include: {Parent: { include: { Parent: true } }} } } }
-      }
-    })
+        Category: {
+          include: {
+            Parent: { include: { Parent: { include: { Parent: true } } } },
+          },
+        },
+      },
+    });
 
-    if (!cart) throw new NotFoundException()
+    if (!cart) throw new NotFoundException();
 
     const staticPath = this.configService.get('STATIC_PATH');
     const templatesPath = this.configService.get('TEMPLATES_PATH');
-    const destination = path.join(staticPath, "pdf");
+    const destination = path.join(staticPath, 'pdf');
     const fileName = `${uuidv4()}.pdf`;
     const pth = path.join(destination, fileName);
 
     this.documentService.createFolderIfDoesNotExist(destination);
 
-    const html = fs.readFileSync(path.join(templatesPath, "pdf", "pdf-template.html")).toString()
+    const html = fs
+      .readFileSync(path.join(templatesPath, 'pdf', 'pdf-template.html'))
+      .toString();
 
     await pdf.create(
-      { html, data: cart, path: pth, type: "" },
       {
-        format: "A4",
-        orientation: "portrait",
-        border: "9.906mm",
+        html, data: cart, path: pth, type: '',
+      },
+      {
+        format: 'A4',
+        orientation: 'portrait',
+        border: '9.906mm',
         header: {
-            height: "15mm",
-            contents: /*html*/
-            `
+          height: '15mm',
+          /* html */
+          contents: `
             <style>
                 body, html {
                     padding: 0px;
@@ -108,16 +117,17 @@ export class CartService {
                     <span style="margin-left: 5.4186mm; font-family: 'Jost'; font-style: normal; font-weight: 400; font-size: 3.0479mm; line-height: 5.5033mm; letter-spacing: -0.02em; color: #131B23; text-align: right;">{{page}}/{{pages}}</span>
                 </div>
             </div>
-            `
+            `,
         },
-      })
+      },
+    );
 
-      return await this.prismaService.document.create({
-        data: {
-          url: `pdf/${fileName}`,
-          type: DocumentTypeEnum.FILE,
-          name: fileName
-        }
-      })
+    return this.prismaService.document.create({
+      data: {
+        url: `pdf/${fileName}`,
+        type: DocumentTypeEnum.FILE,
+        name: fileName,
+      },
+    });
   }
 }
