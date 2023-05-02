@@ -1,4 +1,6 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import {
+  Resolver, Query, Mutation, Args, Int,
+} from '@nestjs/graphql';
 import { CartSizeService } from './cart-size.service';
 import { CartSize } from './models/cart-size.model';
 import { CreateCartSizeInput } from './dto/create-cart-size.input';
@@ -9,7 +11,9 @@ export class CartSizeResolver {
   constructor(private readonly cartSizeService: CartSizeService) {}
 
   @Mutation(() => CartSize, { name: 'createCartSize' })
-  create(@Args('createCartSizeInput') createCartSizeInput: CreateCartSizeInput) {
+  create(
+  @Args('createCartSizeInput') createCartSizeInput: CreateCartSizeInput,
+  ) {
     return this.cartSizeService.create(createCartSizeInput);
   }
 
@@ -29,8 +33,13 @@ export class CartSizeResolver {
   }
 
   @Mutation(() => CartSize)
-  updateCartSize(@Args('updateCartSizeInput') updateCartSizeInput: UpdateCartSizeInput) {
-    return this.cartSizeService.update(updateCartSizeInput.id, updateCartSizeInput);
+  updateCartSize(
+  @Args('updateCartSizeInput') updateCartSizeInput: UpdateCartSizeInput,
+  ) {
+    return this.cartSizeService.update(
+      updateCartSizeInput.id,
+      updateCartSizeInput,
+    );
   }
 
   @Mutation(() => CartSize)

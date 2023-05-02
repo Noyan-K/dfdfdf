@@ -92,9 +92,7 @@ export class UserService {
     if (!user) throw new NotFoundException('User not found!');
 
     if (user.document_id) {
-      user.Document = (await this.documentService.getDocument(
-        user.document_id,
-      )) as Document;
+      user.Document = await this.documentService.getDocument(user.document_id);
     }
 
     return user;

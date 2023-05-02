@@ -7,7 +7,7 @@ import { Model } from '../../model/models/model.models';
 @ObjectType()
 export class Vendor extends VendorModel {
   @Field(() => Document, { nullable: true })
-    Document?: Document;
+    Document?: Document | null;
 
   @Field(() => [Model], { nullable: true })
     Model?: Model[];

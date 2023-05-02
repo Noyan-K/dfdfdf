@@ -59,9 +59,7 @@ export class CartResolver {
   }
 
   @Query(() => Document, { name: 'generatePdf', nullable: true })
-  generatePdf(
-    @Args('id', { type: () => Int }) id: number,
-    ): Promise<Document> {
+  generatePdf(@Args('id', { type: () => Int }) id: number): Promise<Document> {
     return this.cartService.generatePdf(id);
   }
 }

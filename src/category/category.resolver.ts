@@ -1,11 +1,11 @@
 import {
   Resolver, Query, Mutation, Args, Int,
 } from '@nestjs/graphql';
+import { ClothSexEnum } from '@prisma/client';
 import { CategoryService } from './category.service';
 import { Category } from './models/category.model';
 import { CreateCategoryInput } from './dto/create-category.input';
 import { UpdateCategoryInput } from './dto/update-category.input';
-import {ClothSexEnum} from '@prisma/client';
 
 @Resolver(() => Category)
 export class CategoryResolver {
@@ -21,10 +21,17 @@ export class CategoryResolver {
   @Query(() => [Category], { name: 'categories' })
   findAll(
     @Args('sex', { type: () => ClothSexEnum }) sex: ClothSexEnum,
-      @Args('search', { type: () => String }) search?: string,
       @Args('parent_id', { type: () => Int, nullable: true }) parent_id?: number,
   ): Promise<Category[]> {
-    return this.categoryService.findAll(sex, search, parent_id);
+    return this.categoryService.findAll(sex, parent_id);
+  }
+
+  @Query(() => [Category], { name: 'searchCategories' })
+  search(
+    @Args('sex', { type: () => ClothSexEnum }) sex: ClothSexEnum,
+      @Args('search', { type: () => String }) search?: string,
+  ): Promise<Category[]> {
+    return this.categoryService.search(sex, search);
   }
 
   @Query(() => Category, { name: 'category', nullable: true })

@@ -6,9 +6,7 @@ import { CartSize } from './models/cart-size.model';
 
 @Injectable()
 export class CartSizeService {
-  constructor(
-    private readonly prisma: PrismaService,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   create(createCartSizeInput: CreateCartSizeInput): Promise<CartSize> {
     return this.prisma.cartSize.upsert({
@@ -37,7 +35,7 @@ export class CartSizeService {
     return `This action updates a #${id} cartSize`;
   }
 
-  remove(cart_id: number, size_id: number):Promise<CartSize> {
+  remove(cart_id: number, size_id: number): Promise<CartSize> {
     return this.prisma.cartSize.delete({
       where: { cart_id_size_id: { cart_id, size_id } },
     });

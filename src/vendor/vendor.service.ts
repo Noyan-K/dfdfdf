@@ -1,12 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { NotFoundException } from '@nestjs/common/exceptions';
 import { CreateVendorInput } from './dto/create-vendor.input';
 import { UpdateVendorInput } from './dto/update-vendor.input';
 import { Vendor } from './models/vendor.models';
 import { DocumentService } from '../document/document.service';
-import { Document } from '../document/models/document.model';
 
 @Injectable()
 export class VendorService {
@@ -76,9 +74,7 @@ export class VendorService {
     const documents = await Promise.all(
       vendors.map((vendor) => {
         if (vendor.document_id) {
-          return this.documentService.getDocument(
-            vendor.document_id,
-          ) as Promise<Document>;
+          return this.documentService.getDocument(vendor.document_id);
         }
         return undefined;
       }),

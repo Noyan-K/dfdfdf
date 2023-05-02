@@ -382,6 +382,41 @@ type Cart {
   CartSize: [CartSize!]
 }
 
+type CategoryModel {
+  id: Int!
+  parent_id: Int
+  name: String!
+  mannequin: MannequinPositionEnum
+  sex: ClothSexEnum
+  description: String
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+}
+
+enum MannequinPositionEnum {
+  UP
+  DOWN
+  FULL
+}
+
+type CategoryDocument {
+  id: Int!
+  category_id: Int!
+  document_id: Int!
+  type: DocumentTypeOfCategoryEnum!
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+  Category: CategoryModel!
+  Document: Document
+}
+
+enum DocumentTypeOfCategoryEnum {
+  MANNEQUIN
+  PREVIEW
+}
+
 type Category {
   id: Int!
   parent_id: Int
@@ -389,7 +424,6 @@ type Category {
   mannequin: MannequinPositionEnum
   sex: ClothSexEnum
   description: String
-  document_id: Int
   created_at: DateTime!
   updated_at: DateTime!
   deleted_at: DateTime
@@ -397,12 +431,7 @@ type Category {
   Parent: Category
   Product: [ProductModel!]
   Cart: [Cart!]
-}
-
-enum MannequinPositionEnum {
-  UP
-  DOWN
-  FULL
+  CategoryDocument: [CategoryDocument!]
 }
 
 type Product {
@@ -515,7 +544,8 @@ type Query {
   carts(contact_id: Int!, take: Int, skip: Int): [Cart!]!
   cart(id: Int!): Cart
   generatePdf(id: Int!): Document
-  categories(sex: ClothSexEnum!, search: String!, parent_id: Int): [Category!]!
+  categories(sex: ClothSexEnum!, parent_id: Int): [Category!]!
+  searchCategories(sex: ClothSexEnum!, search: String!): [Category!]!
   category(id: Int!): Category
   profiles(skip: Int, take: Int): [Profile!]!
   profile(id: Int!): Profile
@@ -772,7 +802,8 @@ input CreateCategoryInput {
   name: String!
   sex: ClothSexEnum
   description: String
-  document_id: Int
+  preview_document_id: Int!
+  mannequin_document_id: Int!
 }
 
 input UpdateCategoryInput {
@@ -780,7 +811,8 @@ input UpdateCategoryInput {
   name: String
   sex: ClothSexEnum
   description: String
-  document_id: Int
+  preview_document_id: Int
+  mannequin_document_id: Int
 }
 
 input CreateProfileInput {
