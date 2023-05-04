@@ -18,7 +18,7 @@ export class CartService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly documentService: DocumentService,
-    private readonly configService: ConfigService,
+    private readonly config: ConfigService,
   ) {}
 
   async create(createCartInput: CreateCartInput): Promise<Cart> {
@@ -80,9 +80,9 @@ export class CartService {
 
     if (!cart) throw new NotFoundException();
 
-    const staticPath = this.configService.get('STATIC_PATH');
-    const templatesPath = this.configService.get('TEMPLATES_PATH');
-    const destination = path.join(staticPath, 'pdf');
+    const staticPath = this.config.get('STATIC_PATH');
+    const templatesPath = this.config.get('TEMPLATES_PATH');
+    const destination = path.join(__dirname, '..', staticPath, 'pdf');
     const fileName = `${uuidv4()}.pdf`;
     const pth = path.join(destination, fileName);
 
