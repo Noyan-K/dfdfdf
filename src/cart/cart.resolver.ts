@@ -60,6 +60,7 @@ export class CartResolver {
 
   @Query(() => Document, { name: 'generatePdf', nullable: true })
   generatePdf(@Args('id', { type: () => Int }) id: number): Promise<Document> {
+    console.log("resolver");
     return this.cartService.generatePdf(id);
   }
 }
