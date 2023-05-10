@@ -33,7 +33,6 @@ export class CreateProductInput {
 
   @IsOptional()
   @IsArray()
-  @ValidateNested()
   @Field(() => [Int], { nullable: true })
     array_of_document_ids?: number[];
 

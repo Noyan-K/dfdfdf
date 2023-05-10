@@ -20,7 +20,19 @@ export class CategoryService {
   };
 
   create(createCategoryInput: CreateCategoryInput): Promise<Category> {
-    return this.prisma.category.create({ data: createCategoryInput });
+    return this.prisma.category.create({
+      data: {
+        ...createCategoryInput,
+        CategoryDocument: {
+          createMany: {
+            data: [
+              { type: 'PREVIEW', document_id: createCategoryInput.preview_document_id },
+              { type: 'MANNEQUIN', document_id: createCategoryInput.mannequin_document_id },
+            ],
+          },
+        },
+      },
+    });
   }
 
   findAll(sex: ClothSexEnum, parent_id?: number): Promise<Category[]> {

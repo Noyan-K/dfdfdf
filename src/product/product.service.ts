@@ -18,6 +18,7 @@ export class ProductService {
 
   create(createProductInput: CreateProductInput): Promise<Product> {
     const arrayOfProductDocuments: Prisma.ProductDocumentCreateManyProductInput[] = [];
+
     if (createProductInput.array_of_document_ids && createProductInput.array_of_document_ids.length > 0) {
       createProductInput.array_of_document_ids.forEach((id) => {
         arrayOfProductDocuments.push({
@@ -25,6 +26,8 @@ export class ProductService {
         });
       });
     }
+
+    delete createProductInput.array_of_document_ids;
 
     return this.prisma.product.create({
       data: {
@@ -258,7 +261,14 @@ export class ProductService {
     updateProductInput: UpdateProductInput,
   ): Promise<Product | null> {
     if (updateProductInput.array_of_document_ids && updateProductInput.array_of_document_ids.length > 0) {
-      const createProductDocuments: { product_id: number, document_id: number }[] = updateProductInput.array_of_document_ids.map((document_id) => {
+      const receivedProductDocument = await this.prisma.productDocument.findMany({
+        where: { product_id: id },
+      });
+
+      const mappedReceivedProductDocument = receivedProductDocument.map((val) => val.document_id);
+      const filteredArrayOfDocumentIds = updateProductInput.array_of_document_ids.filter((val) => !mappedReceivedProductDocument.includes(val));
+
+      const createProductDocuments: { product_id: number, document_id: number }[] = filteredArrayOfDocumentIds.map((document_id: number) => {
         const result = { product_id: id, document_id };
         return result;
       });
@@ -267,6 +277,8 @@ export class ProductService {
         data: createProductDocuments,
       });
     }
+
+    delete updateProductInput.array_of_document_ids;
 
     await this.prisma.product.update({
       data: updateProductInput,
