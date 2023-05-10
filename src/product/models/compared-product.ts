@@ -1,5 +1,5 @@
 import {
-  ObjectType, Field, Int, Float,
+  ObjectType, Field, Float,
 } from '@nestjs/graphql';
 import { IsOptional } from 'class-validator';
 import { Product } from './product.models';

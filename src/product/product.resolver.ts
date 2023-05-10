@@ -18,7 +18,7 @@ import { GetComparedProductsDto } from './dto/get-compared-products.dto';
 export class ProductResolver {
   constructor(private productService: ProductService) {}
 
-  @UseGuards(GqlJwtAuthGuard)
+  // @UseGuards(GqlJwtAuthGuard)
   @Mutation(() => Product)
   createProduct(
     @Args('createProductInput') createProductInput: CreateProductInput,
@@ -71,7 +71,7 @@ export class ProductResolver {
     return this.productService.findOne(product_id);
   }
 
-  @UseGuards(GqlJwtAuthGuard)
+  // @UseGuards(GqlJwtAuthGuard)
   @Mutation(() => Product)
   updateProduct(
     @Args('updateProductInput') updateProductInput: UpdateProductInput,
