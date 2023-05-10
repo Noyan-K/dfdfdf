@@ -207,7 +207,6 @@ type ProductModel {
   description_id: Int
   category_id: Int
   description: String
-  document_id: [Int!]
   created_at: DateTime!
   updated_at: DateTime!
   deleted_at: DateTime
@@ -380,6 +379,7 @@ type Cart {
   Contact: Contact
   Category: Category
   CartSize: [CartSize!]
+  Document: [Document!]
 }
 
 type CategoryModel {
@@ -434,6 +434,16 @@ type Category {
   CategoryDocument: [CategoryDocument!]
 }
 
+type ProductDocument {
+  product_id: Int!
+  document_id: Int!
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+  Document: Document!
+  Product: ProductModel!
+}
+
 type Product {
   id: Int!
   vendor_id: Int
@@ -442,16 +452,15 @@ type Product {
   description_id: Int
   category_id: Int
   description: String
-  document_id: [Int!]
   created_at: DateTime!
   updated_at: DateTime!
   deleted_at: DateTime
-  Document: [Document!]
   Vendor: Vendor
   SupplierProductPrice: [SupplierProductPrice!]
   ModelProduct: [ModelProduct!]
   Description: Description
   Category: Category
+  ProductDocument: [ProductDocument!]
 }
 
 type GetProductsDto {
@@ -473,16 +482,15 @@ type ComparedProduct {
   description_id: Int
   category_id: Int
   description: String
-  document_id: [Int!]
   created_at: DateTime!
   updated_at: DateTime!
   deleted_at: DateTime
-  Document: [Document!]
   Vendor: Vendor
   SupplierProductPrice: [SupplierProductPrice!]
   ModelProduct: [ModelProduct!]
   Description: Description
   Category: Category
+  ProductDocument: [ProductDocument!]
   supplier_price: Float
   supplier_with_price: Float!
   price_difference: Float!
@@ -691,6 +699,7 @@ input CreateProductInput {
   description: String
   description_id: Int
   vendor_id: Int
+  array_of_document_ids: [Int!]
   model_id: Int
 }
 
@@ -700,6 +709,7 @@ input UpdateProductInput {
   description: String
   description_id: Int
   vendor_id: Int
+  array_of_document_ids: [Int!]
   model_id: Int
   id: Int!
 }

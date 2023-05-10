@@ -24,9 +24,6 @@ export class ProductModel implements Product {
   @Field(() => String, { nullable: true })
     description: string | null;
 
-  @Field(() => [Int], { nullable: true })
-    document_id: number[];
-
   @Field(() => Date)
     created_at: Date;
 

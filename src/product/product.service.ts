@@ -1,12 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { NotFoundException } from '@nestjs/common/exceptions';
 import { Prisma } from '@prisma/client';
 import { CreateProductInput } from './dto/create-product.input';
 import { UpdateProductInput } from './dto/update-product.input';
 import { Product } from './models/product.models';
 import { PrismaService } from '../prisma/prisma.service';
 import { DocumentService } from '../document/document.service';
-import { Document } from '../document/models/document.model';
 import { GetProductsDto } from './dto/get-products.dto';
 import { GetComparedProductsDto } from './dto/get-compared-products.dto';
 import { ComparedProduct } from './models/compared-product';
@@ -19,8 +17,26 @@ export class ProductService {
   ) {}
 
   create(createProductInput: CreateProductInput): Promise<Product> {
+    const arrayOfProductDocuments: Prisma.ProductDocumentCreateManyProductInput[] = [];
+    if (createProductInput.array_of_document_ids && createProductInput.array_of_document_ids.length > 0) {
+      createProductInput.array_of_document_ids.forEach((id) => {
+        arrayOfProductDocuments.push({
+          document_id: id,
+        });
+      });
+    }
+
     return this.prisma.product.create({
-      data: createProductInput,
+      data: {
+        ...createProductInput,
+        ProductDocument: {
+          createMany: {
+            data: [
+              ...arrayOfProductDocuments,
+            ],
+          },
+        },
+      },
     });
   }
 
@@ -57,6 +73,11 @@ export class ProductService {
       take,
       skip,
       include: {
+        ProductDocument: {
+          include: {
+            Document: true,
+          },
+        },
         Vendor: true,
         ModelProduct: {
           include: {
@@ -73,14 +94,6 @@ export class ProductService {
           },
         },
       },
-    });
-
-    const documents = await Promise.all(
-      products.map((product) => this.documentService.getDocuments(product.document_id)),
-    );
-
-    products.forEach((product, idx) => {
-      products[idx].Document = documents[idx];
     });
 
     return {
@@ -140,6 +153,11 @@ export class ProductService {
     const products: Product[] = await this.prisma.product.findMany({
       where,
       include: {
+        ProductDocument: {
+          include: {
+            Document: true,
+          },
+        },
         Vendor: true,
         ModelProduct: {
           include: {
@@ -156,14 +174,6 @@ export class ProductService {
           },
         },
       },
-    });
-
-    const documents = await Promise.all(
-      products.map((product) => this.documentService.getDocuments(product.document_id)),
-    );
-
-    products.forEach((product, idx) => {
-      products[idx].Document = documents[idx];
     });
 
     let resultProducts: ComparedProduct[] = [];
@@ -201,11 +211,16 @@ export class ProductService {
     };
   }
 
-  async findOne(id: number): Promise<Product | null> {
-    const receivedProduct: Product | null = await this.prisma.product.findFirst(
+  findOne(id: number): Promise<Product | null> {
+    return this.prisma.product.findFirst(
       {
         where: { id },
         include: {
+          ProductDocument: {
+            include: {
+              Document: true,
+            },
+          },
           Vendor: true,
           ModelProduct: {
             include: {
@@ -236,18 +251,23 @@ export class ProductService {
         },
       },
     );
-
-    if (!receivedProduct) throw new NotFoundException();
-
-    receivedProduct.Document = await this.documentService.getDocuments(receivedProduct.document_id);
-
-    return receivedProduct;
   }
 
   async update(
     id: number,
     updateProductInput: UpdateProductInput,
   ): Promise<Product | null> {
+    if (updateProductInput.array_of_document_ids && updateProductInput.array_of_document_ids.length > 0) {
+      const createProductDocuments: { product_id: number, document_id: number }[] = updateProductInput.array_of_document_ids.map((document_id) => {
+        const result = { product_id: id, document_id };
+        return result;
+      });
+
+      await this.prisma.productDocument.createMany({
+        data: createProductDocuments,
+      });
+    }
+
     await this.prisma.product.update({
       data: updateProductInput,
       where: { id },

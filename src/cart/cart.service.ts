@@ -28,6 +28,7 @@ export class CartService {
   findAll(contact_id: number, take?: number, skip?: number): Promise<Cart[]> {
     return this.prismaService.cart.findMany({
       where: { contact_id },
+      include: { Document: true },
       take,
       skip,
     });
@@ -37,6 +38,7 @@ export class CartService {
     return this.prismaService.cart.findFirst({
       where: { id },
       include: {
+        Document: true,
         CartSize: {
           where: {
             deleted_at: { equals: null },

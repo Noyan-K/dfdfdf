@@ -25,6 +25,7 @@ export class VendorService {
     return this.prisma.vendor.findMany({
       where: { id: vendor_id },
       orderBy: { name: 'asc' },
+      include: { Document: true },
       take,
       skip,
     });
@@ -33,6 +34,7 @@ export class VendorService {
   async findOne(id: number): Promise<Vendor | null> {
     const receivedVendor: Vendor | null = await this.prisma.vendor.findFirst({
       where: { id },
+      include: { Document: true },
     });
 
     if (!receivedVendor) throw new NotFoundException();
@@ -68,20 +70,8 @@ export class VendorService {
       orderBy: {
         Product: { _count: 'desc' },
       },
+      include: { Document: true },
       take: 16,
-    });
-
-    const documents = await Promise.all(
-      vendors.map((vendor) => {
-        if (vendor.document_id) {
-          return this.documentService.getDocument(vendor.document_id);
-        }
-        return undefined;
-      }),
-    );
-
-    vendors.forEach((vendor, idx) => {
-      vendors[idx].Document = documents[idx];
     });
 
     return vendors;
