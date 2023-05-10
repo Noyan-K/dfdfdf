@@ -6,7 +6,6 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { DocumentService } from '../document/document.service';
-import { Document } from '../document/models/document.model';
 
 @Injectable()
 export class UserService {
@@ -41,11 +40,17 @@ export class UserService {
   }
 
   async findOne(id: number): Promise<User | null> {
-    return this.prisma.user.findFirst({ where: { id } });
+    return this.prisma.user.findFirst({
+      where: { id },
+      include: { Document: true },
+    });
   }
 
   async findOneByEmail(email: string): Promise<User | null> {
-    return this.prisma.user.findUnique({ where: { email } });
+    return this.prisma.user.findUnique({
+      where: { email },
+      include: { Document: true },
+    });
   }
 
   async update(
@@ -90,10 +95,6 @@ export class UserService {
     const user: User | null = await this.findOne(id);
 
     if (!user) throw new NotFoundException('User not found!');
-
-    if (user.document_id) {
-      user.Document = await this.documentService.getDocument(user.document_id);
-    }
 
     return user;
   }

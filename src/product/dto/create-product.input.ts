@@ -1,6 +1,7 @@
 import { InputType, Field, Int } from '@nestjs/graphql';
 import {
-  IsNotEmpty, IsNumber, IsOptional, IsString,
+  IsArray,
+  IsNotEmpty, IsNumber, IsOptional, IsString, ValidateNested,
 } from 'class-validator';
 
 @InputType()
@@ -29,6 +30,11 @@ export class CreateProductInput {
   @IsNumber()
   @Field(() => Int, { nullable: true })
     vendor_id?: number | undefined;
+
+  @IsOptional()
+  @IsArray()
+  @Field(() => [Int], { nullable: true })
+    array_of_document_ids?: number[];
 
   @IsOptional()
   @IsNumber()
