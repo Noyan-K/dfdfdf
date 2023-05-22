@@ -7,7 +7,6 @@ import { GqlJwtAuthGuard } from 'src/auth/guards/gql-jwt-auth.guard';
 import { CartService } from './cart.service';
 import { Cart } from './models/cart.model';
 import { CreateCartInput } from './dto/create-cart.input';
-import { Category } from '../category/models/category.model';
 import { UpdateCartInput } from './dto/update-cart.input';
 import { Document } from '../document/models/document.model';
 
@@ -25,12 +24,11 @@ export class CartResolver {
   @UseGuards(GqlJwtAuthGuard)
   @Query(() => [Cart], { name: 'carts' })
   findAll(
-    @Args('contact_id', { type: () => Int }) contact_id: number,
-      @Args('take', { type: () => Int, nullable: true }) take?: number,
+    @Args('take', { type: () => Int, nullable: true }) take?: number,
       @Args('skip', { type: () => Int, nullable: true }) skip?: number,
   ): Promise<Cart[]> {
     try {
-      return this.cartService.findAll(contact_id, take, skip);
+      return this.cartService.findAll(take, skip);
     } catch (e) {
       throw new NotFoundException('Carts not found!');
     }

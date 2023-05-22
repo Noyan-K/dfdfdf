@@ -4,16 +4,12 @@ import { CreateProductInput } from './dto/create-product.input';
 import { UpdateProductInput } from './dto/update-product.input';
 import { Product } from './models/product.models';
 import { PrismaService } from '../prisma/prisma.service';
-import { DocumentService } from '../document/document.service';
 import { GetProductsDto } from './dto/get-products.dto';
-import { GetComparedProductsDto } from './dto/get-compared-products.dto';
-import { ComparedProduct } from './models/compared-product';
 
 @Injectable()
 export class ProductService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly documentService: DocumentService,
   ) {}
 
   create(createProductInput: CreateProductInput): Promise<Product> {
@@ -47,27 +43,10 @@ export class ProductService {
     search: string,
     take?: number,
     skip?: number,
-    vendor_ids?: number[],
-    model_ids?: number[],
   ): Promise<GetProductsDto> {
-    if (vendor_ids?.length === 0) vendor_ids = undefined;
-
     const where = {
-      OR: [
-        { name: { contains: search, mode: Prisma.QueryMode.insensitive } },
-        {
-          vendor_partnumber: {
-            contains: search,
-            mode: Prisma.QueryMode.insensitive,
-          },
-        },
-      ],
-      vendor_id: { in: vendor_ids },
-      SupplierProductPrice: { some: { deleted_at: { equals: null } } },
-      ModelProduct: {},
+      name: { contains: search, mode: Prisma.QueryMode.insensitive },
     };
-
-    if (model_ids?.length && model_ids.length > 0) where.ModelProduct = { some: { model_id: { in: model_ids } } };
 
     const total: number = await this.prisma.product.count({ where });
 
@@ -81,135 +60,12 @@ export class ProductService {
             Document: true,
           },
         },
-        Vendor: true,
-        ModelProduct: {
-          include: {
-            Model: true,
-          },
-        },
         Description: true,
-        SupplierProductPrice: {
-          where: {
-            deleted_at: { equals: null },
-          },
-          orderBy: {
-            price: 'asc',
-          },
-        },
       },
     });
 
     return {
       products,
-      total,
-    };
-  }
-
-  async compareAll(
-    search: string,
-    supplier_id_with: number,
-    supplier_id?: number,
-    take?: number,
-    skip?: number,
-    vendor_ids?: number[],
-    model_ids?: number[],
-  ): Promise<GetComparedProductsDto> {
-    if (vendor_ids?.length === 0) vendor_ids = undefined;
-
-    const where = {
-      OR: [
-        { name: { contains: search, mode: Prisma.QueryMode.insensitive } },
-        {
-          vendor_partnumber: {
-            contains: search,
-            mode: Prisma.QueryMode.insensitive,
-          },
-        },
-      ],
-      AND: [
-        { SupplierProductPrice: { some: { deleted_at: { equals: null } } } },
-        {
-          SupplierProductPrice: {
-            some: {
-              supplier_id: supplier_id_with,
-              deleted_at: { equals: null },
-            },
-          },
-        },
-      ],
-      vendor_id: { in: vendor_ids },
-      ModelProduct: {},
-    };
-
-    if (supplier_id) {
-      where.AND.push({
-        SupplierProductPrice: {
-          some: { supplier_id, deleted_at: { equals: null } },
-        },
-      });
-    }
-
-    if (model_ids?.length && model_ids.length > 0) where.ModelProduct = { some: { model_id: { in: model_ids } } };
-
-    const total: number = await this.prisma.product.count({ where });
-
-    const products: Product[] = await this.prisma.product.findMany({
-      where,
-      include: {
-        ProductDocument: {
-          include: {
-            Document: true,
-          },
-        },
-        Vendor: true,
-        ModelProduct: {
-          include: {
-            Model: true,
-          },
-        },
-        Description: true,
-        SupplierProductPrice: {
-          where: {
-            deleted_at: { equals: null },
-          },
-          orderBy: {
-            price: 'asc',
-          },
-        },
-      },
-    });
-
-    let resultProducts: ComparedProduct[] = [];
-
-    for (let i = 0; i < products.length; i++) {
-      const product = products[i];
-      const supplierPrice = supplier_id
-        ? product.SupplierProductPrice?.find(
-          (p) => p.supplier_id === supplier_id,
-        )?.price
-        : product.SupplierProductPrice?.at(0)?.price;
-      const supplierWithPrice = product.SupplierProductPrice?.find(
-        (p) => p.supplier_id === supplier_id_with,
-      )?.price;
-      const difference = supplierPrice && supplierWithPrice
-        ? Math.ceil((100 - (supplierPrice * 100) / supplierWithPrice) * 10)
-            / 10
-        : undefined;
-      resultProducts.push({
-        ...product,
-        supplier_price: supplierPrice,
-        supplier_with_price: supplierWithPrice || 0,
-        price_difference: difference || 0,
-      });
-    }
-
-    resultProducts = resultProducts.sort(
-      (a, b) => b.price_difference - a.price_difference,
-    );
-    resultProducts = resultProducts.slice(skip, (take || 0) + (skip || 0));
-
-    return {
-      products: resultProducts,
       total,
     };
   }
@@ -224,33 +80,7 @@ export class ProductService {
               Document: true,
             },
           },
-          Vendor: true,
-          ModelProduct: {
-            include: {
-              Model: true,
-            },
-          },
-          Description: {
-            include: {
-              Language: true,
-            },
-          },
-          SupplierProductPrice: {
-            where: {
-              deleted_at: null,
-            },
-            orderBy: {
-              price: 'asc',
-            },
-            include: {
-              Currency: true,
-              Supplier: {
-                include: {
-                  User: true,
-                },
-              },
-            },
-          },
+          Description: true,
         },
       },
     );
@@ -303,26 +133,8 @@ export class ProductService {
       LIMIT ${take} OFFSET ${skip};
     `;
 
-    const receivedModels = await this.prisma.$queryRaw`
-      select *
-      from "public"."Model"
-      where to_tsvector("name") @@ to_tsquery(${queryText}) and "deleted_at" is null
-      ORDER BY ts_rank(to_tsvector("name"), to_tsquery(${queryText})) DESC
-      LIMIT ${take} OFFSET ${skip};
-    `;
-
-    const receivedVendors = await this.prisma.$queryRaw`
-      select *
-      from "public"."Vendor"
-      where to_tsvector("name") @@ to_tsquery(${queryText}) and "deleted_at" is null
-      ORDER BY ts_rank(to_tsvector("name"), to_tsquery(${queryText})) DESC
-      LIMIT ${take} OFFSET ${skip};
-    `;
-
     return {
       receivedProducts,
-      receivedModels,
-      receivedVendors,
     };
   }
 }

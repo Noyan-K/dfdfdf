@@ -1,5 +1,4 @@
 import { ObjectType, Field } from '@nestjs/graphql';
-import { Contact } from 'src/contact/models/contact.model';
 import { Category } from 'src/category/models/category.model';
 import { Document } from 'src/document/models/document.model';
 import { CartModel } from './cart';
@@ -10,9 +9,6 @@ import { CartSize } from '../cart-size/models/cart-size.model';
 export class Cart extends CartModel {
   @Field(() => [CartProduct], { nullable: true })
     CartProducts?: CartProduct[] | null;
-
-  @Field(() => Contact, { nullable: true })
-    Contact?: Contact | null;
 
   @Field(() => Category, { nullable: true })
     Category?: Category;

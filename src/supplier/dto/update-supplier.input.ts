@@ -11,11 +11,6 @@ export class UpdateSupplierInput extends PartialType(CreateSupplierInput) {
     id: number;
 
   @IsOptional()
-  @IsNumber()
-  @Field(() => Int, { nullable: true })
-    currency_id?: number | null;
-
-  @IsOptional()
   @IsBoolean()
   @Field(() => Boolean, { nullable: true })
     deliver_goods_yourself: boolean;

@@ -8,9 +8,6 @@ export class DescriptionModel {
   @Field(() => String)
     text: string;
 
-  @Field(() => Int)
-    language_id: number;
-
   @Field(() => Date)
     created_at: Date;
 

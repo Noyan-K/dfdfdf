@@ -25,9 +25,8 @@ export class CartService {
     return this.prismaService.cart.create({ data: createCartInput });
   }
 
-  findAll(contact_id: number, take?: number, skip?: number): Promise<Cart[]> {
+  findAll(take?: number, skip?: number): Promise<Cart[]> {
     return this.prismaService.cart.findMany({
-      where: { contact_id },
       include: { Document: true },
       take,
       skip,
@@ -70,7 +69,6 @@ export class CartService {
     const cart = await this.prismaService.cart.findFirst({
       where: { id },
       include: {
-        Contact: true,
         CartSize: { include: { Size: true } },
         Category: {
           include: {

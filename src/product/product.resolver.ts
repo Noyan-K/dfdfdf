@@ -11,8 +11,6 @@ import { UpdateProductInput } from './dto/update-product.input';
 import { GetProductsDto } from './dto/get-products.dto';
 import { FilterProductsInput } from './dto/filter-products.input';
 import { SearchResultModel } from './models/search-result.models';
-import { CompareProductsInput } from './dto/compare-products.input';
-import { GetComparedProductsDto } from './dto/get-compared-products.dto';
 
 @Resolver(() => Product)
 export class ProductResolver {
@@ -32,35 +30,12 @@ export class ProductResolver {
       @Args('take', { type: () => Int, nullable: true }) take?: number,
       @Args('skip', { type: () => Int, nullable: true }) skip?: number,
   ): Promise<GetProductsDto> {
-    const { search, vendor_ids, model_ids } = filterProductsInput;
+    const { search } = filterProductsInput;
 
     return this.productService.findAll(
       search,
       take,
       skip,
-      vendor_ids,
-      model_ids,
-    );
-  }
-
-  @Query(() => GetComparedProductsDto, { name: 'compareProducts' })
-  compareAll(
-    @Args('FilterProductsInput') filterProductsInput: FilterProductsInput,
-      @Args('CompareProductsInput') compareProductsInput: CompareProductsInput,
-      @Args('take', { type: () => Int, nullable: true }) take?: number,
-      @Args('skip', { type: () => Int, nullable: true }) skip?: number,
-  ): Promise<GetComparedProductsDto> {
-    const { search, vendor_ids, model_ids } = filterProductsInput;
-    const { supplier_id, supplier_id_with } = compareProductsInput;
-
-    return this.productService.compareAll(
-      search,
-      supplier_id_with,
-      supplier_id,
-      take,
-      skip,
-      vendor_ids,
-      model_ids,
     );
   }
 

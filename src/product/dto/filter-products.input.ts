@@ -1,5 +1,5 @@
-import { InputType, Field, Int } from '@nestjs/graphql';
-import { IsArray, IsOptional, IsString } from 'class-validator';
+import { InputType, Field } from '@nestjs/graphql';
+import { IsOptional, IsString } from 'class-validator';
 
 @InputType()
 export class FilterProductsInput {
@@ -7,14 +7,4 @@ export class FilterProductsInput {
   @IsString()
   @Field(() => String)
     search: string;
-
-  @IsOptional()
-  @IsArray()
-  @Field(() => [Int], { nullable: true })
-    vendor_ids?: number[];
-
-  @IsOptional()
-  @IsArray()
-  @Field(() => [Int], { nullable: true })
-    model_ids?: number[];
 }

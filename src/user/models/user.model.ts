@@ -1,6 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Address } from 'src/address/models/address.model';
-import { Currency } from 'src/currency/models/currency.model';
 import { UserModel } from './user';
 import { SupplierModel } from '../../supplier/models/supplier';
 import { CartModel } from '../../cart/models/cart';
@@ -27,7 +26,4 @@ export class User extends UserModel {
 
   @Field(() => Address, { nullable: true })
     Address?: Address[] | null;
-
-  @Field(() => Currency)
-    Currency?: Currency;
 }

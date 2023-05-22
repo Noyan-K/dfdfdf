@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { NotFoundException } from '@nestjs/common/exceptions';
-import { DeliveryService } from 'src/delivery/delivery.service';
 import { CreateSupplierInput } from './dto/create-supplier.input';
 import { UpdateSupplierInput } from './dto/update-supplier.input';
 import { PrismaService } from '../prisma/prisma.service';
@@ -13,19 +12,11 @@ import { SupplierModel } from './models/supplier';
 export class SupplierService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly deliveryService: DeliveryService,
   ) {}
 
-  async create(createSupplierInput: CreateSupplierInput): Promise<Supplier> {
-    const receivedCurrency = await this.prisma.currency.findFirst({
-      where: { name: { mode: 'insensitive', equals: 'rub' } },
-    });
-
+  create(createSupplierInput: CreateSupplierInput): Promise<Supplier> {
     return this.prisma.supplier.create({
-      data: {
-        ...createSupplierInput,
-        currency_id: receivedCurrency?.id ?? null,
-      },
+      data: createSupplierInput,
     });
   }
 

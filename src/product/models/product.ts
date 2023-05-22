@@ -6,12 +6,6 @@ export class ProductModel implements Product {
   @Field(() => Int)
     id: number;
 
-  @Field(() => Int, { nullable: true })
-    vendor_id: number | null;
-
-  @Field(() => String)
-    vendor_partnumber: string;
-
   @Field(() => String)
     name: string;
 

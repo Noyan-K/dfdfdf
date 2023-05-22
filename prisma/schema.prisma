@@ -11,12 +11,10 @@ datasource db {
 model Description {
   id                   Int                    @id(map: "Descriptions_pk") @unique(map: "Descriptions_description_id_key") @default(autoincrement())
   text                 String
-  language_id          Int
   created_at           DateTime               @default(now())
   updated_at           DateTime               @updatedAt
   deleted_at           DateTime?
 
-  Language             Language               @relation(fields: [language_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "description_language_id")
   Product              Product[]
 }
 
@@ -34,65 +32,14 @@ model Document {
   updated_at           DateTime               @updatedAt
   deleted_at           DateTime?
 
-  Vendor               Vendor[]
   Cart                 Cart[]
   CategoryDocument     CategoryDocument[]
   User                 User[]
   ProductDocument      ProductDocument[]
 }
 
-model Language {
-  id                   Int                    @id(map: "Language_pk") @unique(map: "Language_language_id_key") @default(autoincrement())
-  language             String
-  created_at           DateTime               @default(now())
-  updated_at           DateTime               @updatedAt
-  deleted_at           DateTime?
-
-  Description          Description[]
-}
-
-model Vendor {
-  id                   Int                    @id(map: "Vendors_pk") @unique(map: "Vendors_vendor_id_key") @default(autoincrement())
-  name                 String                 @unique(map: "Vendors_vendor_name_key")
-  document_id          Int?                   @unique
-  created_at           DateTime               @default(now())
-  updated_at           DateTime               @updatedAt
-  deleted_at           DateTime?
-
-  Model                Model[]
-  Product              Product[]
-  Document             Document?              @relation(fields: [document_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "model_document_id_fk")
-}
-
-model Model {
-  id                   Int                    @id(map: "Models_pk") @unique(map: "Models_model_id_key") @default(autoincrement())
-  name                 String
-  vendor_id            Int?
-  created_at           DateTime               @default(now())
-  updated_at           DateTime               @updatedAt
-  deleted_at           DateTime?
-
-  ModelProduct         ModelProduct[]
-  Vendor               Vendor?                @relation(fields: [vendor_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "model_vendor_id_fk")
-}
-
-model ModelProduct {
-  product_id           Int
-  model_id             Int
-  created_at           DateTime               @default(now())
-  updated_at           DateTime               @updatedAt
-  deleted_at           DateTime?
-
-  Model                Model                  @relation(fields: [model_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "modelProdcut_model_id")
-  Product              Product                @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "modelProdcut_prodcut_id")
-
-  @@id([product_id, model_id], map: "modelproduct_pk")
-}
-
 model Product {
   id                   Int                    @id(map: "Products_pk") @unique(map: "Products_product_id_key") @default(autoincrement())
-  vendor_id            Int?
-  vendor_partnumber    String
   name                 String
   description_id       Int?
   category_id          Int?
@@ -101,10 +48,7 @@ model Product {
   updated_at           DateTime               @updatedAt
   deleted_at           DateTime?
 
-  ModelProduct         ModelProduct[]
   Description          Description?           @relation(fields: [description_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "product_description_id_fk")
-  Vendor               Vendor?                @relation(fields: [vendor_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "product_vendor_id_fk")
-  SupplierProductPrice SupplierProductPrice[]
   CartProduct          CartProduct[]
   Category             Category?              @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "product_category_id_fk")
   ProductDocument      ProductDocument[]
@@ -123,66 +67,18 @@ model ProductDocument {
   @@id([product_id, document_id])
 }
 
-model Currency {
-  id                   Int                    @id(map: "Currencies_pk") @unique(map: "Currencies_currency_id_key") @default(autoincrement())
-  name                 String?
-  created_at           DateTime               @default(now())
-  updated_at           DateTime               @updatedAt
-  deleted_at           DateTime?
-
-  CurrencyRate         CurrencyRate[]
-  SupplierProductPrice SupplierProductPrice[]
-  User                 User[]
-  Supplier             Supplier[]
-}
-
-model CurrencyRate {
-  currency_id          Int
-  rate                 Float?
-  date                 DateTime               @db.Timestamp(6)
-  created_at           DateTime               @default(now())
-  updated_at           DateTime               @updatedAt
-  deleted_at           DateTime?
-
-  Currency             Currency               @relation(fields: [currency_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "currency_id")
-
-  @@id([currency_id, date], map: "currencyrate_pk")
-}
-
-model SupplierProductPrice {
-  product_id           Int
-  supplier_id          Int
-  price_date           DateTime               @db.Timestamp(6)
-  price                Float
-  supplier_partnumber  String?
-  currency_id          Int
-  created_at           DateTime               @default(now())
-  updated_at           DateTime               @updatedAt
-  deleted_at           DateTime?
-
-  Currency             Currency?              @relation(fields: [currency_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "currency_id")
-  Product              Product                @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "product_id")
-  Supplier             Supplier               @relation(fields: [supplier_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "supplier_id")
-
-  @@unique([supplier_id, supplier_partnumber])
-  @@id([product_id, supplier_id, price_date], map: "supplierproductprice_pk")
-}
-
 model Supplier {
   id                                    Int                    @id(map: "Suppliers_pk") @unique(map: "Suppliers_supplier_id_key") @default(autoincrement())
   name                                  String
-  currency_id                           Int?
   deliver_goods_yourself                Boolean                @default(false)
   array_of_delivery_ids                 Int[]                  @default([])
   created_at                            DateTime               @default(now())
   updated_at                            DateTime               @updatedAt
   deleted_at                            DateTime?
 
-  SupplierProductPrice SupplierProductPrice[]
   CartProduct          CartProduct[]
   User                 User?
   Address              Address[]
-  Currency             Currency?                               @relation(fields: [currency_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "currency_id")
 }
 
 enum DeliveryTypeEnum {
@@ -211,7 +107,6 @@ enum CartType {
 
 model Cart {
   id                                    Int                    @id @default(autoincrement())
-  contact_id                            Int?
   document_id                           Int?
   cloth_sex                             ClothSexEnum
   category_id                           Int?
@@ -225,13 +120,10 @@ model Cart {
   updated_at                            DateTime               @updatedAt
   deleted_at                            DateTime?
 
-  Contact                               Contact?               @relation(fields: [contact_id], references: [id])
   Category                              Category?              @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "category_id")
   CartProducts                          CartProduct[]
   CartSize                              CartSize[]
   Document                              Document?              @relation(fields: [document_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "model_document_id_fk")
-
-  @@unique([id, contact_id])
 }
 
 model CartProduct {
@@ -300,17 +192,6 @@ enum UserTypeEnum {
   GUEST
 }
 
-model Contact {
-  id                       Int                    @id(map: "contact_pk") @unique(map: "contact_id_uindex") @default(autoincrement())
-  name                     String
-  email                    String
-  created_at               DateTime               @default(now())
-  updated_at               DateTime               @updatedAt
-  deleted_at               DateTime?
-
-  Cart                     Cart[]
-}
-
 model User {
   id                       Int                    @id(map: "user_pk") @unique(map: "user_id_uindex") @default(autoincrement())
   name                     String
@@ -320,7 +201,6 @@ model User {
   type                     UserTypeEnum           @default(USER)
   document_id              Int?                   @unique
   supplier_id              Int?                   @unique
-  currency_id              Int?
   array_of_delivery_ids    Int[]                  @default([])
   created_at               DateTime               @default(now())
   updated_at               DateTime               @updatedAt
@@ -330,7 +210,6 @@ model User {
   Profile                  Profile?
   UserRole                 UserRole[]
   Address                  Address[]
-  Currency                 Currency?              @relation(fields: [currency_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "currency_id")
   Document                 Document?              @relation(fields: [document_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "model_document_id_fk")
 }
 

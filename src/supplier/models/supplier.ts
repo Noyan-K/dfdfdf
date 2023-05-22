@@ -8,9 +8,6 @@ export class SupplierModel {
   // @Field(() => String, { deprecationReason: 'пока используем name из User' })
   name: string;
 
-  @Field(() => Int, { nullable: true })
-    currency_id?: number | null;
-
   @Field(() => Boolean, { defaultValue: false })
     deliver_goods_yourself: boolean;
 

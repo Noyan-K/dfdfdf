@@ -7,11 +7,6 @@ import {
 @InputType()
 export class CreateCartInput {
   @IsOptional()
-  @IsNumber()
-  @Field(() => Int, { nullable: true })
-    contact_id: number | null;
-
-  @IsOptional()
   @IsEnum(ClothSexEnum)
   @Field(() => ClothSexEnum, { nullable: true })
     cloth_sex: ClothSexEnum;

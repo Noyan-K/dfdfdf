@@ -7,9 +7,6 @@ export class CartModel {
     id: number;
 
   @Field(() => Int, { nullable: true })
-    contact_id: number | null;
-
-  @Field(() => Int, { nullable: true })
     document_id: number | null;
 
   @Field(() => ClothSexEnum)
