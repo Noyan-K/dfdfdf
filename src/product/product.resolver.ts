@@ -1,22 +1,16 @@
 import {
   Resolver, Query, Mutation, Args, Int,
 } from '@nestjs/graphql';
-import { UseGuards } from '@nestjs/common';
-import { NotFoundException } from '@nestjs/common/exceptions';
+import { ClothSexEnum } from '@prisma/client';
 import { ProductService } from './product.service';
-import { Product } from './models/product.models';
-import { GqlJwtAuthGuard } from '../auth/guards/gql-jwt-auth.guard';
+import { Product } from './models/product.model';
 import { CreateProductInput } from './dto/create-product.input';
 import { UpdateProductInput } from './dto/update-product.input';
-import { GetProductsDto } from './dto/get-products.dto';
-import { FilterProductsInput } from './dto/filter-products.input';
-import { SearchResultModel } from './models/search-result.models';
 
 @Resolver(() => Product)
 export class ProductResolver {
-  constructor(private productService: ProductService) {}
+  constructor(private readonly productService: ProductService) {}
 
-  // @UseGuards(GqlJwtAuthGuard)
   @Mutation(() => Product)
   createProduct(
     @Args('createProductInput') createProductInput: CreateProductInput,
@@ -24,57 +18,41 @@ export class ProductResolver {
     return this.productService.create(createProductInput);
   }
 
-  @Query(() => GetProductsDto, { name: 'products' })
+  @Query(() => [Product], { name: 'products' })
   findAll(
-    @Args('FilterProductsInput') filterProductsInput: FilterProductsInput,
-      @Args('take', { type: () => Int, nullable: true }) take?: number,
-      @Args('skip', { type: () => Int, nullable: true }) skip?: number,
-  ): Promise<GetProductsDto> {
-    const { search } = filterProductsInput;
+    @Args('sex', { type: () => ClothSexEnum }) sex: ClothSexEnum,
+      @Args('parent_id', { type: () => Int, nullable: true }) parent_id?: number,
+  ): Promise<Product[]> {
+    return this.productService.findAll(sex, parent_id);
+  }
 
-    return this.productService.findAll(
-      search,
-      take,
-      skip,
-    );
+  @Query(() => [Product], { name: 'searchProducts' })
+  search(
+    @Args('sex', { type: () => ClothSexEnum }) sex: ClothSexEnum,
+      @Args('search', { type: () => String }) search?: string,
+  ): Promise<Product[]> {
+    return this.productService.search(sex, search);
   }
 
   @Query(() => Product, { name: 'product', nullable: true })
   findOne(
-    @Args('id', { type: () => Int }) product_id: number,
+    @Args('id', { type: () => Int }) id: number,
   ): Promise<Product | null> {
-    return this.productService.findOne(product_id);
+    return this.productService.findOne(id);
   }
 
-  // @UseGuards(GqlJwtAuthGuard)
-  @Mutation(() => Product)
+  @Mutation(() => Product, { nullable: true })
   updateProduct(
-    @Args('updateProductInput') updateProductInput: UpdateProductInput,
+    @Args('id', { type: () => Int }) id: number,
+      @Args('updateProductInput') updateProductInput: UpdateProductInput,
   ): Promise<Product | null> {
-    return this.productService.update(
-      updateProductInput.id,
-      updateProductInput,
-    );
+    return this.productService.update(id, updateProductInput);
   }
 
-  @UseGuards(GqlJwtAuthGuard)
   @Mutation(() => Product)
   removeProduct(
-    @Args('id', { type: () => Int }) product_id: number,
+    @Args('id', { type: () => Int }) id: number,
   ): Promise<Product> {
-    return this.productService.remove(product_id);
-  }
-
-  @Query(() => SearchResultModel, { name: 'searchProducts' })
-  searchProducts(
-  @Args('take', { type: () => Int }) take: number,
-    @Args('skip', { type: () => Int }) skip: number,
-    @Args('text', { type: () => String }) text: string,
-  ) {
-    try {
-      return this.productService.search(take, skip, text);
-    } catch (error) {
-      throw new NotFoundException();
-    }
+    return this.productService.remove(id);
   }
 }

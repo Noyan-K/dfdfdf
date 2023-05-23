@@ -1,37 +1,33 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { ClothSexEnum, DocumentTypeOfProductEnum } from '@prisma/client';
 import { CreateProductInput } from './dto/create-product.input';
 import { UpdateProductInput } from './dto/update-product.input';
-import { Product } from './models/product.models';
 import { PrismaService } from '../prisma/prisma.service';
-import { GetProductsDto } from './dto/get-products.dto';
+import { Product } from './models/product.model';
+import { DocumentService } from '../document/document.service';
 
 @Injectable()
 export class ProductService {
   constructor(
     private readonly prisma: PrismaService,
+    private readonly documentService: DocumentService,
   ) {}
 
+  sexFilter = {
+    MALE: { not: ClothSexEnum.FEMALE },
+    FEMALE: { not: ClothSexEnum.MALE },
+    UNISEX: { equals: ClothSexEnum.UNISEX },
+  };
+
   create(createProductInput: CreateProductInput): Promise<Product> {
-    const arrayOfProductDocuments: Prisma.ProductDocumentCreateManyProductInput[] = [];
-
-    if (createProductInput.array_of_document_ids && createProductInput.array_of_document_ids.length > 0) {
-      createProductInput.array_of_document_ids.forEach((id) => {
-        arrayOfProductDocuments.push({
-          document_id: id,
-        });
-      });
-    }
-
-    delete createProductInput.array_of_document_ids;
-
     return this.prisma.product.create({
       data: {
         ...createProductInput,
         ProductDocument: {
           createMany: {
             data: [
-              ...arrayOfProductDocuments,
+              { type: 'PREVIEW', document_id: createProductInput.preview_document_id },
+              { type: 'MANNEQUIN', document_id: createProductInput.mannequin_document_id },
             ],
           },
         },
@@ -39,102 +35,101 @@ export class ProductService {
     });
   }
 
-  async findAll(
-    search: string,
-    take?: number,
-    skip?: number,
-  ): Promise<GetProductsDto> {
-    const where = {
-      name: { contains: search, mode: Prisma.QueryMode.insensitive },
-    };
-
-    const total: number = await this.prisma.product.count({ where });
-
-    const products: Product[] = await this.prisma.product.findMany({
-      where,
-      take,
-      skip,
+  findAll(sex: ClothSexEnum, parent_id?: number): Promise<Product[]> {
+    return this.prisma.product.findMany({
+      where: {
+        parent_id: { equals: parent_id ?? null },
+        sex: this.sexFilter[sex],
+      },
       include: {
         ProductDocument: {
+          where: {
+            type: DocumentTypeOfProductEnum.PREVIEW,
+          },
           include: {
             Document: true,
           },
         },
-        Description: true,
+        Parent: true,
+        Children: {
+          include: {
+            Children: {
+              include: {
+                Children: true,
+              },
+            },
+          },
+        },
       },
     });
+  }
 
-    return {
-      products,
-      total,
-    };
+  search(sex: ClothSexEnum, search?: string): Promise<Product[]> {
+    return this.prisma.product.findMany({
+      where: {
+        name: { contains: search, mode: 'insensitive' },
+        sex: this.sexFilter[sex],
+      },
+      include: {
+        ProductDocument: {
+          where: {
+            type: DocumentTypeOfProductEnum.PREVIEW,
+          },
+          include: {
+            Document: true,
+          },
+        },
+        Children: true,
+        Parent: {
+          include: {
+            Parent: {
+              include: {
+                Parent: true,
+              },
+            },
+          },
+        },
+      },
+    });
   }
 
   findOne(id: number): Promise<Product | null> {
-    return this.prisma.product.findFirst(
-      {
-        where: { id },
-        include: {
-          ProductDocument: {
-            include: {
-              Document: true,
+    return this.prisma.product.findFirst({
+      where: { id },
+      include: {
+        ProductDocument: {
+          where: {
+            type: DocumentTypeOfProductEnum.MANNEQUIN,
+          },
+          include: {
+            Document: true,
+          },
+        },
+        Parent: {
+          include: {
+            Parent: {
+              include: {
+                Parent: true,
+              },
             },
           },
-          Description: true,
         },
       },
-    );
+    });
   }
 
   async update(
     id: number,
     updateProductInput: UpdateProductInput,
   ): Promise<Product | null> {
-    if (updateProductInput.array_of_document_ids && updateProductInput.array_of_document_ids.length > 0) {
-      const receivedProductDocument = await this.prisma.productDocument.findMany({
-        where: { product_id: id },
-      });
-
-      const mappedReceivedProductDocument = receivedProductDocument.map((val) => val.document_id);
-      const filteredArrayOfDocumentIds = updateProductInput.array_of_document_ids.filter((val) => !mappedReceivedProductDocument.includes(val));
-
-      const createProductDocuments: { product_id: number, document_id: number }[] = filteredArrayOfDocumentIds.map((document_id: number) => {
-        const result = { product_id: id, document_id };
-        return result;
-      });
-
-      await this.prisma.productDocument.createMany({
-        data: createProductDocuments,
-      });
-    }
-
-    delete updateProductInput.array_of_document_ids;
-
     await this.prisma.product.update({
-      data: updateProductInput,
       where: { id },
+      data: updateProductInput,
     });
-
-    return this.prisma.product.findFirst({ where: { id } });
+    return this.findOne(id);
   }
 
   remove(id: number): Promise<Product> {
     return this.prisma.product.delete({ where: { id } });
-  }
-
-  async search(take: number, skip: number, text: string) {
-    const queryText = `${text.replace(/ /g, ':* | ')}:*`;
-
-    const receivedProducts = await this.prisma.$queryRaw`
-      select *
-      from "public"."Product"
-      where to_tsvector("name") @@ to_tsquery(${queryText}) and "deleted_at" is null
-      ORDER BY ts_rank(to_tsvector("name"), to_tsquery(${queryText})) DESC
-      LIMIT ${take} OFFSET ${skip};
-    `;
-
-    return {
-      receivedProducts,
-    };
   }
 }

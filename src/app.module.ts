@@ -6,20 +6,16 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ProductModule } from './product/product.module';
-import { DescriptionModule } from './description/description.module';
 import { DocumentModule } from './document/document.module';
 import { SupplierModule } from './supplier/supplier.module';
-import { CartModule } from './cart/cart.module';
-import { CategoryModule } from './category/category.module';
-import { CartProductModule } from './cart/cart-product/cart-product.module';
+import { OrderModule } from './order/order.module';
+import { ProductModule } from './product/product.module';
 import { RolesModule } from './roles/roles.module';
-import { ProfileModule } from './profile/profile.module';
 import { TypeModule } from './types/types.module';
 import { AddressModule } from './address/address.module';
 import { DeliveryModule } from './delivery/delivery.module';
 import { SizeModule } from './size/size.module';
-import { CartSizeModule } from './cart/cart-size/cart-size.module';
+import { OrderSizeModule } from './order/order-size/order-size.module';
 import config from './config';
 import PrismaModule from './prisma/prisma.module';
 
@@ -35,19 +31,15 @@ import PrismaModule from './prisma/prisma.module';
     AuthModule,
     UserModule,
     ProductModule,
-    DescriptionModule,
     DocumentModule,
     SupplierModule,
-    CartModule,
-    CategoryModule,
-    CartProductModule,
+    OrderModule,
     RolesModule,
-    ProfileModule,
     TypeModule,
     AddressModule,
     DeliveryModule,
     SizeModule,
-    CartSizeModule,
+    OrderSizeModule,
   ],
   controllers: [AppController],
   providers: [AppService, Logger],

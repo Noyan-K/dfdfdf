@@ -52,11 +52,11 @@ enum AddressTypeEnum {
   WAREHOUSE
 }
 
-type CartModel {
+type OrderModel {
   id: Int!
   document_id: Int
   cloth_sex: ClothSexEnum!
-  category_id: Int
+  product_id: Int
   custom_size: String
   custom_model: String
   custom_knot: String
@@ -72,15 +72,6 @@ enum ClothSexEnum {
   MALE
   FEMALE
   UNISEX
-}
-
-type Profile {
-  id: Int!
-  user_id: Int!
-  created_at: DateTime!
-  updated_at: DateTime!
-  deleted_at: DateTime
-  User: User!
 }
 
 type Document {
@@ -112,9 +103,8 @@ type User {
   deleted_at: DateTime
   Document: Document
   Supplier: SupplierModel
-  Cart: [CartModel!]
+  Cart: [OrderModel!]
   UserRole: [UserRole!]
-  Profile: Profile
   Address: Address
 }
 
@@ -137,83 +127,6 @@ enum RolesEnum {
 
 type ProductModel {
   id: Int!
-  name: String!
-  description_id: Int
-  category_id: Int
-  description: String
-  created_at: DateTime!
-  updated_at: DateTime!
-  deleted_at: DateTime
-}
-
-type Description {
-  id: Int!
-  text: String!
-  created_at: DateTime!
-  updated_at: DateTime!
-  deleted_at: DateTime
-  Product: [ProductModel!]
-}
-
-type CartProduct {
-  id: Int!
-  cart_id: Int!
-  product_id: Int
-  quantity: Int!
-  supplier_id: Int
-  created_at: DateTime!
-  updated_at: DateTime!
-  deleted_at: DateTime
-  Product: Product
-  Cart: CartModel!
-  Supplier: Supplier
-}
-
-type Size {
-  id: Int!
-  json: JSON!
-  created_at: DateTime!
-  updated_at: DateTime!
-  deleted_at: DateTime
-}
-
-"""
-The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
-"""
-scalar JSON
-
-type CartSize {
-  size_id: Int!
-  cart_id: Int!
-  created_at: DateTime!
-  updated_at: DateTime!
-  deleted_at: DateTime
-  Cart: CartModel!
-  Size: Size!
-}
-
-type Cart {
-  id: Int!
-  document_id: Int
-  cloth_sex: ClothSexEnum!
-  category_id: Int
-  custom_size: String
-  custom_model: String
-  custom_knot: String
-  custom_textile: String
-  additional_materials: String
-  artistic_description: String
-  created_at: DateTime!
-  updated_at: DateTime!
-  deleted_at: DateTime
-  CartProducts: [CartProduct!]
-  Category: Category
-  CartSize: [CartSize!]
-  Document: [Document!]
-}
-
-type CategoryModel {
-  id: Int!
   parent_id: Int
   name: String!
   mannequin: MannequinPositionEnum
@@ -230,24 +143,24 @@ enum MannequinPositionEnum {
   FULL
 }
 
-type CategoryDocument {
+type ProductDocument {
   id: Int!
-  category_id: Int!
+  product_id: Int!
   document_id: Int!
-  type: DocumentTypeOfCategoryEnum!
+  type: DocumentTypeOfProductEnum!
   created_at: DateTime!
   updated_at: DateTime!
   deleted_at: DateTime
-  Category: CategoryModel!
+  Product: ProductModel!
   Document: Document
 }
 
-enum DocumentTypeOfCategoryEnum {
+enum DocumentTypeOfProductEnum {
   MANNEQUIN
   PREVIEW
 }
 
-type Category {
+type Product {
   id: Int!
   parent_id: Int
   name: String!
@@ -257,43 +170,52 @@ type Category {
   created_at: DateTime!
   updated_at: DateTime!
   deleted_at: DateTime
-  Children: [Category!]
-  Parent: Category
-  Product: [ProductModel!]
-  Cart: [Cart!]
-  CategoryDocument: [CategoryDocument!]
-}
-
-type ProductDocument {
-  product_id: Int!
-  document_id: Int!
-  created_at: DateTime!
-  updated_at: DateTime!
-  deleted_at: DateTime
-  Document: Document!
-}
-
-type Product {
-  id: Int!
-  name: String!
-  description_id: Int
-  category_id: Int
-  description: String
-  created_at: DateTime!
-  updated_at: DateTime!
-  deleted_at: DateTime
-  Description: Description
-  Category: Category
+  Children: [Product!]
+  Parent: Product
+  Order: [Order!]
   ProductDocument: [ProductDocument!]
 }
 
-type GetProductsDto {
-  total: Int!
-  products: [Product!]
+type Size {
+  id: Int!
+  json: JSON!
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
 }
 
-type SearchResultModel {
-  receivedProducts: [ProductModel!]!
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+type OrderSize {
+  size_id: Int!
+  order_id: Int!
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+  Order: OrderModel!
+  Size: Size!
+}
+
+type Order {
+  id: Int!
+  document_id: Int
+  cloth_sex: ClothSexEnum!
+  product_id: Int
+  custom_size: String
+  custom_model: String
+  custom_knot: String
+  custom_textile: String
+  additional_materials: String
+  artistic_description: String
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+  Product: Product
+  OrderSize: [OrderSize!]
+  Document: [Document!]
 }
 
 type Delivery {
@@ -320,26 +242,21 @@ type Query {
   userRole(user_id: Int!, role_name: RolesEnum!): UserRole
   suppliers(findSuppliersInput: FindSuppliersInput!, take: Int, skip: Int): [Supplier!]!
   supplier(id: Int!): Supplier
-  products(FilterProductsInput: FilterProductsInput!, take: Int, skip: Int): GetProductsDto!
+  products(sex: ClothSexEnum!, parent_id: Int): [Product!]!
+  searchProducts(sex: ClothSexEnum!, search: String!): [Product!]!
   product(id: Int!): Product
-  searchProducts(take: Int!, skip: Int!, text: String!): SearchResultModel!
   documents(take: Int, skip: Int): [Document!]!
   document(id: Int!): Document!
   getDocuments(id: [Int!]!): [Document!]
   getDocument(id: Int!): [Document!]
-  carts(take: Int, skip: Int): [Cart!]!
-  cart(id: Int!): Cart
+  orders(take: Int, skip: Int): [Order!]!
+  order(id: Int!): Order
   generatePdf(id: Int!): Document
-  categories(sex: ClothSexEnum!, parent_id: Int): [Category!]!
-  searchCategories(sex: ClothSexEnum!, search: String!): [Category!]!
-  category(id: Int!): Category
-  profiles(skip: Int, take: Int): [Profile!]!
-  profile(id: Int!): Profile
   addresses(take: Int, skip: Int, supplier_id: Int): [Address!]!
   address(id: Int!): Address!
   sizes(take: Int, skip: Int): [Size!]!
   size(id: Int!): Size!
-  cartSize(id: Int!): CartSize!
+  orderSize(id: Int!): OrderSize!
 }
 
 input FindSuppliersInput {
@@ -351,10 +268,6 @@ enum SortByEnum {
   NAME
 }
 
-input FilterProductsInput {
-  search: String!
-}
-
 type Mutation {
   updateUser(updateUserInput: UpdateUserInput!): User!
   createUserRole(createUserRoleInput: CreateUserRoleInput!): UserRole!
@@ -363,29 +276,23 @@ type Mutation {
   updateSupplier(updateSupplierInput: UpdateSupplierInput!): Supplier
   removeSupplier(id: Int!): Supplier!
   createProduct(createProductInput: CreateProductInput!): Product!
-  updateProduct(updateProductInput: UpdateProductInput!): Product!
+  updateProduct(id: Int!, updateProductInput: UpdateProductInput!): Product
   removeProduct(id: Int!): Product!
   createDocument(createDocumentInput: CreateDocumentInput!): Document!
   updateDocument(updateDocumentInput: UpdateDocumentInput!): Document!
   removeDocument(id: Int!): Document!
-  createCart(createCartInput: CreateCartInput!): Cart!
-  updateCart(updateCartInput: UpdateCartInput!): Cart
-  deleteCart(id: Int!): Cart!
-  createCategory(createCategoryInput: CreateCategoryInput!): Category!
-  updateCategory(id: Int!, updateCategoryInput: UpdateCategoryInput!): Category
-  removeCategory(id: Int!): Category!
-  createProfile(createProfileInput: CreateProfileInput!): Profile!
-  updateProfile(updateProfileInput: UpdateProfileInput!): Profile!
-  removeProfile(id: Int!): Profile!
+  createOrder(createOrderInput: CreateOrderInput!): Order!
+  updateOrder(updateOrderInput: UpdateOrderInput!): Order
+  deleteOrder(id: Int!): Order!
   createAddress(createAddressInput: CreateAddressInput!): Address!
   updateAddress(id: Int!, updateAddressInput: UpdateAddressInput!): Address!
   removeAddress(id: Int!): Address!
   createSize(createSizeInput: CreateSizeInput!): Size!
   updateSize(id: Int!, updateSizeInput: UpdateSizeInput!): Size!
   removeSize(id: Int!): Size!
-  createCartSize(createCartSizeInput: CreateCartSizeInput!): CartSize!
-  updateCartSize(updateCartSizeInput: UpdateCartSizeInput!): CartSize!
-  removeCartSize(cart_id: Int!, size_id: Int!): CartSize!
+  createOrderSize(createOrderSizeInput: CreateOrderSizeInput!): OrderSize!
+  updateOrderSize(updateOrderSizeInput: UpdateOrderSizeInput!): OrderSize!
+  removeOrderSize(order_id: Int!, size_id: Int!): OrderSize!
 }
 
 input UpdateUserInput {
@@ -414,18 +321,21 @@ input UpdateSupplierInput {
 }
 
 input CreateProductInput {
+  parent_id: Int
   name: String!
+  sex: ClothSexEnum
   description: String
-  description_id: Int
-  array_of_document_ids: [Int!]
+  preview_document_id: Int!
+  mannequin_document_id: Int!
 }
 
 input UpdateProductInput {
+  parent_id: Int
   name: String
+  sex: ClothSexEnum
   description: String
-  description_id: Int
-  array_of_document_ids: [Int!]
-  id: Int!
+  preview_document_id: Int
+  mannequin_document_id: Int
 }
 
 input CreateDocumentInput {
@@ -441,7 +351,7 @@ input UpdateDocumentInput {
   id: Int!
 }
 
-input CreateCartInput {
+input CreateOrderInput {
   cloth_sex: ClothSexEnum
   category_id: Int
   custom_size: String
@@ -452,7 +362,7 @@ input CreateCartInput {
   artistic_description: String
 }
 
-input UpdateCartInput {
+input UpdateOrderInput {
   cloth_sex: ClothSexEnum
   category_id: Int
   custom_size: String
@@ -461,37 +371,6 @@ input UpdateCartInput {
   custom_textile: String
   additional_materials: String
   artistic_description: String
-  id: Int!
-}
-
-input CreateCategoryInput {
-  parent_id: Int
-  name: String!
-  sex: ClothSexEnum
-  description: String
-  preview_document_id: Int!
-  mannequin_document_id: Int!
-}
-
-input UpdateCategoryInput {
-  parent_id: Int
-  name: String
-  sex: ClothSexEnum
-  description: String
-  preview_document_id: Int
-  mannequin_document_id: Int
-}
-
-input CreateProfileInput {
-  user_id: Int!
-  supplier_id: Int
-  document_id: Int
-}
-
-input UpdateProfileInput {
-  user_id: Int
-  supplier_id: Int
-  document_id: Int
   id: Int!
 }
 
@@ -535,13 +414,13 @@ input UpdateSizeInput {
   hips_girth: String
 }
 
-input CreateCartSizeInput {
+input CreateOrderSizeInput {
   size_id: Int!
-  cart_id: Int!
+  order_id: Int!
 }
 
-input UpdateCartSizeInput {
+input UpdateOrderSizeInput {
   size_id: Int
-  cart_id: Int
+  order_id: Int
   id: Int!
 }

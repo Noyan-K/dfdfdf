@@ -8,16 +8,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Description {
-  id                   Int                    @id(map: "Descriptions_pk") @unique(map: "Descriptions_description_id_key") @default(autoincrement())
-  text                 String
-  created_at           DateTime               @default(now())
-  updated_at           DateTime               @updatedAt
-  deleted_at           DateTime?
-
-  Product              Product[]
-}
-
 enum DocumentTypeEnum {
   IMAGE
   FILE
@@ -32,39 +22,9 @@ model Document {
   updated_at           DateTime               @updatedAt
   deleted_at           DateTime?
 
-  Cart                 Cart[]
-  CategoryDocument     CategoryDocument[]
+  Order                Order[]
+  ProductDocument      ProductDocument[]
   User                 User[]
-  ProductDocument      ProductDocument[]
-}
-
-model Product {
-  id                   Int                    @id(map: "Products_pk") @unique(map: "Products_product_id_key") @default(autoincrement())
-  name                 String
-  description_id       Int?
-  category_id          Int?
-  description          String?
-  created_at           DateTime               @default(now())
-  updated_at           DateTime               @updatedAt
-  deleted_at           DateTime?
-
-  Description          Description?           @relation(fields: [description_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "product_description_id_fk")
-  CartProduct          CartProduct[]
-  Category             Category?              @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "product_category_id_fk")
-  ProductDocument      ProductDocument[]
-}
-
-model ProductDocument {
-  product_id           Int
-  document_id          Int
-  created_at           DateTime               @default(now())
-  updated_at           DateTime               @updatedAt
-  deleted_at           DateTime?
-
-  Product              Product                @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "model_product_id_fk")
-  Document             Document               @relation(fields: [document_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "model_document_id_fk")
-
-  @@id([product_id, document_id])
 }
 
 model Supplier {
@@ -76,7 +36,6 @@ model Supplier {
   updated_at                            DateTime               @updatedAt
   deleted_at                            DateTime?
 
-  CartProduct          CartProduct[]
   User                 User?
   Address              Address[]
 }
@@ -99,17 +58,11 @@ model Delivery {
   Parent                          Delivery?              @relation(name: "DeliveryToDelivery", fields: [parent_id], references: [id])
 }
 
-enum CartType {
-  CART
-  PRODUCT_WATCHLIST
-  SUPPLIER_WATCHLIST
-}
-
-model Cart {
+model Order {
   id                                    Int                    @id @default(autoincrement())
   document_id                           Int?
   cloth_sex                             ClothSexEnum
-  category_id                           Int?
+  product_id                            Int?
   custom_size                           String?                @db.VarChar(1024)
   custom_model                          String?                @db.VarChar(1024)
   custom_knot                           String?                @db.VarChar(1024)
@@ -120,30 +73,12 @@ model Cart {
   updated_at                            DateTime               @updatedAt
   deleted_at                            DateTime?
 
-  Category                              Category?              @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "category_id")
-  CartProducts                          CartProduct[]
-  CartSize                              CartSize[]
+  Product                               Product?               @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "product_id")
+  OrderSize                             OrderSize[]
   Document                              Document?              @relation(fields: [document_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "model_document_id_fk")
 }
 
-model CartProduct {
-  id                   Int                    @id @default(autoincrement())
-  cart_id              Int
-  product_id           Int?
-  quantity             Int                    @default(1)
-  supplier_id          Int?
-  created_at           DateTime               @default(now())
-  updated_at           DateTime               @updatedAt
-  deleted_at           DateTime?
-
-  Cart                 Cart                   @relation(fields: [cart_id], references: [id])
-  Product              Product?               @relation(fields: [product_id], references: [id])
-  Supplier             Supplier?              @relation(fields: [supplier_id], references: [id])
-
-  @@unique([cart_id, product_id])
-}
-
-model Category {
+model Product {
   id                           Int                           @id @default(autoincrement())
   name                         String
   parent_id                    Int?
@@ -154,29 +89,28 @@ model Category {
   updated_at                   DateTime                      @updatedAt
   deleted_at                   DateTime?
 
-  Children                     Category[]                    @relation(name: "CategoryToCategory")
-  Parent                       Category?                     @relation(name: "CategoryToCategory", fields: [parent_id], references: [id])
-  Cart                         Cart[]
-  Product                      Product[]
-  CategoryDocument             CategoryDocument[]
+  Children                     Product[]                    @relation(name: "ProductToProduct")
+  Parent                       Product?                     @relation(name: "ProductToProduct", fields: [parent_id], references: [id])
+  Order                        Order[]
+  ProductDocument              ProductDocument[]
 }
 
-model CategoryDocument {
+model ProductDocument {
   id                           Int                           @id @default(autoincrement())
-  category_id                  Int
+  product_id                   Int
   document_id                  Int
-  type                         DocumentTypeOfCategoryEnum
+  type                         DocumentTypeOfProductEnum
   created_at                   DateTime                      @default(now())
   updated_at                   DateTime                      @updatedAt
   deleted_at                   DateTime?
 
-  Category                     Category                      @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "category_id")
+  Product                      Product                       @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "product_id")
   Document                     Document                      @relation(fields: [document_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "model_document_id_fk")
 
-  @@unique([category_id, type])
+  @@unique([product_id, type])
 }
 
-enum DocumentTypeOfCategoryEnum {
+enum DocumentTypeOfProductEnum {
   MANNEQUIN
   PREVIEW
 }
@@ -207,7 +141,6 @@ model User {
   deleted_at               DateTime?
 
   Supplier                 Supplier?              @relation(fields: [supplier_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "supplier_id")
-  Profile                  Profile?
   UserRole                 UserRole[]
   Address                  Address[]
   Document                 Document?              @relation(fields: [document_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "model_document_id_fk")
@@ -237,16 +170,6 @@ model Address {
 enum AddressType {
   DELIVERY
   WAREHOUSE
-}
-
-model Profile {
-  id                   Int                    @id @default(autoincrement())
-  user_id              Int                    @unique
-  created_at           DateTime               @default(now())
-  updated_at           DateTime               @updatedAt
-  deleted_at           DateTime?
-
-  User                 User                   @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_id")
 }
 
 model UserRole {
@@ -280,18 +203,18 @@ model Size {
   updated_at           DateTime               @updatedAt
   deleted_at           DateTime?
 
-  CartSize             CartSize[]
+  OrderSize            OrderSize[]
 }
 
-model CartSize {
+model OrderSize {
   size_id              Int
-  cart_id              Int
+  order_id             Int
   created_at           DateTime               @default(now())
   updated_at           DateTime               @updatedAt
   deleted_at           DateTime?
 
-  Cart                 Cart                   @relation(fields: [cart_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "cart_id")
+  Order                Order                  @relation(fields: [order_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "order_id")
   Size                 Size                   @relation(fields: [size_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "size_id")
 
-  @@unique([cart_id, size_id])
+  @@unique([order_id, size_id])
 }
