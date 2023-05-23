@@ -17,9 +17,6 @@ export class UserModel implements User {
   @Field(() => Int, { nullable: true })
     document_id: number | null;
 
-  @Field(() => Int, { nullable: true })
-    currency_id: number | null;
-
   @Field(() => [Int], { defaultValue: [] })
     array_of_delivery_ids: number[];
 

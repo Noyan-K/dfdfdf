@@ -1,25 +1,24 @@
-import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { Product } from '@prisma/client';
+import {
+  ObjectType, Field, Int, registerEnumType,
+} from '@nestjs/graphql';
+import { ClothSexEnum, MannequinPositionEnum } from '@prisma/client';
 
 @ObjectType()
-export class ProductModel implements Product {
+export class ProductModel {
   @Field(() => Int)
     id: number;
 
   @Field(() => Int, { nullable: true })
-    vendor_id: number | null;
-
-  @Field(() => String)
-    vendor_partnumber: string;
+    parent_id: number | null;
 
   @Field(() => String)
     name: string;
 
-  @Field(() => Int, { nullable: true })
-    description_id: number | null;
+  @Field(() => MannequinPositionEnum, { nullable: true })
+    mannequin: MannequinPositionEnum | null;
 
-  @Field(() => Int, { nullable: true })
-    category_id: number | null;
+  @Field(() => ClothSexEnum, { nullable: true })
+    sex: ClothSexEnum | null;
 
   @Field(() => String, { nullable: true })
     description: string | null;
@@ -33,3 +32,11 @@ export class ProductModel implements Product {
   @Field(() => Date, { nullable: true })
     deleted_at: Date | null;
 }
+
+registerEnumType(MannequinPositionEnum, {
+  name: 'MannequinPositionEnum',
+});
+
+registerEnumType(ClothSexEnum, {
+  name: 'ClothSexEnum',
+});

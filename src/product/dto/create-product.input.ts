@@ -1,43 +1,35 @@
-import { InputType, Field, Int } from '@nestjs/graphql';
+import { InputType, Int, Field } from '@nestjs/graphql';
+import { ClothSexEnum } from '@prisma/client';
 import {
-  IsArray,
-  IsNotEmpty, IsNumber, IsOptional, IsString, ValidateNested,
+  IsEnum, IsNumber, IsOptional, IsString,
 } from 'class-validator';
 
 @InputType()
 export class CreateProductInput {
-  @IsNotEmpty()
-  @IsString()
-  @Field(() => String)
-    vendor_partnumber: string;
+  @IsOptional()
+  @IsNumber()
+  @Field(() => Int, { nullable: true })
+    parent_id: number | null;
 
-  @IsNotEmpty()
   @IsString()
   @Field(() => String)
     name: string;
 
   @IsOptional()
+  @IsEnum(ClothSexEnum)
+  @Field(() => ClothSexEnum, { nullable: true })
+    sex: ClothSexEnum | null;
+
+  @IsOptional()
   @IsString()
   @Field(() => String, { nullable: true })
-    description?: string | null;
+    description: string | null;
 
-  @IsOptional()
   @IsNumber()
-  @Field(() => Int, { nullable: true })
-    description_id?: number | undefined;
+  @Field(() => Int)
+    preview_document_id: number;
 
-  @IsOptional()
   @IsNumber()
-  @Field(() => Int, { nullable: true })
-    vendor_id?: number | undefined;
-
-  @IsOptional()
-  @IsArray()
-  @Field(() => [Int], { nullable: true })
-    array_of_document_ids?: number[];
-
-  @IsOptional()
-  @IsNumber()
-  @Field(() => Int, { nullable: true })
-    model_id?: number | undefined;
+  @Field(() => Int)
+    mannequin_document_id: number;
 }
