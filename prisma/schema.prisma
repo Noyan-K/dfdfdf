@@ -136,6 +136,7 @@ model User {
   document_id              Int?                   @unique
   supplier_id              Int?                   @unique
   array_of_delivery_ids    Int[]                  @default([])
+  telegram_id              Int?                   @unique
   created_at               DateTime               @default(now())
   updated_at               DateTime               @updatedAt
   deleted_at               DateTime?
