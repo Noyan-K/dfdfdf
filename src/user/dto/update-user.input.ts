@@ -37,4 +37,9 @@ export class UpdateUserInput {
   @IsNumber({}, { each: true })
   @Field(() => [Int], { nullable: true })
     array_of_delivery_ids: number[];
+
+  @IsOptional()
+  @IsNumber()
+  @Field(() => Int, { nullable: true })
+    telegram_id: number | null;
 }
