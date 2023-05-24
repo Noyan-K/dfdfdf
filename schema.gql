@@ -2,9 +2,10 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type CurrencyModel {
+type SupplierModel {
   id: Int!
-  name: String
+  deliver_goods_yourself: Boolean!
+  array_of_delivery_ids: [Int!]!
   created_at: DateTime!
   updated_at: DateTime!
   deleted_at: DateTime
@@ -15,60 +16,15 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type CurrencyRateModel {
-  currency_id: Int!
-  rate: Float
-  date: DateTime!
-  created_at: DateTime!
-  updated_at: DateTime!
-  deleted_at: DateTime
-}
-
-type SupplierProductPriceModel {
-  product_id: Int!
-  supplier_id: Int!
-  price_date: DateTime!
-  price: Float!
-  currency_id: Int!
-  created_at: DateTime!
-  updated_at: DateTime!
-  deleted_at: DateTime
-}
-
-type Currency {
-  id: Int!
-  name: String
-  created_at: DateTime!
-  updated_at: DateTime!
-  deleted_at: DateTime
-  CurrencyRate: [CurrencyRateModel!]!
-  SupplierProductPrice: [SupplierProductPriceModel!]
-  User: [User!]!
-  Supplier: [Supplier!]!
-}
-
-type SupplierModel {
-  id: Int!
-  currency_id: Int
-  deliver_goods_yourself: Boolean!
-  array_of_delivery_ids: [Int!]!
-  created_at: DateTime!
-  updated_at: DateTime!
-  deleted_at: DateTime
-}
-
 type Supplier {
   id: Int!
-  currency_id: Int
   deliver_goods_yourself: Boolean!
   array_of_delivery_ids: [Int!]!
   created_at: DateTime!
   updated_at: DateTime!
   deleted_at: DateTime
-  SupplierProductPrice: [SupplierProductPriceModel!]!
   User: User
   Address: Address
-  Currency: Currency!
 }
 
 type Address {
@@ -96,12 +52,11 @@ enum AddressTypeEnum {
   WAREHOUSE
 }
 
-type CartModel {
+type OrderModel {
   id: Int!
-  contact_id: Int
   document_id: Int
   cloth_sex: ClothSexEnum!
-  category_id: Int
+  product_id: Int
   custom_size: String
   custom_model: String
   custom_knot: String
@@ -117,15 +72,6 @@ enum ClothSexEnum {
   MALE
   FEMALE
   UNISEX
-}
-
-type Profile {
-  id: Int!
-  user_id: Int!
-  created_at: DateTime!
-  updated_at: DateTime!
-  deleted_at: DateTime
-  User: User!
 }
 
 type Document {
@@ -148,7 +94,6 @@ type User {
   name: String!
   user_name: String
   document_id: Int
-  currency_id: Int
   array_of_delivery_ids: [Int!]!
   supplier_id: Int
   email: String!
@@ -158,11 +103,9 @@ type User {
   deleted_at: DateTime
   Document: Document
   Supplier: SupplierModel
-  Cart: [CartModel!]
+  Cart: [OrderModel!]
   UserRole: [UserRole!]
-  Profile: Profile
   Address: Address
-  Currency: Currency!
 }
 
 enum UserTypeEnum {
@@ -182,207 +125,7 @@ enum RolesEnum {
   USER
 }
 
-type Delivery {
-  id: Int!
-  name: String!
-  type: DeliveryTypeEnum!
-  parent_id: Int
-  created_at: DateTime!
-  updated_at: DateTime!
-  deleted_at: DateTime
-  Children: [Delivery!]!
-  Parent: Delivery
-}
-
-enum DeliveryTypeEnum {
-  USER
-  SUPPLIER
-}
-
 type ProductModel {
-  id: Int!
-  vendor_id: Int
-  vendor_partnumber: String!
-  name: String!
-  description_id: Int
-  category_id: Int
-  description: String
-  created_at: DateTime!
-  updated_at: DateTime!
-  deleted_at: DateTime
-}
-
-type VendorModel {
-  id: Int!
-  name: String!
-  document_id: Int
-  created_at: DateTime!
-  updated_at: DateTime!
-  deleted_at: DateTime
-}
-
-type ModelProductModel {
-  product_id: Int!
-  model_id: Int!
-  created_at: Int!
-  updated_at: Int!
-  deleted_at: Int
-}
-
-type ModelModel {
-  id: Int!
-  name: String!
-  vendor_id: Int
-  created_at: DateTime!
-  updated_at: DateTime!
-  deleted_at: DateTime
-}
-
-type Model {
-  id: Int!
-  name: String!
-  vendor_id: Int
-  created_at: DateTime!
-  updated_at: DateTime!
-  deleted_at: DateTime
-  Vendor: VendorModel
-  ModelProduct: [ModelProductModel!]
-}
-
-type Vendor {
-  id: Int!
-  name: String!
-  document_id: Int
-  created_at: DateTime!
-  updated_at: DateTime!
-  deleted_at: DateTime
-  Document: Document
-  Model: [Model!]
-  Product: [ProductModel!]
-}
-
-type SupplierProductPrice {
-  product_id: Int!
-  supplier_id: Int!
-  price_date: DateTime!
-  price: Float!
-  currency_id: Int!
-  created_at: DateTime!
-  updated_at: DateTime!
-  deleted_at: DateTime
-  Currency: CurrencyModel
-  Product: ProductModel
-  Supplier: Supplier
-}
-
-type ModelProduct {
-  product_id: Int!
-  model_id: Int!
-  created_at: Int!
-  updated_at: Int!
-  deleted_at: Int
-  Model: Model!
-  Product: ProductModel!
-}
-
-type DescriptionModel {
-  id: Int!
-  text: String!
-  language_id: Int!
-  created_at: DateTime!
-  updated_at: DateTime!
-  deleted_at: DateTime
-}
-
-type LanguageModel {
-  id: Int!
-  language: String!
-  created_at: DateTime!
-  updated_at: DateTime!
-  deleted_at: DateTime
-}
-
-type Description {
-  id: Int!
-  text: String!
-  language_id: Int!
-  created_at: DateTime!
-  updated_at: DateTime!
-  deleted_at: DateTime
-  Language: LanguageModel!
-  Product: [ProductModel!]
-}
-
-type Contact {
-  id: Int!
-  name: String!
-  email: String!
-  created_at: DateTime!
-  updated_at: DateTime!
-  deleted_at: DateTime
-  Cart: [Cart!]!
-}
-
-type CartProduct {
-  id: Int!
-  cart_id: Int!
-  product_id: Int
-  quantity: Int!
-  supplier_id: Int
-  created_at: DateTime!
-  updated_at: DateTime!
-  deleted_at: DateTime
-  Product: Product
-  Cart: CartModel!
-  Supplier: Supplier
-}
-
-type Size {
-  id: Int!
-  json: JSON!
-  created_at: DateTime!
-  updated_at: DateTime!
-  deleted_at: DateTime
-}
-
-"""
-The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
-"""
-scalar JSON
-
-type CartSize {
-  size_id: Int!
-  cart_id: Int!
-  created_at: DateTime!
-  updated_at: DateTime!
-  deleted_at: DateTime
-  Cart: CartModel!
-  Size: Size!
-}
-
-type Cart {
-  id: Int!
-  contact_id: Int
-  document_id: Int
-  cloth_sex: ClothSexEnum!
-  category_id: Int
-  custom_size: String
-  custom_model: String
-  custom_knot: String
-  custom_textile: String
-  additional_materials: String
-  artistic_description: String
-  created_at: DateTime!
-  updated_at: DateTime!
-  deleted_at: DateTime
-  CartProducts: [CartProduct!]
-  Contact: Contact
-  Category: Category
-  CartSize: [CartSize!]
-  Document: [Document!]
-}
-
-type CategoryModel {
   id: Int!
   parent_id: Int
   name: String!
@@ -400,24 +143,24 @@ enum MannequinPositionEnum {
   FULL
 }
 
-type CategoryDocument {
+type ProductDocument {
   id: Int!
-  category_id: Int!
+  product_id: Int!
   document_id: Int!
-  type: DocumentTypeOfCategoryEnum!
+  type: DocumentTypeOfProductEnum!
   created_at: DateTime!
   updated_at: DateTime!
   deleted_at: DateTime
-  Category: CategoryModel!
+  Product: ProductModel!
   Document: Document
 }
 
-enum DocumentTypeOfCategoryEnum {
+enum DocumentTypeOfProductEnum {
   MANNEQUIN
   PREVIEW
 }
 
-type Category {
+type Product {
   id: Int!
   parent_id: Int
   name: String!
@@ -427,144 +170,93 @@ type Category {
   created_at: DateTime!
   updated_at: DateTime!
   deleted_at: DateTime
-  Children: [Category!]
-  Parent: Category
-  Product: [ProductModel!]
-  Cart: [Cart!]
-  CategoryDocument: [CategoryDocument!]
-}
-
-type ProductDocument {
-  product_id: Int!
-  document_id: Int!
-  created_at: DateTime!
-  updated_at: DateTime!
-  deleted_at: DateTime
-  Document: Document!
-  Product: ProductModel!
-}
-
-type Product {
-  id: Int!
-  vendor_id: Int
-  vendor_partnumber: String!
-  name: String!
-  description_id: Int
-  category_id: Int
-  description: String
-  created_at: DateTime!
-  updated_at: DateTime!
-  deleted_at: DateTime
-  Vendor: Vendor
-  SupplierProductPrice: [SupplierProductPrice!]
-  ModelProduct: [ModelProduct!]
-  Description: Description
-  Category: Category
+  Children: [Product!]
+  Parent: Product
+  Order: [Order!]
   ProductDocument: [ProductDocument!]
 }
 
-type GetProductsDto {
-  total: Int!
-  products: [Product!]
-}
-
-type SearchResultModel {
-  receivedProducts: [ProductModel!]!
-  receivedModels: [ModelModel!]!
-  receivedVendors: [VendorModel!]!
-}
-
-type ComparedProduct {
+type Size {
   id: Int!
-  vendor_id: Int
-  vendor_partnumber: String!
+  json: JSON!
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+type OrderSize {
+  size_id: Int!
+  order_id: Int!
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+  Order: OrderModel!
+  Size: Size!
+}
+
+type Order {
+  id: Int!
+  document_id: Int
+  cloth_sex: ClothSexEnum!
+  product_id: Int
+  custom_size: String
+  custom_model: String
+  custom_knot: String
+  custom_textile: String
+  additional_materials: String
+  artistic_description: String
+  created_at: DateTime!
+  updated_at: DateTime!
+  deleted_at: DateTime
+  Product: Product
+  OrderSize: [OrderSize!]
+  Document: [Document!]
+}
+
+type Delivery {
+  id: Int!
   name: String!
-  description_id: Int
-  category_id: Int
-  description: String
+  type: DeliveryTypeEnum!
+  parent_id: Int
   created_at: DateTime!
   updated_at: DateTime!
   deleted_at: DateTime
-  Vendor: Vendor
-  SupplierProductPrice: [SupplierProductPrice!]
-  ModelProduct: [ModelProduct!]
-  Description: Description
-  Category: Category
-  ProductDocument: [ProductDocument!]
-  supplier_price: Float
-  supplier_with_price: Float!
-  price_difference: Float!
+  Children: [Delivery!]!
+  Parent: Delivery
 }
 
-type GetComparedProductsDto {
-  total: Int!
-  products: [ComparedProduct!]
-}
-
-type Language {
-  id: Int!
-  language: String!
-  created_at: DateTime!
-  updated_at: DateTime!
-  deleted_at: DateTime
-  Description: [DescriptionModel!]!
-}
-
-type CurrencyRate {
-  currency_id: Int!
-  rate: Float
-  date: DateTime!
-  created_at: DateTime!
-  updated_at: DateTime!
-  deleted_at: DateTime
-  Currency: CurrencyModel!
+enum DeliveryTypeEnum {
+  USER
+  SUPPLIER
 }
 
 type Query {
   user: User
   getProfile: User
-  documents(take: Int, skip: Int): [Document!]!
-  document(id: Int!): Document!
-  getDocuments(id: [Int!]!): [Document!]
-  getDocument(id: Int!): [Document!]
   userRoles(user_id: Int!, skip: Int, take: Int): [UserRole!]!
   userRole(user_id: Int!, role_name: RolesEnum!): UserRole
   suppliers(findSuppliersInput: FindSuppliersInput!, take: Int, skip: Int): [Supplier!]!
   supplier(id: Int!): Supplier
-  products(FilterProductsInput: FilterProductsInput!, take: Int, skip: Int): GetProductsDto!
-  compareProducts(FilterProductsInput: FilterProductsInput!, CompareProductsInput: CompareProductsInput!, take: Int, skip: Int): GetComparedProductsDto!
+  products(sex: ClothSexEnum!, parent_id: Int): [Product!]!
+  searchProducts(sex: ClothSexEnum!, search: String!): [Product!]!
   product(id: Int!): Product
-  searchProducts(take: Int!, skip: Int!, text: String!): SearchResultModel!
-  currencies(take: Int, skip: Int): [Currency!]!
-  currency(id: Int!): Currency
-  languages(skip: Int, take: Int): [Language!]!
-  language(id: Int!): Language
-  models(take: Int, skip: Int, sortOrder: SearchMode): [Model!]!
-  model(id: Int!): Model
-  vendors(take: Int, skip: Int, vendor_id: Int): [Vendor!]!
-  vendor(id: Int!): Vendor
-  getFilteredVendorsList: [Vendor!]!
-  getVendorsModelList(vendor_id: Int): [Vendor!]!
-  currencyRates(skip: Int, take: Int): [CurrencyRate!]!
-  currencyRate(findUniqueCurrencyRateInput: FindUniqueCurrencyRateInput!): CurrencyRate
-  supplierProductPrices(take: Int, skip: Int): [SupplierProductPrice!]!
-  supplierProductPrice(product_id: Int!, supplier_id: Int!, price_date: DateTime!): SupplierProductPrice
-  carts(contact_id: Int!, take: Int, skip: Int): [Cart!]!
-  cart(id: Int!): Cart
+  documents(take: Int, skip: Int): [Document!]!
+  document(id: Int!): Document!
+  getDocuments(id: [Int!]!): [Document!]
+  getDocument(id: Int!): [Document!]
+  orders(take: Int, skip: Int): [Order!]!
+  order(id: Int!): Order
   generatePdf(id: Int!): Document
-  categories(sex: ClothSexEnum!, parent_id: Int): [Category!]!
-  searchCategories(sex: ClothSexEnum!, search: String!): [Category!]!
-  category(id: Int!): Category
-  profiles(skip: Int, take: Int): [Profile!]!
-  profile(id: Int!): Profile
-  modelProduct(product_id: Int!, model_id: Int!): ModelProduct!
   addresses(take: Int, skip: Int, supplier_id: Int): [Address!]!
   address(id: Int!): Address!
   sizes(take: Int, skip: Int): [Size!]!
   size(id: Int!): Size!
-  contacts: [Contact!]!
-  contact(id: Int!): Contact
-  cartSize(id: Int!): CartSize!
+  orderSize(id: Int!): OrderSize!
 }
 
 input FindSuppliersInput {
@@ -576,82 +268,31 @@ enum SortByEnum {
   NAME
 }
 
-input FilterProductsInput {
-  search: String!
-  vendor_ids: [Int!]
-  model_ids: [Int!]
-}
-
-input CompareProductsInput {
-  supplier_id: Int
-  supplier_id_with: Int!
-}
-
-enum SearchMode {
-  default
-  insensitive
-}
-
-input FindUniqueCurrencyRateInput {
-  currency_id: Int!
-  date: DateTime!
-}
-
 type Mutation {
   updateUser(updateUserInput: UpdateUserInput!): User!
-  createDocument(createDocumentInput: CreateDocumentInput!): Document!
-  updateDocument(updateDocumentInput: UpdateDocumentInput!): Document!
-  removeDocument(id: Int!): Document!
   createUserRole(createUserRoleInput: CreateUserRoleInput!): UserRole!
   removeUserRole(user_id: Int!, role_name: RolesEnum!): UserRole!
   createSupplier(createSupplierInput: CreateSupplierInput!): Supplier!
   updateSupplier(updateSupplierInput: UpdateSupplierInput!): Supplier
   removeSupplier(id: Int!): Supplier!
   createProduct(createProductInput: CreateProductInput!): Product!
-  updateProduct(updateProductInput: UpdateProductInput!): Product!
+  updateProduct(id: Int!, updateProductInput: UpdateProductInput!): Product
   removeProduct(id: Int!): Product!
-  createCurrency(createCurrencyInput: CreateCurrencyInput!): Currency!
-  updateCurrency(updateCurrencyInput: UpdateCurrencyInput!): Currency!
-  removeCurrency(id: Int!): Currency!
-  createLanguage(createLanguageInput: CreateLanguageInput!): Language!
-  updateLanguage(updateLanguageInput: UpdateLanguageInput!): Language!
-  removeLanguage(id: Int!): Language!
-  createModel(createModelInput: CreateModelInput!): Model!
-  updateModel(updateModelInput: UpdateModelInput!): Model!
-  removeModel(id: Int!): Model!
-  createVendor(createVendorInput: CreateVendorInput!): Vendor!
-  updateVendor(updateVendorInput: UpdateVendorInput!): Vendor!
-  removeVendor(id: Int!): Vendor!
-  createCurrencyRate(createCurrencyRateInput: CreateCurrencyRateInput!): CurrencyRate!
-  updateCurrencyRate(updateCurrencyRateInput: UpdateCurrencyRateInput!): CurrencyRate!
-  removeCurrencyRate(findUniqueCurrencyRateInput: FindUniqueCurrencyRateInput!): CurrencyRate!
-  createSupplierProductPrice(createSupplierProductPriceInput: CreateSupplierProductPriceInput!): SupplierProductPrice!
-  updateSupplierProductPrice(updateSupplierProductPriceInput: UpdateSupplierProductPriceInput!): SupplierProductPrice!
-  removeSupplierProductPrice(product_id: Int!, supplier_id: Int!, price_date: DateTime!): SupplierProductPrice!
-  createCart(createCartInput: CreateCartInput!): Cart!
-  updateCart(updateCartInput: UpdateCartInput!): Cart
-  deleteCart(id: Int!): Cart!
-  createCategory(createCategoryInput: CreateCategoryInput!): Category!
-  updateCategory(id: Int!, updateCategoryInput: UpdateCategoryInput!): Category
-  removeCategory(id: Int!): Category!
-  createProfile(createProfileInput: CreateProfileInput!): Profile!
-  updateProfile(updateProfileInput: UpdateProfileInput!): Profile!
-  removeProfile(id: Int!): Profile!
-  createModelProduct(createModelProductInput: CreateModelProductInput!): ModelProduct!
-  updateModelProduct(product_id: Int!, model_id: Int!): ModelProduct!
-  removeModelProduct(product_id: Int!, model_id: Int!): ModelProduct!
+  createDocument(createDocumentInput: CreateDocumentInput!): Document!
+  updateDocument(updateDocumentInput: UpdateDocumentInput!): Document!
+  removeDocument(id: Int!): Document!
+  createOrder(createOrderInput: CreateOrderInput!): Order!
+  updateOrder(updateOrderInput: UpdateOrderInput!): Order
+  deleteOrder(id: Int!): Order!
   createAddress(createAddressInput: CreateAddressInput!): Address!
   updateAddress(id: Int!, updateAddressInput: UpdateAddressInput!): Address!
   removeAddress(id: Int!): Address!
   createSize(createSizeInput: CreateSizeInput!): Size!
   updateSize(id: Int!, updateSizeInput: UpdateSizeInput!): Size!
   removeSize(id: Int!): Size!
-  createContact(createContactInput: CreateContactInput!): Contact!
-  updateContact(id: Int!, updateContactInput: UpdateContactInput!): Contact
-  removeContact(id: Int!): Contact!
-  createCartSize(createCartSizeInput: CreateCartSizeInput!): CartSize!
-  updateCartSize(updateCartSizeInput: UpdateCartSizeInput!): CartSize!
-  removeCartSize(cart_id: Int!, size_id: Int!): CartSize!
+  createOrderSize(createOrderSizeInput: CreateOrderSizeInput!): OrderSize!
+  updateOrderSize(updateOrderSizeInput: UpdateOrderSizeInput!): OrderSize!
+  removeOrderSize(order_id: Int!, size_id: Int!): OrderSize!
 }
 
 input UpdateUserInput {
@@ -661,6 +302,40 @@ input UpdateUserInput {
   password: String!
   currency_id: Int
   array_of_delivery_ids: [Int!]
+}
+
+input CreateUserRoleInput {
+  user_id: Int!
+  role_name: RolesEnum!
+}
+
+input CreateSupplierInput {
+  name: String!
+}
+
+input UpdateSupplierInput {
+  name: String
+  id: Int!
+  deliver_goods_yourself: Boolean
+  array_of_delivery_ids: [Int!]
+}
+
+input CreateProductInput {
+  parent_id: Int
+  name: String!
+  sex: ClothSexEnum
+  description: String
+  preview_document_id: Int!
+  mannequin_document_id: Int!
+}
+
+input UpdateProductInput {
+  parent_id: Int
+  name: String
+  sex: ClothSexEnum
+  description: String
+  preview_document_id: Int
+  mannequin_document_id: Int
 }
 
 input CreateDocumentInput {
@@ -676,114 +351,7 @@ input UpdateDocumentInput {
   id: Int!
 }
 
-input CreateUserRoleInput {
-  user_id: Int!
-  role_name: RolesEnum!
-}
-
-input CreateSupplierInput {
-  name: String!
-}
-
-input UpdateSupplierInput {
-  name: String
-  id: Int!
-  currency_id: Int
-  deliver_goods_yourself: Boolean
-  array_of_delivery_ids: [Int!]
-}
-
-input CreateProductInput {
-  vendor_partnumber: String!
-  name: String!
-  description: String
-  description_id: Int
-  vendor_id: Int
-  array_of_document_ids: [Int!]
-  model_id: Int
-}
-
-input UpdateProductInput {
-  vendor_partnumber: String
-  name: String
-  description: String
-  description_id: Int
-  vendor_id: Int
-  array_of_document_ids: [Int!]
-  model_id: Int
-  id: Int!
-}
-
-input CreateCurrencyInput {
-  name: String!
-}
-
-input UpdateCurrencyInput {
-  name: String
-  id: Int!
-}
-
-input CreateLanguageInput {
-  language: String!
-}
-
-input UpdateLanguageInput {
-  language: String
-  id: Int!
-}
-
-input CreateModelInput {
-  name: String!
-  vendor_id: Int
-}
-
-input UpdateModelInput {
-  name: String
-  vendor_id: Int
-  id: Int!
-}
-
-input CreateVendorInput {
-  name: String!
-  document_id: Int
-}
-
-input UpdateVendorInput {
-  name: String
-  document_id: Int
-  id: Int!
-}
-
-input CreateCurrencyRateInput {
-  currency_id: Int!
-  rate: Float!
-  date: DateTime!
-}
-
-input UpdateCurrencyRateInput {
-  currency_id: Int
-  rate: Float
-  date: DateTime
-}
-
-input CreateSupplierProductPriceInput {
-  product_id: Int!
-  supplier_id: Int!
-  price_date: DateTime!
-  price: Int!
-  currency_id: Int!
-}
-
-input UpdateSupplierProductPriceInput {
-  product_id: Int!
-  supplier_id: Int!
-  price_date: DateTime!
-  price: Int
-  currency_id: Int
-}
-
-input CreateCartInput {
-  contact_id: Int
+input CreateOrderInput {
   cloth_sex: ClothSexEnum
   category_id: Int
   custom_size: String
@@ -794,8 +362,7 @@ input CreateCartInput {
   artistic_description: String
 }
 
-input UpdateCartInput {
-  contact_id: Int
+input UpdateOrderInput {
   cloth_sex: ClothSexEnum
   category_id: Int
   custom_size: String
@@ -805,42 +372,6 @@ input UpdateCartInput {
   additional_materials: String
   artistic_description: String
   id: Int!
-}
-
-input CreateCategoryInput {
-  parent_id: Int
-  name: String!
-  sex: ClothSexEnum
-  description: String
-  preview_document_id: Int!
-  mannequin_document_id: Int!
-}
-
-input UpdateCategoryInput {
-  parent_id: Int
-  name: String
-  sex: ClothSexEnum
-  description: String
-  preview_document_id: Int
-  mannequin_document_id: Int
-}
-
-input CreateProfileInput {
-  user_id: Int!
-  supplier_id: Int
-  document_id: Int
-}
-
-input UpdateProfileInput {
-  user_id: Int
-  supplier_id: Int
-  document_id: Int
-  id: Int!
-}
-
-input CreateModelProductInput {
-  product_id: Int!
-  model_id: Int!
 }
 
 input CreateAddressInput {
@@ -883,23 +414,13 @@ input UpdateSizeInput {
   hips_girth: String
 }
 
-input CreateContactInput {
-  name: String!
-  email: String!
-}
-
-input UpdateContactInput {
-  name: String
-  email: String
-}
-
-input CreateCartSizeInput {
+input CreateOrderSizeInput {
   size_id: Int!
-  cart_id: Int!
+  order_id: Int!
 }
 
-input UpdateCartSizeInput {
+input UpdateOrderSizeInput {
   size_id: Int
-  cart_id: Int
+  order_id: Int
   id: Int!
 }
