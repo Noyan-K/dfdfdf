@@ -29,6 +29,9 @@ export class UserModel implements User {
   @Field(() => UserTypeEnum)
     type: UserTypeEnum;
 
+  @Field(() => Int, { nullable: true })
+    telegram_id: number | null;
+
   @Field(() => Date)
     created_at: Date;
 
