@@ -11,18 +11,19 @@ import { User } from '../user/models/user.model';
 import { LoginDto } from './dto/login.dto';
 import { JwtPayload } from './interfaces/jwtPayload.interface';
 import { RegistrationDto } from './dto/registration.dto';
+import { JwtResetPasswordGuard } from './guards/jwt-reset-password.guard';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  // @Post('registration')
-  // @ApiBody({ type: RegistrationDto })
-  // async registration(
-  //   @Body() registrationDto: RegistrationDto,
-  // ): Promise<TokensInterface> {
-  //   return this.authService.registration(registrationDto);
-  // }
+  @Post('registration')
+  @ApiBody({ type: RegistrationDto })
+  async registration(
+    @Body() registrationDto: RegistrationDto,
+  ): Promise<void> {
+    return this.authService.registration(registrationDto);
+  }
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
@@ -36,5 +37,22 @@ export class AuthController {
   refresh(@Req() req: Request): Promise<TokensInterface> {
     const { sub } = req.user as JwtPayload;
     return this.authService.refresh(sub);
+  }
+
+  @UseGuards(JwtResetPasswordGuard)
+  @Post('reset-password')
+  resetPassword(
+    @Req() req: Request,
+      @Body('password') password?: string,
+  ): Promise<TokensInterface> {
+    const { email, sub } = req.user as JwtPayload;
+    return this.authService.resetPassword(email, sub, password);
+  }
+
+  @Post('forgot-password')
+  forgotPassword(
+    @Body('email') email: string,
+  ): Promise<void> {
+    return this.authService.forgotPassword(email);
   }
 }
