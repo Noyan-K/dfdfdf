@@ -15,7 +15,7 @@ export class User extends UserModel {
     Supplier?: SupplierModel | null;
 
   @Field(() => [OrderModel], { nullable: true })
-    Cart?: OrderModel[];
+    Order?: OrderModel[];
 
   @Field(() => [UserRole], { nullable: true })
     UserRole?: UserRole[];
