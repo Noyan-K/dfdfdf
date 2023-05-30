@@ -29,11 +29,6 @@ export class UpdateUserInput {
     password: string;
 
   @IsOptional()
-  @IsNumber()
-  @Field(() => Int, { nullable: true })
-    currency_id: number | null;
-
-  @IsOptional()
   @IsNumber({}, { each: true })
   @Field(() => [Int], { nullable: true })
     array_of_delivery_ids: number[];

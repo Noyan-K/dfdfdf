@@ -1,18 +1,15 @@
 import {
-  Field, Int, ObjectType, registerEnumType,
+  Field, Int, ObjectType,
 } from '@nestjs/graphql';
-import { User, UserTypeEnum } from '@prisma/client';
+import { User } from '@prisma/client';
 
 @ObjectType()
 export class UserModel implements User {
   @Field(() => Int)
     id: number;
 
-  @Field(() => String)
-    name: string;
-
   @Field(() => String, { nullable: true })
-    user_name: string | null;
+    name: string | null;
 
   @Field(() => Int, { nullable: true })
     document_id: number | null;
@@ -26,9 +23,6 @@ export class UserModel implements User {
   @Field(() => String)
     email: string;
 
-  @Field(() => UserTypeEnum)
-    type: UserTypeEnum;
-
   @Field(() => Int, { nullable: true })
     telegram_id: number | null;
 
@@ -41,9 +35,5 @@ export class UserModel implements User {
   @Field(() => Date, { nullable: true })
     deleted_at: Date | null;
 
-  password: string | null;
+  password: string;
 }
-
-registerEnumType(UserTypeEnum, {
-  name: 'UserTypeEnum',
-});
