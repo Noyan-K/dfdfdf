@@ -1,15 +1,19 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { ConfigService } from '@nestjs/config';
-import { v4 as uuidv4 } from 'uuid';
 import * as path from 'path';
 import * as fs from 'fs';
+
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+
+import { PrismaService } from 'src/prisma/prisma.service';
+import { v4 as uuidv4 } from 'uuid';
 import { DocumentTypeEnum } from '@prisma/client';
+
 import { Order } from './models/order.model';
-import { DocumentService } from '../document/document.service';
 import { UpdateOrderInput } from './dto/update-order.input';
-import { Document } from '../document/models/document.model';
 import { CreateOrderInput } from './dto/create-order.input';
+
+import { DocumentService } from '../document/document.service';
+import { Document } from '../document/models/document.model';
 
 const pdf = require('pdf-creator-node');
 
@@ -78,7 +82,9 @@ export class OrderService {
       },
     });
 
-    if (!order) throw new NotFoundException();
+    if (!order) {
+      throw new NotFoundException();
+    }
 
     const staticPath = this.config.get('STATIC_PATH');
     const templatesPath = this.config.get('TEMPLATES_PATH');
@@ -94,7 +100,10 @@ export class OrderService {
 
     await pdf.create(
       {
-        html, data: order, path: pth, type: '',
+        html,
+        data: order,
+        path: pth,
+        type: '',
       },
       {
         format: 'A4',

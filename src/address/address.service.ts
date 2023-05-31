@@ -1,5 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+
 import { PrismaService } from 'src/prisma/prisma.service';
+
 import { CreateAddressInput } from './dto/create-address.input';
 import { UpdateAddressInput } from './dto/update-address.input';
 import { Address } from './models/address.model';
@@ -12,8 +14,9 @@ export class AddressService {
     user_id: number,
     createAddressInput: CreateAddressInput,
   ): Promise<Address> {
-    const name = createAddressInput.name
-      ?? `Адрес доставки №${await this.prismaService.address.count({
+    const name =
+      createAddressInput.name ??
+      `Адрес доставки №${await this.prismaService.address.count({
         where: { user_id },
       })}`;
     const receivedUser = await this.prismaService.user.findFirst({
@@ -38,20 +41,20 @@ export class AddressService {
   ): Promise<Address[]> {
     return supplier_id
       ? this.prismaService.address.findMany({
-        where: {
-          supplier_id,
-          type: 'WAREHOUSE',
-        },
-        skip,
-        take,
-      })
+          where: {
+            supplier_id,
+            type: 'WAREHOUSE',
+          },
+          skip,
+          take,
+        })
       : this.prismaService.address.findMany({
-        where: {
-          user_id,
-        },
-        skip,
-        take,
-      });
+          where: {
+            user_id,
+          },
+          skip,
+          take,
+        });
   }
 
   async findOne(id: number, user_id: number): Promise<Address | null> {
@@ -60,9 +63,9 @@ export class AddressService {
     });
 
     if (
-      (receivedAddress?.type === 'DELIVERY'
-        && receivedAddress?.user_id === user_id)
-      || receivedAddress?.type === 'WAREHOUSE'
+      (receivedAddress?.type === 'DELIVERY' &&
+        receivedAddress.user_id === user_id) ||
+      receivedAddress?.type === 'WAREHOUSE'
     ) {
       return receivedAddress;
     }

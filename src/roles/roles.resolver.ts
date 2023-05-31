@@ -7,8 +7,10 @@ import {
   registerEnumType,
 } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common/decorators';
+
 import { GqlJwtAuthGuard } from 'src/auth/guards/gql-jwt-auth.guard';
 import { RolesEnum } from '@prisma/client';
+
 import { RolesService } from './roles.service';
 import { CreateUserRoleInput } from './dto/create-user-role.input';
 import { UserRole } from './models/user-role.models';
@@ -30,8 +32,8 @@ export class RolesResolver {
   @Query(() => [UserRole], { name: 'userRoles' })
   findAllUserRole(
     @Args('user_id', { type: () => Int }) user_id: number,
-      @Args('skip', { type: () => Int, nullable: true }) skip?: number,
-      @Args('take', { type: () => Int, nullable: true }) take?: number,
+    @Args('skip', { type: () => Int, nullable: true }) skip?: number,
+    @Args('take', { type: () => Int, nullable: true }) take?: number,
   ): Promise<UserRoleModel[]> {
     return this.rolesService.findAllUserRole(user_id, skip, take);
   }
@@ -40,7 +42,7 @@ export class RolesResolver {
   @Query(() => UserRole, { name: 'userRole', nullable: true })
   findOneUserRole(
     @Args('user_id', { type: () => Int }) user_id: number,
-      @Args('role_name', { type: () => RolesEnum }) role_name: RolesEnum,
+    @Args('role_name', { type: () => RolesEnum }) role_name: RolesEnum,
   ): Promise<UserRoleModel | null> {
     return this.rolesService.findOneUserRole(user_id, role_name);
   }
@@ -49,7 +51,7 @@ export class RolesResolver {
   @Mutation(() => UserRole)
   removeUserRole(
     @Args('user_id', { type: () => Int }) user_id: number,
-      @Args('role_name', { type: () => RolesEnum }) role_name: RolesEnum,
+    @Args('role_name', { type: () => RolesEnum }) role_name: RolesEnum,
   ): Promise<UserRoleModel> {
     return this.rolesService.deleteUserRole(user_id, role_name);
   }

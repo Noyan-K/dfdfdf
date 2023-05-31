@@ -4,6 +4,8 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
+
 import * as bcrypt from 'bcrypt';
 import { User } from 'src/user/models/user.model';
 import { ConfigService } from '@nestjs/config';
@@ -96,9 +98,9 @@ export class AuthService {
       undefined,
     );
     const payload = {
-      email: user?.email,
-      sub: user?.id,
-      name: user?.name,
+      email: user.email,
+      sub: user.id,
+      name: user.name,
       roles: receivedUsersRoles
         ? receivedUsersRoles.map((role: UserRoleModel) => role.role_name)
         : [],
@@ -122,7 +124,7 @@ export class AuthService {
     return this.generateTokens({
       email: receivedUser.email,
       sub: receivedUser.id,
-      name: receivedUser?.name,
+      name: receivedUser.name,
       roles: receivedUsersRoles
         ? receivedUsersRoles.map((role: UserRoleModel) => role.role_name)
         : [],

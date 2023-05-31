@@ -1,7 +1,7 @@
-import {
-  Resolver, Query, Mutation, Args, Int,
-} from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+
 import { ClothSexEnum } from '@prisma/client';
+
 import { ProductService } from './product.service';
 import { Product } from './models/product.model';
 import { CreateProductInput } from './dto/create-product.input';
@@ -21,7 +21,7 @@ export class ProductResolver {
   @Query(() => [Product], { name: 'products' })
   findAll(
     @Args('sex', { type: () => ClothSexEnum }) sex: ClothSexEnum,
-      @Args('parent_id', { type: () => Int, nullable: true }) parent_id?: number,
+    @Args('parent_id', { type: () => Int, nullable: true }) parent_id?: number,
   ): Promise<Product[]> {
     return this.productService.findAll(sex, parent_id);
   }
@@ -29,7 +29,7 @@ export class ProductResolver {
   @Query(() => [Product], { name: 'searchProducts' })
   search(
     @Args('sex', { type: () => ClothSexEnum }) sex: ClothSexEnum,
-      @Args('search', { type: () => String }) search?: string,
+    @Args('search', { type: () => String }) search?: string,
   ): Promise<Product[]> {
     return this.productService.search(sex, search);
   }
@@ -44,15 +44,13 @@ export class ProductResolver {
   @Mutation(() => Product, { nullable: true })
   updateProduct(
     @Args('id', { type: () => Int }) id: number,
-      @Args('updateProductInput') updateProductInput: UpdateProductInput,
+    @Args('updateProductInput') updateProductInput: UpdateProductInput,
   ): Promise<Product | null> {
     return this.productService.update(id, updateProductInput);
   }
 
   @Mutation(() => Product)
-  removeProduct(
-    @Args('id', { type: () => Int }) id: number,
-  ): Promise<Product> {
+  removeProduct(@Args('id', { type: () => Int }) id: number): Promise<Product> {
     return this.productService.remove(id);
   }
 }

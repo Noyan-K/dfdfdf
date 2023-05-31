@@ -1,13 +1,13 @@
 import { UseGuards } from '@nestjs/common';
-import {
-  Resolver, Query, Args, Mutation,
-} from '@nestjs/graphql';
-import { GqlJwtAuthGuard } from '../auth/guards/gql-jwt-auth.guard';
+import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
+
 import { UserService } from './user.service';
 import { User } from './models/user.model';
 import { CurrentUser } from './decorators/user.decorator.graphql';
-import { ValidatedUser } from '../auth/interfaces/validatedUser.interface';
 import { UpdateUserInput } from './dto/update-user.input';
+
+import { ValidatedUser } from '../auth/interfaces/validatedUser.interface';
+import { GqlJwtAuthGuard } from '../auth/guards/gql-jwt-auth.guard';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -23,7 +23,7 @@ export class UserResolver {
   @Mutation(() => User, { name: 'updateUser' })
   update(
     @CurrentUser() user: ValidatedUser,
-      @Args('updateUserInput') updateUserInput: UpdateUserInput,
+    @Args('updateUserInput') updateUserInput: UpdateUserInput,
   ): Promise<User | null> {
     return this.userService.update(user.id, updateUserInput);
   }

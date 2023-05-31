@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
+
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Prisma } from '@prisma/client';
+
 import { CreateSizeInput } from './dto/create-size.input';
 import { UpdateSizeInput } from './dto/update-size.input';
 import { Size } from './models/size.model';

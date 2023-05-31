@@ -1,13 +1,14 @@
 import { NotFoundException } from '@nestjs/common';
 import { UseGuards } from '@nestjs/common/decorators';
-import {
-  Resolver, Query, Args, Int, Mutation,
-} from '@nestjs/graphql';
+import { Resolver, Query, Args, Int, Mutation } from '@nestjs/graphql';
+
 import { GqlJwtAuthGuard } from 'src/auth/guards/gql-jwt-auth.guard';
+
 import { OrderService } from './order.service';
 import { Order } from './models/order.model';
 import { CreateOrderInput } from './dto/create-order.input';
 import { UpdateOrderInput } from './dto/update-order.input';
+
 import { Document } from '../document/models/document.model';
 
 @Resolver(() => Order)
@@ -25,7 +26,7 @@ export class OrderResolver {
   @Query(() => [Order], { name: 'orders' })
   findAll(
     @Args('take', { type: () => Int, nullable: true }) take?: number,
-      @Args('skip', { type: () => Int, nullable: true }) skip?: number,
+    @Args('skip', { type: () => Int, nullable: true }) skip?: number,
   ): Promise<Order[]> {
     try {
       return this.orderService.findAll(take, skip);

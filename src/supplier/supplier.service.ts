@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { NotFoundException } from '@nestjs/common/exceptions';
+
 import { CreateSupplierInput } from './dto/create-supplier.input';
 import { UpdateSupplierInput } from './dto/update-supplier.input';
-import { PrismaService } from '../prisma/prisma.service';
 import { Supplier } from './models/supplier.model';
 import { FindSuppliersInput } from './dto/find-suppliers.input';
-import { SortByEnum } from '../types/sort.type';
 import { SupplierModel } from './models/supplier';
+
+import { SortByEnum } from '../types/sort.type';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class SupplierService {
-  constructor(
-    private readonly prisma: PrismaService,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   create(createSupplierInput: CreateSupplierInput): Promise<Supplier> {
     return this.prisma.supplier.create({
@@ -51,11 +51,14 @@ export class SupplierService {
   }
 
   async findOne(id: number): Promise<Supplier | null> {
-    const receivedProduct: Supplier | null = await this.prisma.supplier.findFirst({
-      where: { id },
-    });
+    const receivedProduct: Supplier | null =
+      await this.prisma.supplier.findFirst({
+        where: { id },
+      });
 
-    if (!receivedProduct) throw new NotFoundException();
+    if (!receivedProduct) {
+      throw new NotFoundException();
+    }
 
     return receivedProduct;
   }
