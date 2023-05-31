@@ -1,54 +1,53 @@
-import {
-  ObjectType, Field, Int, registerEnumType,
-} from '@nestjs/graphql';
+import { ObjectType, Field, Int, registerEnumType } from '@nestjs/graphql';
+
 import { AddressType } from '@prisma/client';
 
 @ObjectType()
 export class AddressModel {
   @Field(() => Int)
-    id: number;
+  id: number;
 
   @Field(() => Int)
-    user_id: number;
+  user_id: number;
 
   @Field(() => Int, { nullable: true })
-    supplier_id?: number | null;
+  supplier_id?: number | null;
 
   @Field(() => AddressType)
-    type: string;
+  type: string;
 
   @Field(() => String)
-    name: string;
+  name: string;
 
   @Field(() => Int, { nullable: true })
-    postcode?: number | null;
+  postcode?: number | null;
 
   @Field(() => String)
-    country: string;
+  country: string;
 
   @Field(() => String)
-    region: string;
+  region: string;
 
   @Field(() => String)
-    city: string;
+  city: string;
 
   @Field(() => String)
-    street: string;
+  street: string;
 
   @Field(() => Int)
-    house_number: number;
+  house_number: number;
 
   @Field(() => Int, { nullable: true })
-    apartment_number_or_office?: number | null;
+  apartment_number_or_office?: number | null;
 
   @Field(() => Date, { nullable: false })
-    created_at: Date;
+  created_at: Date;
 
   @Field(() => Date)
-    updated_at: Date;
+  updated_at: Date;
 
   @Field(() => Date, { nullable: true })
-    deleted_at?: Date | null;
+  deleted_at?: Date | null;
 }
 
 registerEnumType(AddressType, {

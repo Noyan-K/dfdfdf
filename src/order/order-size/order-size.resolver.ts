@@ -1,6 +1,5 @@
-import {
-  Resolver, Query, Mutation, Args, Int,
-} from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+
 import { OrderSizeService } from './order-size.service';
 import { OrderSize } from './models/order-size.model';
 import { CreateOrderSizeInput } from './dto/create-order-size.input';
@@ -12,7 +11,7 @@ export class OrderSizeResolver {
 
   @Mutation(() => OrderSize, { name: 'createOrderSize' })
   create(
-  @Args('createOrderSizeInput') createOrderSizeInput: CreateOrderSizeInput,
+    @Args('createOrderSizeInput') createOrderSizeInput: CreateOrderSizeInput,
   ) {
     return this.orderSizeService.create(createOrderSizeInput);
   }
@@ -34,7 +33,7 @@ export class OrderSizeResolver {
 
   @Mutation(() => OrderSize)
   updateOrderSize(
-  @Args('updateOrderSizeInput') updateOrderSizeInput: UpdateOrderSizeInput,
+    @Args('updateOrderSizeInput') updateOrderSizeInput: UpdateOrderSizeInput,
   ) {
     return this.orderSizeService.update(
       updateOrderSizeInput.id,
@@ -44,7 +43,7 @@ export class OrderSizeResolver {
 
   @Mutation(() => OrderSize)
   removeOrderSize(
-  @Args('order_id', { type: () => Int }) order_id: number,
+    @Args('order_id', { type: () => Int }) order_id: number,
     @Args('size_id', { type: () => Int }) size_id: number,
   ) {
     return this.orderSizeService.remove(order_id, size_id);

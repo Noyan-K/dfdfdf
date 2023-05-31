@@ -1,15 +1,18 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { JwtModule } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
-import { UserService } from '../user/user.service';
+
+import * as bcrypt from 'bcrypt';
+
 import { AuthService } from './auth.service';
-import { PrismaService } from '../prisma/prisma.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { TokensInterface } from './interfaces/tokens.interface';
+
+import { UserService } from '../user/user.service';
+import { PrismaService } from '../prisma/prisma.service';
 import config from '../config';
 import { User } from '../user/models/user.model';
-import { TokensInterface } from './interfaces/tokens.interface';
 
 describe('AuthService', () => {
   let authService: AuthService;

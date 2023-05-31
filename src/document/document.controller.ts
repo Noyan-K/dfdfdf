@@ -4,9 +4,11 @@ import {
   UseInterceptors,
   UploadedFile,
 } from '@nestjs/common';
-import { Express } from 'express';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { UploadedFiles } from '@nestjs/common/decorators';
+
+import { Express } from 'express';
+
 import { DocumentService } from './document.service';
 import { Document } from './models/document.model';
 

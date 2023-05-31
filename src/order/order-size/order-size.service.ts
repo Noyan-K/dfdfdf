@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
+
 import { CreateOrderSizeInput } from './dto/create-order-size.input';
 import { UpdateOrderSizeInput } from './dto/update-order-size.input';
-import { PrismaService } from '../../prisma/prisma.service';
 import { OrderSize } from './models/order-size.model';
+
+import { PrismaService } from '../../prisma/prisma.service';
 
 @Injectable()
 export class OrderSizeService {

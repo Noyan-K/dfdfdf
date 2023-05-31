@@ -1,9 +1,12 @@
 import { Injectable } from '@nestjs/common';
+
 import { ClothSexEnum, DocumentTypeOfProductEnum } from '@prisma/client';
+
 import { CreateProductInput } from './dto/create-product.input';
 import { UpdateProductInput } from './dto/update-product.input';
-import { PrismaService } from '../prisma/prisma.service';
 import { Product } from './models/product.model';
+
+import { PrismaService } from '../prisma/prisma.service';
 import { DocumentService } from '../document/document.service';
 
 @Injectable()
@@ -26,8 +29,14 @@ export class ProductService {
         ProductDocument: {
           createMany: {
             data: [
-              { type: 'PREVIEW', document_id: createProductInput.preview_document_id },
-              { type: 'MANNEQUIN', document_id: createProductInput.mannequin_document_id },
+              {
+                type: 'PREVIEW',
+                document_id: createProductInput.preview_document_id,
+              },
+              {
+                type: 'MANNEQUIN',
+                document_id: createProductInput.mannequin_document_id,
+              },
             ],
           },
         },

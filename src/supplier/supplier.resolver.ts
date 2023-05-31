@@ -1,8 +1,8 @@
-import {
-  Resolver, Query, Mutation, Args, Int,
-} from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common/decorators';
+
 import { GqlJwtAuthGuard } from 'src/auth/guards/gql-jwt-auth.guard';
+
 import { SupplierService } from './supplier.service';
 import { Supplier } from './models/supplier.model';
 import { CreateSupplierInput } from './dto/create-supplier.input';
@@ -24,8 +24,8 @@ export class SupplierResolver {
   @Query(() => [Supplier], { name: 'suppliers' })
   findAll(
     @Args('findSuppliersInput') findSuppliersInput?: FindSuppliersInput,
-      @Args('take', { type: () => Int, nullable: true }) take?: number,
-      @Args('skip', { type: () => Int, nullable: true }) skip?: number,
+    @Args('take', { type: () => Int, nullable: true }) take?: number,
+    @Args('skip', { type: () => Int, nullable: true }) skip?: number,
   ): Promise<Supplier[]> {
     return this.supplierService.findAll(findSuppliersInput, take, skip);
   }

@@ -1,8 +1,10 @@
 import { PassportStrategy } from '@nestjs/passport';
-import { ExtractJwt, Strategy } from 'passport-jwt';
-import { Request } from 'express';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+
+import { ExtractJwt, Strategy } from 'passport-jwt';
+import { Request } from 'express';
+
 import { JwtPayload } from '../interfaces/jwtPayload.interface';
 
 @Injectable()
@@ -15,7 +17,7 @@ export class JwtRefreshStrategy extends PassportStrategy(
       ignoreExpiration: false,
       secretOrKey: configService.get('JWT_REFRESH_SECRET'),
       jwtFromRequest: ExtractJwt.fromExtractors([
-        (request: Request) => request?.header('refresh-token') ?? null,
+        (request: Request) => request.header('refresh-token') ?? null,
       ]),
     });
   }

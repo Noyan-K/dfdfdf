@@ -1,5 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
+
 import { Request } from 'express';
+
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtPayload } from './interfaces/jwtPayload.interface';

@@ -1,4 +1,5 @@
 import { INestApplication, Injectable, OnModuleInit } from '@nestjs/common';
+
 import { PrismaClient, Prisma } from '@prisma/client';
 
 @Injectable()
@@ -13,8 +14,11 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
       ) => {
         if (params.action === 'findUnique' || params.action === 'findFirst') {
           params.action = 'findFirst';
-          if (params.args.where.deleted_at === 'all') params.args.where.deleted_at = undefined;
-          else params.args.where.deleted_at = null;
+          if (params.args.where.deleted_at === 'all') {
+            params.args.where.deleted_at = undefined;
+          } else {
+            params.args.where.deleted_at = null;
+          }
         }
         if (params.action === 'findMany') {
           if (params.args.where) {

@@ -1,16 +1,17 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { NotFoundException } from '@nestjs/common/exceptions';
+
 import * as bcrypt from 'bcrypt';
+
 import { User } from './models/user.model';
-import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 
+import { PrismaService } from '../prisma/prisma.service';
+
 @Injectable()
 export class UserService {
-  constructor(
-    private readonly prisma: PrismaService,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(createUserInput: CreateUserInput): Promise<User> {
     if (createUserInput.type === 'GUEST' && !createUserInput.password) {
@@ -91,7 +92,9 @@ export class UserService {
   async getProfile(id: number): Promise<User | null> {
     const user: User | null = await this.findOne(id);
 
-    if (!user) throw new NotFoundException('User not found!');
+    if (!user) {
+      throw new NotFoundException('User not found!');
+    }
 
     return user;
   }

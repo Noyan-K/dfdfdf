@@ -1,6 +1,5 @@
-import {
-  Resolver, Query, Mutation, Args, Int,
-} from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+
 import { SizeService } from './size.service';
 import { Size } from './models/size.model';
 import { CreateSizeInput } from './dto/create-size.input';
@@ -20,7 +19,7 @@ export class SizeResolver {
   @Query(() => [Size], { name: 'sizes' })
   findAll(
     @Args('take', { type: () => Int, nullable: true }) take?: number,
-      @Args('skip', { type: () => Int, nullable: true }) skip?: number,
+    @Args('skip', { type: () => Int, nullable: true }) skip?: number,
   ): Promise<Size[]> {
     return this.sizeService.findAll(take, skip);
   }
@@ -33,7 +32,7 @@ export class SizeResolver {
   @Mutation(() => Size)
   updateSize(
     @Args('id', { type: () => Int }) id: number,
-      @Args('updateSizeInput') updateSizeInput: UpdateSizeInput,
+    @Args('updateSizeInput') updateSizeInput: UpdateSizeInput,
   ): Promise<Size | null> {
     return this.sizeService.update(id, updateSizeInput);
   }

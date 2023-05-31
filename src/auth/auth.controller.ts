@@ -1,16 +1,17 @@
-import {
-  Controller, UseGuards, Post, Req, Body,
-} from '@nestjs/common';
-import { Request } from 'express';
+import { Controller, UseGuards, Post, Req, Body } from '@nestjs/common';
 import { ApiBody } from '@nestjs/swagger';
+
+import { Request } from 'express';
+
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
 import { TokensInterface } from './interfaces/tokens.interface';
-import { User } from '../user/models/user.model';
 import { LoginDto } from './dto/login.dto';
 import { JwtPayload } from './interfaces/jwtPayload.interface';
 import { RegistrationDto } from './dto/registration.dto';
+
+import { User } from '../user/models/user.model';
 
 @Controller('auth')
 export class AuthController {

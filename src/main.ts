@@ -1,10 +1,13 @@
+import { join } from 'path';
+
 import { ValidationPipe, Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import * as bodyParser from 'body-parser';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { ConfigService } from '@nestjs/config';
-import { join } from 'path';
+
+import * as bodyParser from 'body-parser';
+
 import { AppModule } from './app.module';
 
 async function bootstrap() {

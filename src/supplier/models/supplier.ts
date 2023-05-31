@@ -3,23 +3,23 @@ import { ObjectType, Field, Int } from '@nestjs/graphql';
 @ObjectType()
 export class SupplierModel {
   @Field(() => Int)
-    id: number;
+  id: number;
 
   // @Field(() => String, { deprecationReason: 'пока используем name из User' })
   name: string;
 
   @Field(() => Boolean, { defaultValue: false })
-    deliver_goods_yourself: boolean;
+  deliver_goods_yourself: boolean;
 
   @Field(() => [Int], { defaultValue: [] })
-    array_of_delivery_ids: number[];
+  array_of_delivery_ids: number[];
 
   @Field(() => Date)
-    created_at: Date;
+  created_at: Date;
 
   @Field(() => Date)
-    updated_at: Date;
+  updated_at: Date;
 
   @Field(() => Date, { nullable: true })
-    deleted_at?: Date | null;
+  deleted_at?: Date | null;
 }

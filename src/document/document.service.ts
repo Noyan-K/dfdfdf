@@ -1,13 +1,17 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { DocumentTypeEnum } from '@prisma/client';
-import { ConfigService } from '@nestjs/config';
 import { extname } from 'path';
 import * as fs from 'fs';
+
+import { ConfigService } from '@nestjs/config';
+import { BadRequestException, Injectable } from '@nestjs/common';
+
+import { DocumentTypeEnum } from '@prisma/client';
 import { v4 as uuidv4 } from 'uuid';
+
 import { Document } from './models/document.model';
-import { PrismaService } from '../prisma/prisma.service';
 import { CreateDocumentInput } from './dto/create-document.input';
 import { UpdateDocumentInput } from './dto/update-document.input';
+
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class DocumentService {

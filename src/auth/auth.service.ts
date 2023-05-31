@@ -4,15 +4,17 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
+
 import * as bcrypt from 'bcrypt';
 import { User } from 'src/user/models/user.model';
-import { ConfigService } from '@nestjs/config';
 import { SupplierService } from 'src/supplier/supplier.service';
 import { RolesService } from 'src/roles/roles.service';
 import { RolesEnum } from '@prisma/client';
 import { UserRoleModel } from 'src/roles/models/user-role';
 import { UserService } from 'src/user/user.service';
 import { PrismaService } from 'src/prisma/prisma.service';
+
 import { TokensInterface } from './interfaces/tokens.interface';
 import { RegistrationDto } from './dto/registration.dto';
 
@@ -99,9 +101,9 @@ export class AuthService {
       undefined,
     );
     const payload = {
-      email: user?.email,
-      sub: user?.id,
-      name: user?.name,
+      email: user.email,
+      sub: user.id,
+      name: user.name,
       roles: receivedUsersRoles
         ? receivedUsersRoles.map((role: UserRoleModel) => role.role_name)
         : [],
@@ -125,7 +127,7 @@ export class AuthService {
     return this.generateTokens({
       email: receivedUser.email,
       sub: receivedUser.id,
-      name: receivedUser?.name,
+      name: receivedUser.name,
       roles: receivedUsersRoles
         ? receivedUsersRoles.map((role: UserRoleModel) => role.role_name)
         : [],
