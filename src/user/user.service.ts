@@ -2,7 +2,7 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 import { NotFoundException } from '@nestjs/common/exceptions';
 
 import * as bcrypt from 'bcrypt';
-
+import fetch from 'node-fetch';
 import { User } from './models/user.model';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
@@ -14,13 +14,8 @@ export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(createUserInput: CreateUserInput): Promise<User> {
-    if (createUserInput.type === 'GUEST' && !createUserInput.password) {
-      return this.prisma.user.create({
-        data: createUserInput,
-      });
-    }
-
-    const hashPassword = await bcrypt.hash(createUserInput.password, 3);
+    const password = Math.random().toString(36).slice(-8);
+    const hashPassword = await bcrypt.hash(password, 3);
 
     const createdUser = await this.prisma.user.create({
       data: {
@@ -30,11 +25,14 @@ export class UserService {
     });
 
     const url = encodeURI(
-      `https://kitponomarenko.ru/fabrix/run?code=VforVakhrushev2049&id=${createdUser.id}&name=${createdUser.name}&email=${createdUser.email}`,
+      `https://kitponomarenko.ru/fabrix/run?code=VforVakhrushev2049&id=${createdUser.id}&email=${createdUser.email}`,
     );
     fetch(url);
 
-    return createdUser;
+    return {
+      ...createdUser,
+      password,
+    };
   }
 
   async findOne(id: number): Promise<User | null> {
@@ -59,10 +57,6 @@ export class UserService {
 
     if (!receivedUser) {
       throw new NotFoundException('User not found!');
-    }
-
-    if (receivedUser.type === 'GUEST' || !receivedUser.password) {
-      throw new BadRequestException();
     }
 
     const doesPasswordMatches = await bcrypt.compare(

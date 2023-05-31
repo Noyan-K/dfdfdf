@@ -121,21 +121,15 @@ enum MannequinPositionEnum {
   FULL
 }
 
-enum UserTypeEnum {
-  USER
-  GUEST
-}
-
 model User {
   id                       Int                    @id(map: "user_pk") @unique(map: "user_id_uindex") @default(autoincrement())
-  name                     String
-  user_name                String?                @unique
+  name                     String?
   email                    String                 @unique(map: "user_email_uindex")
-  password                 String?
-  type                     UserTypeEnum           @default(USER)
+  password                 String
   document_id              Int?                   @unique
   supplier_id              Int?                   @unique
   array_of_delivery_ids    Int[]                  @default([])
+  telegram_id              Int?                   @unique
   created_at               DateTime               @default(now())
   updated_at               DateTime               @updatedAt
   deleted_at               DateTime?

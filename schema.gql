@@ -91,26 +91,20 @@ enum DocumentTypeEnum {
 
 type User {
   id: Int!
-  name: String!
-  user_name: String
+  name: String
   document_id: Int
   array_of_delivery_ids: [Int!]!
   supplier_id: Int
   email: String!
-  type: UserTypeEnum!
+  telegram_id: Int
   created_at: DateTime!
   updated_at: DateTime!
   deleted_at: DateTime
   Document: Document
   Supplier: SupplierModel
-  Cart: [OrderModel!]
+  Order: [OrderModel!]
   UserRole: [UserRole!]
   Address: Address
-}
-
-enum UserTypeEnum {
-  USER
-  GUEST
 }
 
 type UserRole {
@@ -300,8 +294,8 @@ input UpdateUserInput {
   email: String
   newPassword: String!
   password: String!
-  currency_id: Int
   array_of_delivery_ids: [Int!]
+  telegram_id: Int
 }
 
 input CreateUserRoleInput {

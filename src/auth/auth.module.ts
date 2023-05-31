@@ -13,6 +13,8 @@ import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
 
 import { UserModule } from '../user/user.module';
 import { SupplierModule } from '../supplier/supplier.module';
+import { MailModule } from '../mail/mail.module';
+import { JwtResetPasswordStrategy } from './strategies/jwt-resest-password.strategy';
 
 @Module({
   imports: [
@@ -22,8 +24,9 @@ import { SupplierModule } from '../supplier/supplier.module';
     PassportModule,
     JwtModule.register({}),
     SupplierModule,
+    MailModule,
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy, JwtRefreshStrategy],
+  providers: [AuthService, LocalStrategy, JwtStrategy, JwtRefreshStrategy, JwtResetPasswordStrategy],
   controllers: [AuthController],
 })
 export class AuthModule {}
