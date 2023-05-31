@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
+
 import PrismaModule from 'src/prisma/prisma.module';
+
 import { DeliveryService } from './delivery.service';
 import { DeliveryResolver } from './delivery.resolver';
 

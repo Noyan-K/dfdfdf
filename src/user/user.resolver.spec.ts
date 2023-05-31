@@ -1,7 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
+
 import { UserResolver } from './user.resolver';
 import { UserService } from './user.service';
 import User from './models/user.model';
+
 import { ValidatedUser } from '../auth/interfaces/validatedUser.interface';
 
 type CleanUser = Omit<User, 'password'>;

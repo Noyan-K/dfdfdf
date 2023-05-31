@@ -3,7 +3,6 @@
 /node_modules
 /static
 .env
-package-lock.json
 
 # Logs
 logs

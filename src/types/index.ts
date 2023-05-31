@@ -1,6 +1,8 @@
 import { registerEnumType } from '@nestjs/graphql';
-import { DocumentTypeEnum, Prisma, RolesEnum } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
+
+import { DocumentTypeEnum, Prisma, RolesEnum } from '@prisma/client';
+
 // import { CartTypeEnum, WatchListTypeEnum } from './cart.type';
 import { SortByEnum } from './sort.type';
 

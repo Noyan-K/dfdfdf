@@ -1,30 +1,29 @@
-import {
-  ObjectType, Field, Int, registerEnumType,
-} from '@nestjs/graphql';
+import { ObjectType, Field, Int, registerEnumType } from '@nestjs/graphql';
+
 import { DeliveryTypeEnum } from '@prisma/client';
 
 @ObjectType()
 export class DeliveryModel {
   @Field(() => Int)
-    id: number;
+  id: number;
 
   @Field(() => String)
-    name: string;
+  name: string;
 
   @Field(() => DeliveryTypeEnum)
-    type: DeliveryTypeEnum;
+  type: DeliveryTypeEnum;
 
   @Field(() => Int, { nullable: true })
-    parent_id?: number | null;
+  parent_id?: number | null;
 
   @Field(() => Date, { nullable: false })
-    created_at: Date;
+  created_at: Date;
 
   @Field(() => Date)
-    updated_at: Date;
+  updated_at: Date;
 
   @Field(() => Date, { nullable: true })
-    deleted_at?: Date | null;
+  deleted_at?: Date | null;
 }
 
 registerEnumType(DeliveryTypeEnum, {

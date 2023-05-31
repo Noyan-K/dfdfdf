@@ -1,26 +1,27 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
+
 import { DocumentTypeEnum } from '@prisma/client';
 
 @ObjectType()
 export class Document {
   @Field(() => Int)
-    id: number;
+  id: number;
 
   @Field(() => String)
-    url: string;
+  url: string;
 
   @Field(() => String)
-    name: string;
+  name: string;
 
   @Field(() => DocumentTypeEnum)
-    type: DocumentTypeEnum;
+  type: DocumentTypeEnum;
 
   @Field(() => Date)
-    created_at: Date;
+  created_at: Date;
 
   @Field(() => Date)
-    updated_at: Date;
+  updated_at: Date;
 
   @Field(() => Date, { nullable: true })
-    deleted_at?: Date | null;
+  deleted_at?: Date | null;
 }

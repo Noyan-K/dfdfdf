@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
+
 import { DocumentService } from './document.service';
 import { DocumentResolver } from './document.resolver';
-import PrismaModule from '../prisma/prisma.module';
 import { DocumentController } from './document.controller';
+
+import PrismaModule from '../prisma/prisma.module';
 
 @Module({
   imports: [PrismaModule],

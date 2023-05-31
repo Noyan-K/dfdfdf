@@ -1,4 +1,5 @@
 import { InputType, Field } from '@nestjs/graphql';
+
 import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
 import { DocumentTypeEnum } from '@prisma/client';
 
@@ -7,14 +8,14 @@ export class CreateDocumentInput {
   @IsNotEmpty()
   @IsString()
   @Field(() => String)
-    url: string;
+  url: string;
 
   @IsNotEmpty()
   @IsString()
   @Field(() => String)
-    name: string;
+  name: string;
 
   @IsEnum(DocumentTypeEnum)
   @Field(() => DocumentTypeEnum)
-    type: DocumentTypeEnum;
+  type: DocumentTypeEnum;
 }
