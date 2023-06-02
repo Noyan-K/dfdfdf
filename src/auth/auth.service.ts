@@ -8,7 +8,6 @@ import { ConfigService } from '@nestjs/config';
 
 import * as bcrypt from 'bcrypt';
 import { User } from 'src/user/models/user.model';
-import { ConfigService } from '@nestjs/config';
 import { RolesService } from 'src/roles/roles.service';
 import { RolesEnum } from '@prisma/client';
 import { UserRoleModel } from 'src/roles/models/user-role';
