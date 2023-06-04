@@ -19,23 +19,25 @@ export class UpdateUserInput {
   @Field(() => String, { nullable: true })
   email?: string;
 
+  @IsOptional()
   @IsString()
   @Length(4, 100)
-  @Field(() => String)
-  newPassword: string;
+  @Field(() => String, { nullable: true })
+  newPassword?: string;
 
+  @IsOptional()
   @IsString()
   @Length(4, 100)
-  @Field(() => String)
-  password: string;
+  @Field(() => String, { nullable: true })
+  password?: string;
 
   @IsOptional()
   @IsNumber({}, { each: true })
   @Field(() => [Int], { nullable: true })
-    array_of_delivery_ids: number[];
+  array_of_delivery_ids: number[];
 
   @IsOptional()
   @IsNumber()
   @Field(() => Int, { nullable: true })
-    telegram_id: number | null;
+  telegram_id: number | null;
 }

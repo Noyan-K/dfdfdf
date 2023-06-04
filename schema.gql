@@ -292,8 +292,8 @@ type Mutation {
 input UpdateUserInput {
   name: String
   email: String
-  newPassword: String!
-  password: String!
+  newPassword: String
+  password: String
   array_of_delivery_ids: [Int!]
   telegram_id: Int
 }

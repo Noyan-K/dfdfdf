@@ -3,6 +3,7 @@ import { NotFoundException } from '@nestjs/common/exceptions';
 
 import * as bcrypt from 'bcrypt';
 import fetch from 'node-fetch';
+
 import { User } from './models/user.model';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
@@ -27,7 +28,7 @@ export class UserService {
     const url = encodeURI(
       `https://kitponomarenko.ru/fabrix/run?code=VforVakhrushev2049&id=${createdUser.id}&email=${createdUser.email}`,
     );
-    fetch(url);
+    await fetch(url);
 
     return {
       ...createdUser,
@@ -59,26 +60,49 @@ export class UserService {
       throw new NotFoundException('User not found!');
     }
 
-    const doesPasswordMatches = await bcrypt.compare(
-      updateUserInput.password,
-      receivedUser.password,
-    );
-
-    if (!doesPasswordMatches) {
-      throw new BadRequestException('Wrong passwords.');
+    if (
+      updateUserInput.password === undefined &&
+      updateUserInput.newPassword !== undefined
+    ) {
+      throw new BadRequestException('You should fill your current password');
     }
 
-    const newPasswordHash = await bcrypt.hash(updateUserInput.newPassword, 3);
+    if (
+      updateUserInput.password !== undefined &&
+      updateUserInput.newPassword !== undefined
+    ) {
+      const doesPasswordMatches = await bcrypt.compare(
+        updateUserInput.password,
+        receivedUser.password,
+      );
 
-    const { newPassword, password, ...newUpdateUserInput } = updateUserInput;
+      if (!doesPasswordMatches) {
+        throw new BadRequestException('Wrong passwords.');
+      }
 
-    await this.prisma.user.update({
-      where: { id: user_id },
-      data: {
-        ...newUpdateUserInput,
-        password: newPasswordHash,
-      },
-    });
+      const newPasswordHash = await bcrypt.hash(updateUserInput.newPassword, 3);
+
+      delete updateUserInput.password;
+      delete updateUserInput.newPassword;
+
+      await this.prisma.user.update({
+        where: { id: user_id },
+        data: {
+          ...updateUserInput,
+          password: newPasswordHash,
+        },
+      });
+    } else {
+      delete updateUserInput.password;
+      delete updateUserInput.newPassword;
+
+      await this.prisma.user.update({
+        where: { id: user_id },
+        data: {
+          ...updateUserInput,
+        },
+      });
+    }
 
     return this.prisma.user.findUnique({ where: { id: user_id } });
   }
