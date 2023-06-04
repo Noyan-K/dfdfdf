@@ -1,6 +1,5 @@
-import {
-  Field, Int, ObjectType,
-} from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
+
 import { User } from '@prisma/client';
 
 @ObjectType()
@@ -9,7 +8,7 @@ export class UserModel implements User {
   id: number;
 
   @Field(() => String, { nullable: true })
-    name: string | null;
+  name: string | null;
 
   @Field(() => Int, { nullable: true })
   document_id: number | null;
@@ -24,7 +23,7 @@ export class UserModel implements User {
   email: string;
 
   @Field(() => Int, { nullable: true })
-    telegram_id: number | null;
+  telegram_id: number | null;
 
   @Field(() => Date)
   created_at: Date;
