@@ -1,6 +1,6 @@
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 
-import { ClothSexEnum } from '@prisma/client';
+import { ClothSexEnum, MannequinSexEnum } from '@prisma/client';
 
 import { ProductService } from './product.service';
 import { Product } from './models/product.model';
@@ -37,8 +37,10 @@ export class ProductResolver {
   @Query(() => Product, { name: 'product', nullable: true })
   findOne(
     @Args('id', { type: () => Int }) id: number,
+    @Args('mannequinSex', { type: () => MannequinSexEnum })
+    mannequinSex?: MannequinSexEnum,
   ): Promise<Product | null> {
-    return this.productService.findOne(id);
+    return this.productService.findOne(id, mannequinSex);
   }
 
   @Mutation(() => Product, { nullable: true })

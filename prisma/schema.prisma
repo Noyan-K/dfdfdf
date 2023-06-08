@@ -100,6 +100,7 @@ model ProductDocument {
   product_id                   Int
   document_id                  Int
   type                         DocumentTypeOfProductEnum
+  mannequin_sex                MannequinSexEnum              @default(MALE)
   created_at                   DateTime                      @default(now())
   updated_at                   DateTime                      @updatedAt
   deleted_at                   DateTime?
@@ -107,7 +108,7 @@ model ProductDocument {
   Product                      Product                       @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "product_id")
   Document                     Document                      @relation(fields: [document_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "model_document_id_fk")
 
-  @@unique([product_id, type])
+  @@unique([product_id, type, mannequin_sex])
 }
 
 enum DocumentTypeOfProductEnum {
@@ -181,6 +182,11 @@ model UserRole {
 enum RolesEnum {
   ADMIN
   USER
+}
+
+enum MannequinSexEnum {
+  MALE
+  FEMALE
 }
 
 enum ClothSexEnum {

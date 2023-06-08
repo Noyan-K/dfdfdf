@@ -1,26 +1,26 @@
 import { Injectable } from '@nestjs/common';
 
-import { ClothSexEnum, DocumentTypeOfProductEnum } from '@prisma/client';
+import {
+  ClothSexEnum,
+  DocumentTypeOfProductEnum,
+  MannequinSexEnum,
+} from '@prisma/client';
 
 import { CreateProductInput } from './dto/create-product.input';
 import { UpdateProductInput } from './dto/update-product.input';
 import { Product } from './models/product.model';
 
 import { PrismaService } from '../prisma/prisma.service';
-import { DocumentService } from '../document/document.service';
 
 @Injectable()
 export class ProductService {
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly documentService: DocumentService,
-  ) {}
-
   sexFilter = {
     MALE: { not: ClothSexEnum.FEMALE },
     FEMALE: { not: ClothSexEnum.MALE },
     UNISEX: { equals: ClothSexEnum.UNISEX },
   };
+
+  constructor(private readonly prisma: PrismaService) {}
 
   create(createProductInput: CreateProductInput): Promise<Product> {
     return this.prisma.product.create({
@@ -30,10 +30,12 @@ export class ProductService {
           createMany: {
             data: [
               {
+                mannequin_sex: createProductInput.mannequin_sex,
                 type: 'PREVIEW',
                 document_id: createProductInput.preview_document_id,
               },
               {
+                mannequin_sex: createProductInput.mannequin_sex,
                 type: 'MANNEQUIN',
                 document_id: createProductInput.mannequin_document_id,
               },
@@ -54,6 +56,10 @@ export class ProductService {
         ProductDocument: {
           where: {
             type: DocumentTypeOfProductEnum.PREVIEW,
+            mannequin_sex:
+              sex === 'FEMALE'
+                ? MannequinSexEnum.FEMALE
+                : MannequinSexEnum.MALE,
           },
           include: {
             Document: true,
@@ -83,6 +89,10 @@ export class ProductService {
         ProductDocument: {
           where: {
             type: DocumentTypeOfProductEnum.PREVIEW,
+            mannequin_sex:
+              sex === 'FEMALE'
+                ? MannequinSexEnum.FEMALE
+                : MannequinSexEnum.MALE,
           },
           include: {
             Document: true,
@@ -102,13 +112,17 @@ export class ProductService {
     });
   }
 
-  findOne(id: number): Promise<Product | null> {
+  findOne(
+    id: number,
+    mannequin_sex?: MannequinSexEnum,
+  ): Promise<Product | null> {
     return this.prisma.product.findFirst({
       where: { id },
       include: {
         ProductDocument: {
           where: {
             type: DocumentTypeOfProductEnum.MANNEQUIN,
+            mannequin_sex,
           },
           include: {
             Document: true,
