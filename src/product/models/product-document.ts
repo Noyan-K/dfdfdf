@@ -1,6 +1,6 @@
 import { ObjectType, Field, Int, registerEnumType } from '@nestjs/graphql';
 
-import { DocumentTypeOfProductEnum } from '@prisma/client';
+import { DocumentTypeOfProductEnum, MannequinSexEnum } from '@prisma/client';
 
 @ObjectType()
 export class ProductDocumentModel {
@@ -16,6 +16,9 @@ export class ProductDocumentModel {
   @Field(() => DocumentTypeOfProductEnum)
   type: DocumentTypeOfProductEnum;
 
+  @Field(() => MannequinSexEnum)
+  mannequin_sex: MannequinSexEnum;
+
   @Field(() => Date)
   created_at: Date;
 
@@ -28,4 +31,8 @@ export class ProductDocumentModel {
 
 registerEnumType(DocumentTypeOfProductEnum, {
   name: 'DocumentTypeOfProductEnum',
+});
+
+registerEnumType(MannequinSexEnum, {
+  name: 'MannequinSexEnum',
 });

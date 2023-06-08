@@ -4,10 +4,9 @@ import { ProductService } from './product.service';
 import { ProductResolver } from './product.resolver';
 
 import PrismaModule from '../prisma/prisma.module';
-import { DocumentModule } from '../document/document.module';
 
 @Module({
-  imports: [PrismaModule, DocumentModule],
+  imports: [PrismaModule],
   providers: [ProductResolver, ProductService],
 })
 export class ProductModule {}
