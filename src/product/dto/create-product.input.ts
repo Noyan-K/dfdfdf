@@ -1,6 +1,6 @@
 import { InputType, Int, Field } from '@nestjs/graphql';
 
-import { ClothSexEnum } from '@prisma/client';
+import { ClothSexEnum, MannequinSexEnum } from '@prisma/client';
 import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
 
 @InputType()
@@ -31,4 +31,8 @@ export class CreateProductInput {
   @IsNumber()
   @Field(() => Int)
   mannequin_document_id: number;
+
+  @IsEnum(MannequinSexEnum)
+  @Field(() => MannequinSexEnum)
+  mannequin_sex: MannequinSexEnum;
 }
