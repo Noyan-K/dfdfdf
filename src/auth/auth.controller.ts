@@ -1,4 +1,4 @@
-import { Controller, UseGuards, Post, Req, Body } from '@nestjs/common';
+import { Controller, UseGuards, Post, Req, Body, HttpCode } from '@nestjs/common';
 import { ApiBody } from '@nestjs/swagger';
 
 import { Request } from 'express';
@@ -19,6 +19,7 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('registration')
+  @HttpCode(200)
   @ApiBody({ type: RegistrationDto })
   async registration(
     @Body() registrationDto: RegistrationDto,
