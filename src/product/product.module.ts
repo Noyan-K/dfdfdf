@@ -6,7 +6,7 @@ import { ProductResolver } from './product.resolver';
 import PrismaModule from '../prisma/prisma.module';
 
 @Module({
-  imports: [PrismaModule],
-  providers: [ProductResolver, ProductService],
+    imports: [PrismaModule],
+    providers: [ProductResolver, ProductService],
 })
 export class ProductModule {}

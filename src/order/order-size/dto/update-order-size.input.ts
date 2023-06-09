@@ -4,6 +4,6 @@ import { CreateOrderSizeInput } from './create-order-size.input';
 
 @InputType()
 export class UpdateOrderSizeInput extends PartialType(CreateOrderSizeInput) {
-  @Field(() => Int)
-  id: number;
+    @Field(() => Int)
+    id: number;
 }

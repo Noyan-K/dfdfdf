@@ -5,17 +5,17 @@ import { DocumentTypeEnum } from '@prisma/client';
 
 @InputType()
 export class CreateDocumentInput {
-  @IsNotEmpty()
-  @IsString()
-  @Field(() => String)
-  url: string;
+    @IsNotEmpty()
+    @IsString()
+    @Field(() => String)
+    url: string;
 
-  @IsNotEmpty()
-  @IsString()
-  @Field(() => String)
-  name: string;
+    @IsNotEmpty()
+    @IsString()
+    @Field(() => String)
+    name: string;
 
-  @IsEnum(DocumentTypeEnum)
-  @Field(() => DocumentTypeEnum)
-  type: DocumentTypeEnum;
+    @IsEnum(DocumentTypeEnum)
+    @Field(() => DocumentTypeEnum)
+    type: DocumentTypeEnum;
 }

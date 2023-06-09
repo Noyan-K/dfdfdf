@@ -11,18 +11,18 @@ import { Document } from '../../document/models/document.model';
 
 @ObjectType()
 export class User extends UserModel {
-  @Field(() => Document, { nullable: true })
-  Document?: Document | null;
+    @Field(() => Document, { nullable: true })
+    Document?: Document | null;
 
-  @Field(() => SupplierModel, { nullable: true })
-  Supplier?: SupplierModel | null;
+    @Field(() => SupplierModel, { nullable: true })
+    Supplier?: SupplierModel | null;
 
-  @Field(() => [OrderModel], { nullable: true })
-  Order?: OrderModel[];
+    @Field(() => [OrderModel], { nullable: true })
+    Order?: OrderModel[];
 
-  @Field(() => [UserRole], { nullable: true })
-  UserRole?: UserRole[];
+    @Field(() => [UserRole], { nullable: true })
+    UserRole?: UserRole[];
 
-  @Field(() => Address, { nullable: true })
-  Address?: Address[] | null;
+    @Field(() => Address, { nullable: true })
+    Address?: Address[] | null;
 }

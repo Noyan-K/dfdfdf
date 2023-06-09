@@ -10,63 +10,52 @@ import { GqlJwtAuthGuard } from '../auth/guards/gql-jwt-auth.guard';
 
 @Resolver(() => Document)
 export class DocumentResolver {
-  constructor(private readonly documentService: DocumentService) {}
+    constructor(private readonly documentService: DocumentService) {}
 
-  @UseGuards(GqlJwtAuthGuard)
-  @Mutation(() => Document)
-  createDocument(
-    @Args('createDocumentInput') createDocumentInput: CreateDocumentInput,
-  ): Promise<Document> {
-    return this.documentService.create(createDocumentInput);
-  }
+    @UseGuards(GqlJwtAuthGuard)
+    @Mutation(() => Document)
+    createDocument(
+        @Args('createDocumentInput') createDocumentInput: CreateDocumentInput,
+    ): Promise<Document> {
+        return this.documentService.create(createDocumentInput);
+    }
 
-  @Query(() => [Document], { name: 'documents' })
-  findAll(
-    @Args('take', { type: () => Int, nullable: true }) take?: number,
-    @Args('skip', { type: () => Int, nullable: true }) skip?: number,
-  ): Promise<Document[]> {
-    return this.documentService.findAll(take, skip);
-  }
+    @Query(() => [Document], { name: 'documents' })
+    findAll(
+        @Args('take', { type: () => Int, nullable: true }) take?: number,
+        @Args('skip', { type: () => Int, nullable: true }) skip?: number,
+    ): Promise<Document[]> {
+        return this.documentService.findAll(take, skip);
+    }
 
-  @Query(() => Document, { name: 'document' })
-  findOne(
-    @Args('id', { type: () => Int }) id: number,
-  ): Promise<Document | null> {
-    return this.documentService.findOne(id);
-  }
+    @Query(() => Document, { name: 'document' })
+    findOne(@Args('id', { type: () => Int }) id: number): Promise<Document | null> {
+        return this.documentService.findOne(id);
+    }
 
-  @UseGuards(GqlJwtAuthGuard)
-  @Mutation(() => Document)
-  updateDocument(
-    @Args('updateDocumentInput') updateDocumentInput: UpdateDocumentInput,
-  ): Promise<Document | null> {
-    return this.documentService.update(
-      updateDocumentInput.id,
-      updateDocumentInput,
-    );
-  }
+    @UseGuards(GqlJwtAuthGuard)
+    @Mutation(() => Document)
+    updateDocument(
+        @Args('updateDocumentInput') updateDocumentInput: UpdateDocumentInput,
+    ): Promise<Document | null> {
+        return this.documentService.update(updateDocumentInput.id, updateDocumentInput);
+    }
 
-  @UseGuards(GqlJwtAuthGuard)
-  @Mutation(() => Document)
-  removeDocument(
-    @Args('id', { type: () => Int }) id: number,
-  ): Promise<Document> {
-    return this.documentService.remove(id);
-  }
+    @UseGuards(GqlJwtAuthGuard)
+    @Mutation(() => Document)
+    removeDocument(@Args('id', { type: () => Int }) id: number): Promise<Document> {
+        return this.documentService.remove(id);
+    }
 
-  @UseGuards(GqlJwtAuthGuard)
-  @Query(() => [Document], { name: 'getDocuments', nullable: true })
-  getDocuments(
-    @Args('id', { type: () => [Int] }) id: number[],
-  ): Promise<Document[]> {
-    return this.documentService.getDocuments(id);
-  }
+    @UseGuards(GqlJwtAuthGuard)
+    @Query(() => [Document], { name: 'getDocuments', nullable: true })
+    getDocuments(@Args('id', { type: () => [Int] }) id: number[]): Promise<Document[]> {
+        return this.documentService.getDocuments(id);
+    }
 
-  @UseGuards(GqlJwtAuthGuard)
-  @Query(() => [Document], { name: 'getDocument', nullable: true })
-  getDocument(
-    @Args('id', { type: () => Int }) id: number,
-  ): Promise<Document | null> {
-    return this.documentService.getDocument(id);
-  }
+    @UseGuards(GqlJwtAuthGuard)
+    @Query(() => [Document], { name: 'getDocument', nullable: true })
+    getDocument(@Args('id', { type: () => Int }) id: number): Promise<Document | null> {
+        return this.documentService.getDocument(id);
+    }
 }

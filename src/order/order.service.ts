@@ -19,100 +19,97 @@ const pdf = require('pdf-creator-node');
 
 @Injectable()
 export class OrderService {
-  constructor(
-    private readonly prismaService: PrismaService,
-    private readonly documentService: DocumentService,
-    private readonly config: ConfigService,
-  ) {}
+    constructor(
+        private readonly prismaService: PrismaService,
+        private readonly documentService: DocumentService,
+        private readonly config: ConfigService,
+    ) {}
 
-  async create(createOrderInput: CreateOrderInput): Promise<Order> {
-    return this.prismaService.order.create({ data: createOrderInput });
-  }
-
-  findAll(take?: number, skip?: number): Promise<Order[]> {
-    return this.prismaService.order.findMany({
-      include: { Document: true },
-      take,
-      skip,
-    });
-  }
-
-  findOne(id: number): Promise<Order | null> {
-    return this.prismaService.order.findFirst({
-      where: { id },
-      include: {
-        Document: true,
-        OrderSize: {
-          where: {
-            deleted_at: { equals: null },
-          },
-          include: {
-            Size: true,
-          },
-        },
-      },
-    });
-  }
-
-  async update(
-    id: number,
-    updateOrderInput: UpdateOrderInput,
-  ): Promise<Order | null> {
-    await this.prismaService.order.update({
-      where: { id },
-      data: updateOrderInput,
-    });
-    return this.findOne(id);
-  }
-
-  remove(id: number): Promise<Order> {
-    return this.prismaService.order.delete({ where: { id } });
-  }
-
-  async generatePdf(id: number): Promise<Document> {
-    const order = await this.prismaService.order.findFirst({
-      where: { id },
-      include: {
-        OrderSize: { include: { Size: true } },
-        Product: {
-          include: {
-            Parent: { include: { Parent: { include: { Parent: true } } } },
-          },
-        },
-      },
-    });
-
-    if (!order) {
-      throw new NotFoundException();
+    async create(createOrderInput: CreateOrderInput): Promise<Order> {
+        return this.prismaService.order.create({ data: createOrderInput });
     }
 
-    const staticPath = this.config.get('STATIC_PATH');
-    const templatesPath = this.config.get('TEMPLATES_PATH');
-    const destination = path.join(__dirname, '..', staticPath, 'pdf');
-    const fileName = `${uuidv4()}.pdf`;
-    const pth = path.join(destination, fileName);
+    findAll(take?: number, skip?: number): Promise<Order[]> {
+        return this.prismaService.order.findMany({
+            include: { Document: true },
+            take,
+            skip,
+        });
+    }
 
-    this.documentService.createFolderIfDoesNotExist(destination);
+    findOne(id: number): Promise<Order | null> {
+        return this.prismaService.order.findFirst({
+            where: { id },
+            include: {
+                Document: true,
+                OrderSize: {
+                    where: {
+                        deleted_at: { equals: null },
+                    },
+                    include: {
+                        Size: true,
+                    },
+                },
+            },
+        });
+    }
 
-    const html = fs
-      .readFileSync(path.join(templatesPath, 'pdf', 'pdf-template.html'))
-      .toString();
+    async update(id: number, updateOrderInput: UpdateOrderInput): Promise<Order | null> {
+        await this.prismaService.order.update({
+            where: { id },
+            data: updateOrderInput,
+        });
+        return this.findOne(id);
+    }
 
-    await pdf.create(
-      {
-        html,
-        data: order,
-        path: pth,
-        type: '',
-      },
-      {
-        format: 'A4',
-        orientation: 'portrait',
-        border: '9.906mm',
-        header: {
-          height: '15mm',
-          /* html */
-          contents: `
+    remove(id: number): Promise<Order> {
+        return this.prismaService.order.delete({ where: { id } });
+    }
+
+    async generatePdf(id: number): Promise<Document> {
+        const order = await this.prismaService.order.findFirst({
+            where: { id },
+            include: {
+                OrderSize: { include: { Size: true } },
+                Product: {
+                    include: {
+                        Parent: { include: { Parent: { include: { Parent: true } } } },
+                    },
+                },
+            },
+        });
+
+        if (!order) {
+            throw new NotFoundException();
+        }
+
+        const staticPath = this.config.get('STATIC_PATH');
+        const templatesPath = this.config.get('TEMPLATES_PATH');
+        const destination = path.join(__dirname, '..', staticPath, 'pdf');
+        const fileName = `${uuidv4()}.pdf`;
+        const pth = path.join(destination, fileName);
+
+        this.documentService.createFolderIfDoesNotExist(destination);
+
+        const html = fs
+            .readFileSync(path.join(templatesPath, 'pdf', 'pdf-template.html'))
+            .toString();
+
+        await pdf.create(
+            {
+                html,
+                data: order,
+                path: pth,
+                type: '',
+            },
+            {
+                format: 'A4',
+                orientation: 'portrait',
+                border: '9.906mm',
+                header: {
+                    height: '15mm',
+                    /* html */
+                    contents: `
             <style>
                 body, html {
                     padding: 0px;
@@ -127,16 +124,16 @@ export class OrderService {
                 </div>
             </div>
             `,
-        },
-      },
-    );
+                },
+            },
+        );
 
-    return this.prismaService.document.create({
-      data: {
-        url: `pdf/${fileName}`,
-        type: DocumentTypeEnum.FILE,
-        name: fileName,
-      },
-    });
-  }
+        return this.prismaService.document.create({
+            data: {
+                url: `pdf/${fileName}`,
+                type: DocumentTypeEnum.FILE,
+                name: fileName,
+            },
+        });
+    }
 }

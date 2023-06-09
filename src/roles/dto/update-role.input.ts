@@ -6,7 +6,7 @@ import { CreateRoleInput } from './create-role.input';
 
 @InputType()
 export class UpdateRoleInput extends PartialType(CreateRoleInput) {
-  @IsNumber()
-  @Field(() => Int)
-  id: number;
+    @IsNumber()
+    @Field(() => Int)
+    id: number;
 }

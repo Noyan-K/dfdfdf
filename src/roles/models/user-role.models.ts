@@ -6,6 +6,6 @@ import { UserRoleModel } from './user-role';
 
 @ObjectType()
 export class UserRole extends UserRoleModel {
-  @Field(() => [User])
-  User: User[];
+    @Field(() => [User])
+    User: User[];
 }

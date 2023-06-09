@@ -5,15 +5,15 @@ import { IsEnum, IsNumber, IsString } from 'class-validator';
 
 @InputType()
 export class CreateDeliveryInput {
-  @IsString()
-  @Field(() => String)
-  name: string;
+    @IsString()
+    @Field(() => String)
+    name: string;
 
-  @IsEnum(DeliveryTypeEnum)
-  @Field(() => DeliveryTypeEnum)
-  type: DeliveryTypeEnum;
+    @IsEnum(DeliveryTypeEnum)
+    @Field(() => DeliveryTypeEnum)
+    type: DeliveryTypeEnum;
 
-  @IsNumber()
-  @Field(() => Int)
-  parent_id: number;
+    @IsNumber()
+    @Field(() => Int)
+    parent_id: number;
 }

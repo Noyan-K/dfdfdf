@@ -8,9 +8,9 @@ import { User } from '../../user/models/user.model';
 
 @ObjectType()
 export class Supplier extends SupplierModel {
-  @Field(() => User, { nullable: true })
-  User?: User | null;
+    @Field(() => User, { nullable: true })
+    User?: User | null;
 
-  @Field(() => Address, { nullable: true })
-  Address?: Address[] | null;
+    @Field(() => Address, { nullable: true })
+    Address?: Address[] | null;
 }

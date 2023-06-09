@@ -7,9 +7,9 @@ import { OrderModel } from '../../models/order';
 
 @ObjectType()
 export class OrderSize extends OrderSizeModel {
-  @Field(() => OrderModel)
-  Order?: OrderModel;
+    @Field(() => OrderModel)
+    Order?: OrderModel;
 
-  @Field(() => Size)
-  Size?: Size;
+    @Field(() => Size)
+    Size?: Size;
 }

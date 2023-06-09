@@ -21,28 +21,28 @@ import config from './config';
 import PrismaModule from './prisma/prisma.module';
 
 @Module({
-  imports: [
-    GraphQLModule.forRoot<ApolloDriverConfig>({
-      autoSchemaFile: 'schema.gql',
-      playground: true,
-      driver: ApolloDriver,
-    }),
-    ConfigModule.forRoot({ isGlobal: true, load: [config] }),
-    PrismaModule,
-    AuthModule,
-    UserModule,
-    ProductModule,
-    DocumentModule,
-    SupplierModule,
-    OrderModule,
-    RolesModule,
-    TypeModule,
-    AddressModule,
-    DeliveryModule,
-    SizeModule,
-    OrderSizeModule,
-  ],
-  controllers: [AppController],
-  providers: [AppService, Logger],
+    imports: [
+        GraphQLModule.forRoot<ApolloDriverConfig>({
+            autoSchemaFile: 'schema.gql',
+            playground: true,
+            driver: ApolloDriver,
+        }),
+        ConfigModule.forRoot({ isGlobal: true, load: [config] }),
+        PrismaModule,
+        AuthModule,
+        UserModule,
+        ProductModule,
+        DocumentModule,
+        SupplierModule,
+        OrderModule,
+        RolesModule,
+        TypeModule,
+        AddressModule,
+        DeliveryModule,
+        SizeModule,
+        OrderSizeModule,
+    ],
+    controllers: [AppController],
+    providers: [AppService, Logger],
 })
 export class AppModule {}

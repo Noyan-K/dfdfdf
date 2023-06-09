@@ -9,11 +9,11 @@ import { OrderResolver } from './order.resolver';
 import { DocumentModule } from '../document/document.module';
 
 @Module({
-  imports: [PrismaModule, DocumentModule],
-  providers: [OrderResolver, OrderService],
-  controllers: [
-    // OrderController,
-  ],
-  exports: [OrderService],
+    imports: [PrismaModule, DocumentModule],
+    providers: [OrderResolver, OrderService],
+    controllers: [
+        // OrderController,
+    ],
+    exports: [OrderService],
 })
 export class OrderModule {}

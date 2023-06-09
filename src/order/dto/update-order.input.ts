@@ -6,8 +6,8 @@ import { CreateOrderInput } from './create-order.input';
 
 @InputType()
 export class UpdateOrderInput extends PartialType(CreateOrderInput) {
-  @IsNotEmpty()
-  @IsNumber()
-  @Field(() => Int)
-  id: number;
+    @IsNotEmpty()
+    @IsNumber()
+    @Field(() => Int)
+    id: number;
 }

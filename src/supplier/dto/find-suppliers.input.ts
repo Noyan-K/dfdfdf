@@ -6,13 +6,13 @@ import { SortByEnum } from '../../types/sort.type';
 
 @InputType()
 export class FindSuppliersInput {
-  @IsOptional()
-  @IsString()
-  @Field(() => String, { nullable: true })
-  search: string;
+    @IsOptional()
+    @IsString()
+    @Field(() => String, { nullable: true })
+    search: string;
 
-  @IsOptional()
-  @IsEnum(SortByEnum)
-  @Field(() => SortByEnum, { nullable: true })
-  sort_by?: SortByEnum;
+    @IsOptional()
+    @IsEnum(SortByEnum)
+    @Field(() => SortByEnum, { nullable: true })
+    sort_by?: SortByEnum;
 }

@@ -9,17 +9,17 @@ import { ValidatedUser } from '../interfaces/validatedUser.interface';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(private readonly configService: ConfigService) {
-    super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      ignoreExpiration: false,
-      secretOrKey: configService.get('JWT_ACCESS_SECRET'),
-    });
-  }
+    constructor(private readonly configService: ConfigService) {
+        super({
+            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+            ignoreExpiration: false,
+            secretOrKey: configService.get('JWT_ACCESS_SECRET'),
+        });
+    }
 
-  validate = (payload: JwtPayload): ValidatedUser => ({
-    id: payload.sub,
-    email: payload.email,
-    roles: payload.roles,
-  });
+    validate = (payload: JwtPayload): ValidatedUser => ({
+        id: payload.sub,
+        email: payload.email,
+        roles: payload.roles,
+    });
 }

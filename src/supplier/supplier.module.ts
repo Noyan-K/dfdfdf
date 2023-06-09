@@ -6,8 +6,8 @@ import { SupplierResolver } from './supplier.resolver';
 import PrismaModule from '../prisma/prisma.module';
 
 @Module({
-  imports: [PrismaModule],
-  providers: [SupplierResolver, SupplierService],
-  exports: [SupplierService],
+    imports: [PrismaModule],
+    providers: [SupplierResolver, SupplierService],
+    exports: [SupplierService],
 })
 export class SupplierModule {}

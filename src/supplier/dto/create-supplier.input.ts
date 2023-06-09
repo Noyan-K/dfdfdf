@@ -4,7 +4,7 @@ import { IsString } from 'class-validator';
 
 @InputType()
 export class CreateSupplierInput {
-  @IsString()
-  @Field(() => String)
-  name: string;
+    @IsString()
+    @Field(() => String)
+    name: string;
 }

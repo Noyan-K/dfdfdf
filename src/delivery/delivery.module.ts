@@ -6,8 +6,8 @@ import { DeliveryService } from './delivery.service';
 import { DeliveryResolver } from './delivery.resolver';
 
 @Module({
-  providers: [DeliveryResolver, DeliveryService],
-  imports: [PrismaModule],
-  exports: [DeliveryService],
+    providers: [DeliveryResolver, DeliveryService],
+    imports: [PrismaModule],
+    exports: [DeliveryService],
 })
 export class DeliveryModule {}

@@ -5,7 +5,7 @@ import PrismaModule from '../prisma/prisma.module';
 import { Types } from './index';
 
 @Module({
-  imports: [PrismaModule],
-  providers: [Types],
+    imports: [PrismaModule],
+    providers: [Types],
 })
 export class TypeModule {}

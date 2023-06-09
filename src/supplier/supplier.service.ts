@@ -12,76 +12,71 @@ import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class SupplierService {
-  constructor(private readonly prisma: PrismaService) {}
+    constructor(private readonly prisma: PrismaService) {}
 
-  create(createSupplierInput: CreateSupplierInput): Promise<Supplier> {
-    return this.prisma.supplier.create({
-      data: createSupplierInput,
-    });
-  }
-
-  findAll(
-    findSuppliersInput?: FindSuppliersInput,
-    take?: number,
-    skip?: number,
-  ): Promise<SupplierModel[]> {
-    return this.prisma.supplier.findMany({
-      take,
-      skip,
-      include: {
-        User: true,
-      },
-      where: {
-        User: {
-          name: {
-            startsWith: findSuppliersInput?.search
-              ? findSuppliersInput.search
-              : undefined,
-            mode: 'insensitive',
-          },
-        },
-      },
-      orderBy: {
-        User: {
-          name:
-            findSuppliersInput?.sort_by === SortByEnum.NAME ? 'asc' : undefined,
-        },
-      },
-    });
-  }
-
-  async findOne(id: number): Promise<Supplier | null> {
-    const receivedProduct: Supplier | null =
-      await this.prisma.supplier.findFirst({
-        where: { id },
-      });
-
-    if (!receivedProduct) {
-      throw new NotFoundException();
+    create(createSupplierInput: CreateSupplierInput): Promise<Supplier> {
+        return this.prisma.supplier.create({
+            data: createSupplierInput,
+        });
     }
 
-    return receivedProduct;
-  }
+    findAll(
+        findSuppliersInput?: FindSuppliersInput,
+        take?: number,
+        skip?: number,
+    ): Promise<SupplierModel[]> {
+        return this.prisma.supplier.findMany({
+            take,
+            skip,
+            include: {
+                User: true,
+            },
+            where: {
+                User: {
+                    name: {
+                        startsWith: findSuppliersInput?.search
+                            ? findSuppliersInput.search
+                            : undefined,
+                        mode: 'insensitive',
+                    },
+                },
+            },
+            orderBy: {
+                User: {
+                    name: findSuppliersInput?.sort_by === SortByEnum.NAME ? 'asc' : undefined,
+                },
+            },
+        });
+    }
 
-  async update(
-    id: number,
-    updateSupplierInput: UpdateSupplierInput,
-  ): Promise<Supplier | null> {
-    await this.prisma.supplier.updateMany({
-      where: { id },
-      data: {
-        ...updateSupplierInput,
-      },
-    });
+    async findOne(id: number): Promise<Supplier | null> {
+        const receivedProduct: Supplier | null = await this.prisma.supplier.findFirst({
+            where: { id },
+        });
 
-    return this.prisma.supplier.findFirst({
-      where: { id },
-    });
-  }
+        if (!receivedProduct) {
+            throw new NotFoundException();
+        }
 
-  remove(id: number): Promise<Supplier> {
-    return this.prisma.supplier.delete({
-      where: { id },
-    });
-  }
+        return receivedProduct;
+    }
+
+    async update(id: number, updateSupplierInput: UpdateSupplierInput): Promise<Supplier | null> {
+        await this.prisma.supplier.updateMany({
+            where: { id },
+            data: {
+                ...updateSupplierInput,
+            },
+        });
+
+        return this.prisma.supplier.findFirst({
+            where: { id },
+        });
+    }
+
+    remove(id: number): Promise<Supplier> {
+        return this.prisma.supplier.delete({
+            where: { id },
+        });
+    }
 }

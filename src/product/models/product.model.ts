@@ -7,15 +7,15 @@ import { ProductDocument } from './product-document.model';
 
 @ObjectType()
 export class Product extends ProductModel {
-  @Field(() => [Product], { nullable: true })
-  Children?: Product[] | null;
+    @Field(() => [Product], { nullable: true })
+    Children?: Product[] | null;
 
-  @Field(() => Product, { nullable: true })
-  Parent?: Product | null;
+    @Field(() => Product, { nullable: true })
+    Parent?: Product | null;
 
-  @Field(() => [Order], { nullable: true })
-  Order?: Order[] | null;
+    @Field(() => [Order], { nullable: true })
+    Order?: Order[] | null;
 
-  @Field(() => [ProductDocument], { nullable: true })
-  ProductDocument?: ProductDocument[];
+    @Field(() => [ProductDocument], { nullable: true })
+    ProductDocument?: ProductDocument[];
 }

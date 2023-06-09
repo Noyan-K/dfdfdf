@@ -4,8 +4,5 @@ import { CreateProductInput } from './create-product.input';
 
 @InputType()
 export class UpdateProductInput extends PartialType(
-  OmitType(CreateProductInput, [
-    'mannequin_document_id',
-    'preview_document_id',
-  ]),
+    OmitType(CreateProductInput, ['mannequin_document_id', 'preview_document_id']),
 ) {}

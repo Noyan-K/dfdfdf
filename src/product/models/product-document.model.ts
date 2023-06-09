@@ -7,9 +7,9 @@ import { Document } from '../../document/models/document.model';
 
 @ObjectType()
 export class ProductDocument extends ProductDocumentModel {
-  @Field(() => ProductModel)
-  Product?: ProductModel;
+    @Field(() => ProductModel)
+    Product?: ProductModel;
 
-  @Field(() => Document, { nullable: true })
-  Document?: Document | null;
+    @Field(() => Document, { nullable: true })
+    Document?: Document | null;
 }

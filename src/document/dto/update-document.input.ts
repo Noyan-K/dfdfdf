@@ -6,8 +6,8 @@ import { CreateDocumentInput } from './create-document.input';
 
 @InputType()
 export class UpdateDocumentInput extends PartialType(CreateDocumentInput) {
-  @IsNotEmpty()
-  @IsNumber()
-  @Field(() => Int)
-  id: number;
+    @IsNotEmpty()
+    @IsNumber()
+    @Field(() => Int)
+    id: number;
 }

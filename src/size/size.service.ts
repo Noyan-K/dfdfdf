@@ -9,46 +9,43 @@ import { Size } from './models/size.model';
 
 @Injectable()
 export class SizeService {
-  constructor(private readonly prismaService: PrismaService) {}
+    constructor(private readonly prismaService: PrismaService) {}
 
-  create(createSizeInput: CreateSizeInput): Promise<Size> {
-    const requisiteJson: Prisma.JsonObject = {
-      name: createSizeInput.name,
-      russian_size: createSizeInput.russian_size,
-      chest_girth: createSizeInput.chest_girth,
-      waits_girth: createSizeInput.waits_girth,
-      hips_girth: createSizeInput.hips_girth,
-    };
+    create(createSizeInput: CreateSizeInput): Promise<Size> {
+        const requisiteJson: Prisma.JsonObject = {
+            name: createSizeInput.name,
+            russian_size: createSizeInput.russian_size,
+            chest_girth: createSizeInput.chest_girth,
+            waits_girth: createSizeInput.waits_girth,
+            hips_girth: createSizeInput.hips_girth,
+        };
 
-    return this.prismaService.size.create({
-      data: { ...createSizeInput, json: requisiteJson },
-    });
-  }
+        return this.prismaService.size.create({
+            data: { ...createSizeInput, json: requisiteJson },
+        });
+    }
 
-  findAll(take?: number, skip?: number): Promise<Size[]> {
-    return this.prismaService.size.findMany({
-      take,
-      skip,
-      orderBy: { id: 'asc' },
-    });
-  }
+    findAll(take?: number, skip?: number): Promise<Size[]> {
+        return this.prismaService.size.findMany({
+            take,
+            skip,
+            orderBy: { id: 'asc' },
+        });
+    }
 
-  findOne(id: number): Promise<Size | null> {
-    return this.prismaService.size.findFirst({ where: { id } });
-  }
+    findOne(id: number): Promise<Size | null> {
+        return this.prismaService.size.findFirst({ where: { id } });
+    }
 
-  async update(
-    id: number,
-    updateSizeInput: UpdateSizeInput,
-  ): Promise<Size | null> {
-    await this.prismaService.size.updateMany({
-      where: { id },
-      data: updateSizeInput,
-    });
-    return this.findOne(id);
-  }
+    async update(id: number, updateSizeInput: UpdateSizeInput): Promise<Size | null> {
+        await this.prismaService.size.updateMany({
+            where: { id },
+            data: updateSizeInput,
+        });
+        return this.findOne(id);
+    }
 
-  remove(id: number): Promise<Size> {
-    return this.prismaService.size.delete({ where: { id } });
-  }
+    remove(id: number): Promise<Size> {
+        return this.prismaService.size.delete({ where: { id } });
+    }
 }

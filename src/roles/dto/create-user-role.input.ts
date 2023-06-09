@@ -5,11 +5,11 @@ import { IsEnum, IsNumber } from 'class-validator';
 
 @InputType()
 export class CreateUserRoleInput {
-  @IsNumber()
-  @Field(() => Int)
-  user_id: number;
+    @IsNumber()
+    @Field(() => Int)
+    user_id: number;
 
-  @IsEnum(RolesEnum)
-  @Field(() => RolesEnum)
-  role_name: RolesEnum;
+    @IsEnum(RolesEnum)
+    @Field(() => RolesEnum)
+    role_name: RolesEnum;
 }

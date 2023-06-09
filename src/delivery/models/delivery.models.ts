@@ -4,9 +4,9 @@ import { DeliveryModel } from './delivery';
 
 @ObjectType()
 export class Delivery extends DeliveryModel {
-  @Field(() => [Delivery])
-  Children?: Delivery;
+    @Field(() => [Delivery])
+    Children?: Delivery;
 
-  @Field(() => Delivery, { nullable: true })
-  Parent?: Delivery | null;
+    @Field(() => Delivery, { nullable: true })
+    Parent?: Delivery | null;
 }

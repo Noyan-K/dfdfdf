@@ -6,7 +6,7 @@ import { SizeService } from './size.service';
 import { SizeResolver } from './size.resolver';
 
 @Module({
-  providers: [SizeResolver, SizeService],
-  imports: [PrismaModule],
+    providers: [SizeResolver, SizeService],
+    imports: [PrismaModule],
 })
 export class SizeModule {}

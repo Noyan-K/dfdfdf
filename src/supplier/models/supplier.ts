@@ -2,24 +2,24 @@ import { ObjectType, Field, Int } from '@nestjs/graphql';
 
 @ObjectType()
 export class SupplierModel {
-  @Field(() => Int)
-  id: number;
+    @Field(() => Int)
+    id: number;
 
-  // @Field(() => String, { deprecationReason: 'пока используем name из User' })
-  name: string;
+    // @Field(() => String, { deprecationReason: 'пока используем name из User' })
+    name: string;
 
-  @Field(() => Boolean, { defaultValue: false })
-  deliver_goods_yourself: boolean;
+    @Field(() => Boolean, { defaultValue: false })
+    deliver_goods_yourself: boolean;
 
-  @Field(() => [Int], { defaultValue: [] })
-  array_of_delivery_ids: number[];
+    @Field(() => [Int], { defaultValue: [] })
+    array_of_delivery_ids: number[];
 
-  @Field(() => Date)
-  created_at: Date;
+    @Field(() => Date)
+    created_at: Date;
 
-  @Field(() => Date)
-  updated_at: Date;
+    @Field(() => Date)
+    updated_at: Date;
 
-  @Field(() => Date, { nullable: true })
-  deleted_at?: Date | null;
+    @Field(() => Date, { nullable: true })
+    deleted_at?: Date | null;
 }

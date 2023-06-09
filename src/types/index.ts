@@ -18,21 +18,21 @@ export class Types {}
 // });
 
 registerEnumType(DocumentTypeEnum, {
-  name: 'DocumentTypeEnum',
+    name: 'DocumentTypeEnum',
 });
 
 registerEnumType(RolesEnum, {
-  name: 'RolesEnum',
+    name: 'RolesEnum',
 });
 
 registerEnumType(Prisma.SortOrder, {
-  name: 'SortOrder',
+    name: 'SortOrder',
 });
 
 registerEnumType(SortByEnum, {
-  name: 'SortByEnum',
+    name: 'SortByEnum',
 });
 
 registerEnumType(Prisma.QueryMode, {
-  name: 'SearchMode',
+    name: 'SearchMode',
 });

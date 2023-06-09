@@ -5,7 +5,7 @@ import { IsEnum } from 'class-validator';
 
 @InputType()
 export class CreateRoleInput {
-  @IsEnum(RolesEnum)
-  @Field(() => RolesEnum)
-  name: RolesEnum;
+    @IsEnum(RolesEnum)
+    @Field(() => RolesEnum)
+    name: RolesEnum;
 }

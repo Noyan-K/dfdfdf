@@ -8,9 +8,9 @@ import { User } from '../../user/models/user.model';
 
 @ObjectType()
 export class Address extends AddressModel {
-  @Field(() => User)
-  User?: User;
+    @Field(() => User)
+    User?: User;
 
-  @Field(() => Supplier)
-  Supplier?: Supplier | null;
+    @Field(() => Supplier)
+    Supplier?: Supplier | null;
 }

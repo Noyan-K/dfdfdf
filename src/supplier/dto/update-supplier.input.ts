@@ -6,17 +6,17 @@ import { CreateSupplierInput } from './create-supplier.input';
 
 @InputType()
 export class UpdateSupplierInput extends PartialType(CreateSupplierInput) {
-  @IsNumber()
-  @Field(() => Int)
-  id: number;
+    @IsNumber()
+    @Field(() => Int)
+    id: number;
 
-  @IsOptional()
-  @IsBoolean()
-  @Field(() => Boolean, { nullable: true })
-  deliver_goods_yourself: boolean;
+    @IsOptional()
+    @IsBoolean()
+    @Field(() => Boolean, { nullable: true })
+    deliver_goods_yourself: boolean;
 
-  @IsOptional()
-  @IsNumber({}, { each: true })
-  @Field(() => [Int], { nullable: true })
-  array_of_delivery_ids: number[];
+    @IsOptional()
+    @IsNumber({}, { each: true })
+    @Field(() => [Int], { nullable: true })
+    array_of_delivery_ids: number[];
 }
