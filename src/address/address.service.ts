@@ -10,8 +10,7 @@ import { Address } from './models/address.model';
 export class AddressService {
     constructor(private readonly prismaService: PrismaService) {}
 
-    async create(user_id: number, createAddressInput: CreateAddressInput): Promise<Address> {
-        const name =
+    async create(user_id: number, createAddressInput: CreateAddressInput): Promise<Address> {const name =
             createAddressInput.name ??
             `Адрес доставки №${await this.prismaService.address.count({
                 where: { user_id },
