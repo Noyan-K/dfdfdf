@@ -25,8 +25,7 @@ export class SizeService {
     });
   }
 
-    findAll(take?: number, skip?: number): Promise<Size[]> {
-        return this.prismaService.size.findMany({
+    findAll(take?: number, skip?: number): Promise<Size[]> {return this.prismaService.size.findMany({
             take,
             skip,
             orderBy: { id: 'asc' },
